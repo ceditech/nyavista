@@ -4,6 +4,8 @@ const surfaces = [
   { id: "marketing", marker: "Understand the news in minutes, not hours." },
   { id: "briefing", marker: "A clearer view of what matters." },
   { id: "story", marker: "Context before conclusions" },
+  { id: "search", marker: "Find context, not just keywords." },
+  { id: "media", marker: "Context designed for a smaller screen." },
   { id: "tracker", marker: "Every sprint, phase, and feature" },
   { id: "editorial", marker: "Editorial clarity at every gate." },
 ] as const;
@@ -35,8 +37,19 @@ for (const surface of surfaces) {
         await page.goto("/", { waitUntil: "networkidle" });
         if (surface.id !== "marketing") await page.getByRole("button", { name: /Explore NyaVista/ }).click();
         const mobileNavigation = page.getByRole("button", { name: "Open navigation" });
-        if (surface.id !== "briefing" && surface.id !== "story" && await mobileNavigation.isVisible()) await mobileNavigation.click();
+        if ((surface.id === "tracker" || surface.id === "editorial") && await mobileNavigation.isVisible()) await mobileNavigation.click();
         if (surface.id === "story") await page.getByRole("button", { name: /Open story:/ }).first().click();
+        if (surface.id === "search") {
+          const mobileSearch = page.getByRole("navigation", { name: "Mobile demo navigation" }).getByRole("button", { name: "Search" });
+          if (await mobileSearch.isVisible()) await mobileSearch.click(); else await page.getByRole("button", { name: "Search", exact: true }).click();
+        }
+        if (surface.id === "media") {
+          const mobileMedia = page.getByRole("navigation", { name: "Mobile demo navigation" }).getByRole("button", { name: "Media" });
+          if (await mobileMedia.isVisible()) await mobileMedia.click(); else {
+            if (await mobileNavigation.isVisible()) await mobileNavigation.click();
+            await page.getByRole("button", { name: /Media briefings/ }).click();
+          }
+        }
         if (surface.id === "tracker") await page.getByRole("button", { name: /Project tracker/ }).click();
         if (surface.id === "editorial") await page.getByRole("button", { name: /Editorial overview/ }).click();
         if (surface.id !== "marketing") {
@@ -58,6 +71,39 @@ for (const surface of surfaces) {
       });
     }
   }
+}
+
+for (const viewport of viewports) {
+  test(`search and media interactions · ${viewport.id}`, async ({ page }) => {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+    await page.goto("/", { waitUntil: "networkidle" });
+    await page.getByRole("button", { name: /Explore NyaVista/ }).click();
+    const mobileDock = page.getByRole("navigation", { name: "Mobile demo navigation" });
+    if (await mobileDock.isVisible()) await mobileDock.getByRole("button", { name: "Search" }).click();
+    else await page.getByRole("button", { name: "Search", exact: true }).click();
+    const search = page.getByRole("textbox", { name: "Search demo stories" });
+    await search.fill("language");
+    await expect(page.getByText("1 fictional story")).toBeVisible();
+    await search.fill("no matching fictional topic");
+    await expect(page.getByRole("status")).toContainText("No fictional stories match");
+    await page.getByRole("button", { name: "Clear search and filters" }).click();
+    await expect(page.getByText("4 fictional stories")).toBeVisible();
+    if (await mobileDock.isVisible()) await mobileDock.getByRole("button", { name: "Media" }).click();
+    else {
+      const menu = page.getByRole("button", { name: "Open navigation" });
+      if (await menu.isVisible()) await menu.click();
+      await page.getByRole("button", { name: /Media briefings/ }).click();
+    }
+    const play = page.getByRole("button", { name: "Play simulated preview" });
+    await play.click();
+    await expect(page.getByRole("button", { name: "Pause simulated preview" })).toBeVisible();
+    await page.getByRole("button", { name: "Mute simulated preview" }).click();
+    await expect(page.getByRole("button", { name: "Unmute simulated preview" })).toBeVisible();
+    await page.getByRole("button", { name: "CC", exact: true }).click();
+    await expect(page.getByText("Accessible text alternative")).toBeVisible();
+    await page.getByRole("button", { name: /Open related story/ }).click();
+    await expect(page.getByRole("heading", { level: 1, name: /How cities are preparing/ })).toBeVisible();
+  });
 }
 
 for (const viewport of viewports) {

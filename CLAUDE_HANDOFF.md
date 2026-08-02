@@ -20,18 +20,30 @@ Required fields for every implementation entry:
 | Field | Current value |
 |---|---|
 | Approved work | Phase 3 — F-020 global/country/region feed architecture |
-| Active tracker IDs | F-020 complete; F-021 implemented and IN_REVIEW |
+| Active tracker IDs | F-020 and F-021 complete; F-022 implemented and IN_REVIEW |
 | Active agent | Codex |
 | STABLE reference | `STABLE_FRAMEWORK.md` at commit `f8ab99e` |
 | UI reference | `docs/design/nyavista-ui-mockup-light-dark.png` |
 | State | Demo-only local implementation; no live providers or production data |
-| Next gate | User reviews F-021 feed/detail; F-022 remains separately gated |
+| Next gate | User reviews F-022 and decides Phase 3 closure; Phase 4 remains unapproved |
 
 ## Implementation ledger
 
+### 2026-08-02 — Codex — F-022
+
+- Outcome: implemented search, touch-first mobile navigation, and a truthful rights-safe demo media briefing; item is `IN_REVIEW` pending user acceptance.
+- Scope: local keyword/category/country filtering, clear/empty states, topbar/mobile navigation, CSS-generated vertical media, simulated play/pause/mute/progress/captions/transcript, fallback/no-stream disclosure, and related-story action. Excluded live search/media, uploads, streaming, persistence, personalization, analytics, accounts, recommendations, production routes, and F-070.
+- STABLE/skills/mockup: root framework and required sources applied; F-020/F-021 dependencies complete; “Vertical Video (Mobile),” “Personalized Feed (Mobile),” and shared media-control panels reviewed in both themes; Next.js and React guidance confirmed the local client-state approach without fetch/API/image/player dependencies.
+- Verification: 17/17 Node tests, ESLint, strict TypeScript, and production build PASS; 64 baselines and 82/82 Playwright cases PASS at four breakpoints in both themes with search/empty/clear, media controls/transcript/open-story, resource/console/overlay, and overflow checks.
+- Visual/accessibility: search preserves compact feed density without claiming personalization; the media composition keeps disclosure, headline, progress, controls, and dock visible on mobile after manual overlap correction. Native labeled controls, live/status text, expanded/pressed states, progress semantics, transcript, touch sizing, focus inheritance, and reduced motion are preserved.
+- Truth/fairness/rights: queries remain in memory only; no `<video>`, remote/publisher asset, autoplay, stream, provider, storage, analytics, or live claim. Togo and priority-market filters use equivalent ISO-based behavior.
+- Files: root client UI/CSS, focused rendered/browser tests, 16 new search/media baselines plus affected synchronized baselines, baseline README, tracker, and handoff.
+- Limitations/rollback: simulation only, English-only, four fictional stories, no real search index/media/personalization. Revert focused UI/test/baseline/docs changes; no migration.
+- Next safe action: user reviews F-022 and Phase 3 closure. Do not begin Phase 4 without explicit approval.
+
 ### 2026-08-02 — Codex — F-021
 
-- Outcome: implemented the approved responsive public demo feed and story-detail experience; item is `IN_REVIEW` pending user acceptance.
+- Outcome: implemented and received user acceptance for the responsive public demo feed and story-detail experience; item is `DONE`.
 - Scope: strict fictional story registry; F-020 global/country filters; feature and compact feed cards; context/transparency rail; detail context, key points, uncertainty, timeline, and fictional source register; responsive interactions and visual evidence. Excluded live providers, real sources/media, persistence, ranking, search, personalization, production routes, and F-022.
 - STABLE/skills/mockup: root framework and required sources reviewed; “News Home Feed (Desktop)” and “Story Detail (Desktop)” light/dark panels inspected; Next.js App Router guidance shaped the existing client-shell boundary; React best-practices review found no waterfall, effect, serialization, inline-component, or bundle concern.
 - Verification: 3/3 focused story tests and 17/17 complete Node tests PASS; ESLint PASS; strict TypeScript PASS; production build PASS; 48 baselines and 62/62 Playwright cases PASS at four breakpoints in both themes with geography filter, open/back, disclosure, console/resource/overlay, and overflow checks.
@@ -39,7 +51,7 @@ Required fields for every implementation entry:
 - Truth/fairness/rights: all stories and sources are explicitly fictional; uncertainty and AI-assisted/no-human-review states are visible; no publisher assets or external links; Togo and commercial-priority markets use the same F-020 contract with no ranking input.
 - Files: `lib/stories.ts`, `lib/geography.ts`, `app/page.tsx`, `app/globals.css`, focused tests, 16 refreshed/new feed/story baselines plus two tracker mobile evidence updates, baseline README, package script, tracker, and handoff.
 - Limitations/rollback: demo-only English content, no live sources, real routes, persistence, media, search, or personalization. Revert the focused domain/UI/test/baseline/docs changes; no migration.
-- Next safe action: user reviews F-021. Do not start F-022 without approval.
+- User acceptance/next safe action: user completed the guided review on 2026-08-02. Do not start F-022 without explicit approval.
 
 ### 2026-08-02 — Codex — F-020
 

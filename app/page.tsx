@@ -8,7 +8,7 @@ import { selectFeedCandidates } from "../lib/geography";
 import { demoStories, type DemoStory } from "../lib/stories";
 import { parseProductTracker, trackerCheckpoints, type TrackerFeature, type TrackerStatus } from "../lib/tracker";
 
-type View = "marketing" | "briefing" | "story" | "tracker" | "editorial";
+type View = "marketing" | "briefing" | "story" | "search" | "media" | "tracker" | "editorial";
 const tracker = parseProductTracker(trackerMarkdown);
 
 function Icon({ children }: { children: React.ReactNode }) {
@@ -38,9 +38,9 @@ export default function Home() {
           <button className={view === "tracker" ? "nav-item active" : "nav-item"} onClick={() => { setView("tracker"); setNavOpen(false); }}><Icon>◫</Icon>Project tracker<span className="nav-count">{tracker.features.length}</span></button>
           <button className={view === "editorial" ? "nav-item active" : "nav-item"} onClick={() => { setView("editorial"); setNavOpen(false); }}><Icon>✓</Icon>Editorial overview</button>
           <p className="nav-label">Explore</p>
-          <button className="nav-item"><Icon>◎</Icon>Global coverage</button>
+          <button className={view === "briefing" || view === "story" ? "nav-item active" : "nav-item"} onClick={() => { setView("briefing"); setNavOpen(false); }}><Icon>◎</Icon>Global coverage</button>
           <button className="nav-item"><Icon>◇</Icon>Saved stories</button>
-          <button className="nav-item"><Icon>◌</Icon>Media briefings</button>
+          <button className={view === "media" ? "nav-item active" : "nav-item"} onClick={() => { setView("media"); setNavOpen(false); }}><Icon>◌</Icon>Media briefings</button>
         </nav>
         <div className="sidebar-note"><span className="status-dot" /> Demo environment<p>No live reporting or providers</p></div>
         <button className="nav-item settings"><Icon>⚙</Icon>Settings</button>
@@ -50,9 +50,9 @@ export default function Home() {
       <div className="workspace">
         <header className="topbar">
           <button className="mobile-menu" onClick={() => setNavOpen(true)} aria-label="Open navigation" aria-expanded={navOpen} aria-controls="primary-navigation"><span aria-hidden="true">☰</span><strong>Menu</strong></button>
-          <div><p className="eyebrow">{product.owner} · {product.foundingCountry}</p><strong>{view === "tracker" ? "Delivery workspace" : view === "editorial" ? "Editorial command centre" : view === "story" ? "Story intelligence" : "Global intelligence briefing"}</strong></div>
+          <div><p className="eyebrow">{product.owner} · {product.foundingCountry}</p><strong>{view === "tracker" ? "Delivery workspace" : view === "editorial" ? "Editorial command centre" : view === "story" ? "Story intelligence" : view === "search" ? "Search demo coverage" : view === "media" ? "Media briefing preview" : "Global intelligence briefing"}</strong></div>
           <div className="top-actions">
-            <button className="icon-button" aria-label="Search">⌕</button>
+            <button className="icon-button" aria-label="Search" onClick={() => setView("search")}>⌕</button>
             <button className="theme-toggle" onClick={() => setTheme(theme === "light" ? "dark" : "light")} aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`}><span>{theme === "light" ? "☾" : "☀"}</span>{theme === "light" ? "Dark" : "Light"}</button>
             <button className="avatar" aria-label="Account menu">NV</button>
           </div>
@@ -61,9 +61,12 @@ export default function Home() {
         <main id="main">
           {view === "briefing" && <Briefing onOpenTracker={() => setView("tracker")} onOpenStory={(story) => { setSelectedStory(story); setView("story"); }} />}
           {view === "story" && <StoryDetail story={selectedStory} onBack={() => setView("briefing")} />}
+          {view === "search" && <SearchStories onOpenStory={(story) => { setSelectedStory(story); setView("story"); }} />}
+          {view === "media" && <MediaBriefing story={demoStories[0]} onOpenStory={(story) => { setSelectedStory(story); setView("story"); }} />}
           {view === "tracker" && <Tracker />}
           {view === "editorial" && <Editorial />}
         </main>
+        {!["tracker", "editorial"].includes(view) && <nav className="mobile-dock" aria-label="Mobile demo navigation"><button className={view === "briefing" || view === "story" ? "active" : ""} onClick={() => setView("briefing")}><span aria-hidden="true">⌂</span>Feed</button><button className={view === "search" ? "active" : ""} onClick={() => setView("search")}><span aria-hidden="true">⌕</span>Search</button><button className={view === "media" ? "active" : ""} onClick={() => setView("media")}><span aria-hidden="true">▷</span>Media</button></nav>}
       </div>
       </>}
     </div>
@@ -145,6 +148,59 @@ function StoryDetail({ story, onBack }: { story: DemoStory; onBack: () => void }
       <aside id="sources" className="detail-panel source-register"><p className="eyebrow">SOURCE TRANSPARENCY</p><h2>{story.sourceCount} fictional source records</h2><p className="source-disclosure">These entries test attribution hierarchy only. They are not publishers or live links.</p>{story.sources.map((source) => <section key={source.name}><div><strong>{source.name}</strong><span className="badge">{source.type.replaceAll("-", " ")}</span></div><small>{source.geography}</small><p>{source.note}</p></section>)}</aside>
     </div>
   </article>;
+}
+
+function SearchStories({ onOpenStory }: { onOpenStory: (story: DemoStory) => void }) {
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState("all");
+  const [countryCode, setCountryCode] = useState<"global" | "TG" | "CA" | "JP" | "AU">("global");
+  const normalizedQuery = query.trim().toLocaleLowerCase("en-US");
+  const geographyMatches = selectFeedCandidates(demoStories, {
+    scope: countryCode === "global" ? { kind: "global" } : { kind: "country", countryCode },
+    pageSize: 20,
+  });
+  const matches = geographyMatches.filter((story) => {
+    const matchesCategory = category === "all" || story.category === category;
+    const searchable = [story.headline, story.summary, story.geographyLabel, story.category, ...story.subjectIds].join(" ").toLocaleLowerCase("en-US");
+    return matchesCategory && (!normalizedQuery || searchable.includes(normalizedQuery));
+  });
+
+  function clearSearch() {
+    setQuery("");
+    setCategory("all");
+    setCountryCode("global");
+  }
+
+  return <div className="page search-page">
+    <header className="search-heading"><span className="pill pill-indigo">LOCAL DEMO SEARCH · NO LIVE INDEX</span><p className="eyebrow">SEARCH FICTIONAL COVERAGE</p><h1>Find context, not just keywords.</h1><p>Search and filter the four validated demo stories. No query is transmitted or stored.</p></header>
+    <form className="search-form" role="search" onSubmit={(event) => event.preventDefault()}>
+      <label className="search-box"><span className="sr-only">Search demo stories</span><span aria-hidden="true">⌕</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search headline, topic, or geography" /></label>
+      <label><span>Category</span><select value={category} onChange={(event) => setCategory(event.target.value)}><option value="all">All categories</option><option>Public policy</option><option>Technology</option><option>Health</option><option>Economy</option></select></label>
+      <label><span>Country</span><select value={countryCode} onChange={(event) => setCountryCode(event.target.value as typeof countryCode)}><option value="global">Worldwide</option><option value="TG">Togo</option><option value="CA">Canada</option><option value="JP">Japan</option><option value="AU">Australia</option></select></label>
+      <button type="button" className="button secondary" onClick={clearSearch}>Clear</button>
+    </form>
+    <div className="search-results-heading" aria-live="polite"><div><p className="eyebrow">RESULTS</p><h2>{matches.length} fictional {matches.length === 1 ? "story" : "stories"}</h2></div><span>Deterministic local filtering</span></div>
+    {matches.length ? <section className="search-results" aria-label="Demo search results">{matches.map((story) => <article key={story.id}><div className={`search-result-art ${story.accent}`} aria-hidden="true"/><div><span className="story-tag">{story.geographyLabel} · {story.category}</span><h3><button onClick={() => onOpenStory(story)}>{story.headline}</button></h3><p>{story.summary}</p><div className="story-meta"><span>{story.sourceCount} fictional sources</span><span>{story.readingMinutes} min</span></div></div></article>)}</section> : <section className="feed-empty" role="status"><h2>No fictional stories match</h2><p>Try another keyword or clear the filters. This result does not describe live-world coverage.</p><button className="button secondary" onClick={clearSearch}>Clear search and filters</button></section>}
+  </div>;
+}
+
+function MediaBriefing({ story, onOpenStory }: { story: DemoStory; onOpenStory: (story: DemoStory) => void }) {
+  const [playing, setPlaying] = useState(false);
+  const [muted, setMuted] = useState(false);
+  const [transcriptOpen, setTranscriptOpen] = useState(false);
+
+  return <div className="page media-page">
+    <header className="media-heading"><span className="pill pill-violet">SIMULATED MEDIA PREVIEW · NO STREAM CONNECTED</span><p className="eyebrow">VERTICAL BRIEFING</p><h1>Context designed for a smaller screen.</h1><p>This rights-safe interface preview demonstrates controls and accessible alternatives without loading or claiming a real video.</p></header>
+    <div className="media-layout">
+      <section className={`vertical-briefing ${playing ? "playing" : ""}`} aria-label="Simulated vertical video briefing">
+        <div className="media-status"><span>GLOBAL · DEMO</span><span>{playing ? "Preview playing" : "Preview paused"}</span></div>
+        <div className="media-city" aria-hidden="true"><i/><i/><i/></div>
+        <div className="media-overlay"><span className="pill">AI-assisted demo</span><h2>{story.headline}</h2><p>Longer heat seasons can affect transit, health, energy, and public spaces at the same time.</p><div className="media-meta"><span>{story.sourceCount} fictional sources</span><span>0:42 / 2:45</span></div></div>
+        <div className="media-controls" aria-label="Simulated media controls"><button onClick={() => setPlaying((value) => !value)} aria-label={playing ? "Pause simulated preview" : "Play simulated preview"}>{playing ? "Ⅱ" : "▶"}</button><div className="media-progress" role="progressbar" aria-label="Simulated playback position" aria-valuemin={0} aria-valuemax={165} aria-valuenow={playing ? 42 : 0}><i style={{ width: playing ? "25%" : "0%" }}/></div><button onClick={() => setMuted((value) => !value)} aria-pressed={muted} aria-label={muted ? "Unmute simulated preview" : "Mute simulated preview"}>{muted ? "Muted" : "Sound"}</button><button onClick={() => setTranscriptOpen((value) => !value)} aria-expanded={transcriptOpen} aria-controls="demo-transcript">CC</button></div>
+      </section>
+      <aside className="media-context"><section><p className="eyebrow">MEDIA AVAILABILITY</p><h2>Interface simulation only</h2><p>No licensed clip, audio track, media provider, autoplay, download, or tracking is connected.</p><span className="pill pill-gold">Fallback active</span></section><section id="demo-transcript" hidden={!transcriptOpen}><p className="eyebrow">DEMO TRANSCRIPT</p><h2>Accessible text alternative</h2><p>Central planning question: how can public services coordinate heat response while protecting equitable access? This transcript is fictional and provided only to demonstrate the accessible media workflow.</p></section><button className="button primary" onClick={() => onOpenStory(story)}>Open related story →</button></aside>
+    </div>
+  </div>;
 }
 
 /* Previous hard-coded tracker retained temporarily for history.

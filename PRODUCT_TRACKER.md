@@ -21,7 +21,7 @@ This file is the delivery source of truth. Update it after evidence exists, not 
 |---|---|
 | Product | NyaVista |
 | Owner | E-DEAL EXPRESS LLC |
-| Current phase | Phase 3 public demo product — F-021 approved |
+| Current phase | Phase 3 public demo product — F-022 approved |
 | Overall status | IN_PROGRESS |
 | Release target | TBD |
 | Release owner | TBD |
@@ -44,7 +44,7 @@ This file is the delivery source of truth. Update it after evidence exists, not 
 | P0 | Audit and planning | NOT_STARTED | Architecture, routes, data, STABLE mapping, risks and backlog approved | — | — | — |
 | P1 | Foundation/design system | DONE | Scaffold/build valid; brand, company, theme and shared states complete | F-010–F-013 and F-015–F-016 accepted; lint, types, tests, build, 24 baselines, and 26 browser cases pass | — | User, 2026-08-01 |
 | P2 | Marketing website | DONE | Global responsive pages, legal shells and SEO verified | F-014 and F-017 complete; 24 routes, safe SEO policy, 40 baselines, 50 browser cases, 10 Node tests, and build pass | Qualified legal review remains required before launch | User, 2026-08-02 |
-| P3 | Public demo product | IN_PROGRESS | Feeds, stories, geography, search and demo media verified | F-020 complete; F-021 approved and in progress | No live news/provider data; all fixtures must remain fictional | User, 2026-08-02 |
+| P3 | Public demo product | IN_PROGRESS | Feeds, stories, geography, search and demo media verified | F-020 and F-021 complete; F-022 approved and in progress | No live news/provider data; all fixtures and media must remain fictional | User, 2026-08-02 |
 | P4 | Auth/personalization | NOT_STARTED | Auth, onboarding, preferences and saves persist securely | — | — | — |
 | P5 | Admin/editorial | NOT_STARTED | RBAC and review/source/media workflows verified | — | — | — |
 | P6 | Firebase persistence | NOT_STARTED | Repositories, rules, indexes, emulator and permission tests pass | — | — | — |
@@ -74,8 +74,8 @@ Create one row per independently testable outcome. Split rows that require diffe
 | F-014 | 2 | Marketing homepage visual implementation | P0 | DONE | Codex | Root STABLE at `6265a47`; full lifecycle, mockup comparison, and review evidence recorded below | Marketing panel hierarchy is reproduced responsively in light/dark themes | 8 marketing screenshots; 38/38 browser cases; semantic/a11y assertions; lint/types/tests/build PASS | HIGH | F-011, F-012 | Marketing | Working tree |
 | F-017 | 2 | Marketing routes, legal shells, and SEO | P0 | DONE | Codex | Root STABLE reviewed at `d1f2405`; complete lifecycle and vinext compatibility evidence below | Required route shells, truthful metadata/canonical policy, and legal-review states are implemented | 24 route registry tests; 10/10 Node tests; 40 baselines; 50 browser cases; build PASS | HIGH | F-010, F-014 | Marketing/trust/SEO | Working tree |
 | F-020 | 3 | Global/country/region feed architecture | P0 | DONE | Codex | `STABLE_FRAMEWORK.md` at repository root reviewed; Phase 2 closure and F-020 continuation approved 2026-08-02; complete lifecycle recorded below | Typed, schema-validated feed scopes support global, country, and region discovery without commercial-market or special-country ranking logic | 4 focused geography/fairness tests and 14/14 full Node tests, lint, strict types, and production build PASS | HIGH | F-010 | Geographic coverage | Working tree |
-| F-021 | 3 | News feed and story visual implementation | P0 | IN_REVIEW | Codex | Root STABLE, approved feed/story mockup panels, current shell, F-020 contracts, Next.js App Router guidance, and React quality review completed | Responsive feed and story-detail demo expose geography, context, source transparency, uncertainty, and accessible interaction in both themes | 17/17 Node tests, lint, strict types, build, 48 baselines, and 62/62 browser cases PASS; user review pending | HIGH | F-012, F-020 | Public UX | Working tree |
-| F-022 | 3 | Mobile feed and video visual implementation | P0 | NOT_STARTED | — | — | Mobile panels guide accessible touch-first responsive flows | Device screenshots/E2E | HIGH | F-012, media data | Public UX | — |
+| F-021 | 3 | News feed and story visual implementation | P0 | DONE | Codex | Root STABLE, approved feed/story mockup panels, current shell, F-020 contracts, Next.js App Router guidance, React quality review, and user acceptance completed | Responsive feed and story-detail demo expose geography, context, source transparency, uncertainty, and accessible interaction in both themes | 17/17 Node tests, lint, strict types, build, 48 baselines, 62/62 browser cases, and user review PASS | HIGH | F-012, F-020 | Public UX | Working tree |
+| F-022 | 3 | Mobile feed and video visual implementation | P0 | IN_REVIEW | Codex | Root STABLE, mobile feed/video panels, F-020/F-021 domain and UI, Next.js client/data/image guidance, React quality review, and complete validation evidence recorded | Search, touch-first feed treatment, and rights-safe demo media provide accessible responsive flows with truthful failure/fallback states | 17/17 Node tests, lint, strict types, build, 64 baselines, and 82/82 browser cases PASS; user review pending | HIGH | F-012, F-020, F-021 | Public UX | Working tree |
 | F-031 | 5 | Editorial dashboard visual implementation | P1 | NOT_STARTED | — | — | Admin panel guides metrics, queues, risks and coverage in both themes | Screenshots/E2E/a11y | HIGH | F-012, RBAC | Admin UX | — |
 | F-030 | 6 | Server-side RBAC and Firebase rules | P0 | NOT_STARTED | — | — | Unauthorized access denied in UI and backend | Rules/integration tests | CRITICAL | Auth/data model | Security | — |
 | F-040 | 7 | Rights-aware ingestion | P0 | NOT_STARTED | — | — | Rights enforced; no paywall bypass/full-text default | Unit/integration logs | CRITICAL | Sources/providers | Content rights | — |
@@ -116,8 +116,8 @@ This is the canonical source for the Project Tracker UI. Sprints group phases fo
 | F-014 | S1 | P2 | Marketing homepage visual implementation | P0 | DONE | 100% | DONE | Codex | Approved and implemented 2026-08-01; 8 responsive light/dark baselines and 38 browser cases pass | HIGH | F-011, F-012 |
 | F-017 | S1 | P2 | Marketing routes, legal shells, and SEO | P0 | DONE | 100% | DONE | Codex | 24 typed routes; review-labeled policy shells; fail-safe robots/canonical/sitemap; 40 baselines and 50 browser cases pass | HIGH | F-010, F-014 |
 | F-020 | S1 | P3 | Global/country/region feed architecture | P0 | DONE | 100% | DONE | Codex | Typed Zod contracts, bounded requests, deterministic matching, malformed-input rejection, and market-priority invariance pass 14/14 Node tests, lint, types, and build | HIGH | F-010 |
-| F-021 | S1 | P3 | News feed and story experience | P0 | IN_REVIEW | 95% | REVIEW | Codex | Typed fictional stories, F-020 geography controls, feed/detail interactions, source/uncertainty states, 48 baselines, and 62 browser cases pass; awaiting user acceptance | HIGH | F-012, F-020 |
-| F-022 | S1 | P3 | Search, mobile feed, and demo media | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | Search/filter, device, E2E, and media-fallback evidence required | HIGH | F-012, F-020 |
+| F-021 | S1 | P3 | News feed and story experience | P0 | DONE | 100% | DONE | Codex | Typed fictional stories, F-020 geography controls, feed/detail interactions, source/uncertainty states, 48 baselines, 62 browser cases, and user review pass | HIGH | F-012, F-020 |
+| F-022 | S1 | P3 | Search, mobile feed, and demo media | P0 | IN_REVIEW | 95% | REVIEW | Codex | Local search/empty/clear states, mobile dock, simulated media controls/transcript/fallback, 64 baselines, and 82 browser cases pass; awaiting user acceptance | HIGH | F-012, F-020, F-021 |
 | F-023 | S2 | P4 | Authentication and onboarding | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | Auth, denial, verification, recovery, and security tests required | CRITICAL | F-010, F-030 |
 | F-024 | S2 | P4 | Preferences, follows, bookmarks, and history | P1 | NOT_STARTED | 0% | SCOPE | Unassigned | Persistence, privacy, locale, and E2E tests required | HIGH | F-023, F-034 |
 | F-031 | S2 | P5 | Editorial dashboard visual implementation | P1 | NOT_STARTED | 0% | SCOPE | Unassigned | Light/dark screenshots, E2E, and accessibility required | HIGH | F-012, F-030 |
@@ -233,7 +233,7 @@ This is the canonical source for the Project Tracker UI. Sprints group phases fo
 ### F-021 News feed and story experience
 
 - Phase / epic: Phase 3 public demo product
-- Status / owner: IN_REVIEW / Codex
+- Status / owner: DONE / Codex
 - Approved outcome: turn the current briefing preview into a coherent, responsive public demo feed and story-detail experience aligned with the approved desktop feed/detail panels.
 - In scope: typed fictional story fixtures validated at the domain boundary; global and country feed controls consuming F-020; feature and compact story cards; trending/context rail; story detail with why-it-matters, key points, source register, timeline, uncertainty/disclosure states; working back/open interactions; both themes and mobile/tablet/desktop/large-desktop verification.
 - Out of scope: live news/providers, ingestion, real publisher links or media, search, video/audio playback, personalization, bookmarks/sharing persistence, authentication, ranking/recommendations, comments, production routes/SEO, and F-022.
@@ -251,12 +251,40 @@ This is the canonical source for the Project Tracker UI. Sprints group phases fo
 - Validate: 3/3 story tests and 17/17 complete Node tests PASS; ESLint PASS; strict TypeScript PASS; vinext production build PASS; 48 committed light/dark baselines and 62/62 Playwright visual/interaction cases PASS across 390×844, 768×1024, 1440×1000, and 1920×1080. Browser cases cover Togo filtering, story open/back, disclosure/source states, console/resource/overlay failure guards, and horizontal overflow.
 - Evolve/visual comparison: the desktop feed preserves the approved feature-story/compact-list/context-rail hierarchy; the story view preserves large editorial headline, section navigation, context/key-point panels, source rail, and restrained semantic color. Mobile stacks detail panels and keeps section navigation horizontally available. CSS-generated abstract art intentionally replaces publisher imagery; dedicated mobile feed/video behavior remains F-022.
 - React/Next.js review: no async client component, data waterfall, non-serializable boundary, external fetch, inline component, unnecessary effect, or heavy dependency was introduced. Derived feed selection remains synchronous over four demo records and is not prematurely memoized.
-- Acceptance status: automated and manual implementation evidence is complete; user visual/interaction acceptance remains required before `DONE`.
+- Acceptance status: automated and manual implementation evidence is complete; user completed the guided feed/filter/story/back/theme/responsive review and accepted F-021 on 2026-08-02.
 - Files changed: `lib/stories.ts`, `lib/geography.ts`, `app/page.tsx`, `app/globals.css`, `tests/stories.test.ts`, `tests/rendered-html.test.mjs`, `tests/visual-regression.spec.ts`, briefing/story baselines, baseline README, `package.json`, `PRODUCT_TRACKER.md`, and `CLAUDE_HANDOFF.md`.
 - Security/editorial/legal: strict story/source validation; no external links, publisher names/assets, live claims, credentials, personal data, ranking, provider calls, or publishing behavior. Demo and uncertainty disclosures are prominent.
 - Accessibility/i18n/geographic fairness: semantic headings/articles/asides/navigation, native pressed-state filters, descriptive open/back controls, visible focus inheritance, touch-sized controls, reduced-motion inheritance, and responsive no-overflow evidence. English-only labels remain a documented limitation; Togo and priority markets use the identical F-020 selection path.
 - Migration/rollback: no migration or external state. Revert the focused module, generic selector extension, UI/CSS/tests/baselines, package script, and evidence records.
-- Next approval required: user reviews F-021 feed and story detail in both themes and responsive views. Do not begin F-022 until approved.
+- Next approval required: F-022 search, mobile feed, and demo media remains separately gated. Do not begin it without approval.
+
+### F-022 Search, mobile feed, and demo media
+
+- Phase / epic: Phase 3 public demo product
+- Status / owner: IN_REVIEW / Codex
+- Approved outcome: complete the Phase 3 public-demo interaction layer with searchable fictional stories, touch-first mobile feed treatment, and a truthful rights-safe vertical media briefing.
+- In scope: client-side keyword/category/country filtering over validated F-021 fixtures; query clearing and honest empty results; working search navigation; mobile-first feed navigation/treatment; one CSS-generated vertical demo briefing with play/pause state, progress, captions/transcript, mute state, disclosure, fallback/unsupported messaging, and open-story action; light/dark and four-breakpoint evidence.
+- Out of scope: live search index/API, remote media, uploads, transcoding, streaming, autoplay, downloads, personalization, saved state, analytics, accounts, recommendations, publisher imagery, production routes/SEO, and later rights-cleared media pipeline F-070.
+- Mockup panels: “Vertical Video (Mobile)” and “Personalized Feed (Mobile)” in light/dark, plus shared media controls. “Personalized” is adapted to a non-personal local demo because no account/preferences exist.
+- Acceptance criteria: search opens from visible navigation, filters validated demo stories deterministically, clears, and shows honest empty state; mobile feed remains touch-friendly with no overflow; media preview controls expose accessible play/pause, mute, progress, captions/transcript, disclosure, fallback, and story-opening behavior without claiming playback/provider connectivity; both themes and required breakpoints pass visual/interaction checks.
+- Risks / mitigations: fake functionality — label preview simulation and unsupported/live states; media rights — CSS art and no assets; inaccessible custom controls — native buttons, labels, state attributes, transcript; over-filtering or geography bias — search only fixture fields and reuse validated country codes; regression — extend existing matrix and preserve prior views.
+- Verification plan: focused search/media source assertions; Playwright search, empty, media-control, open-story, theme, overflow, resource/console/overlay checks; new search/media screenshots across both themes and four breakpoints; lint, strict TypeScript, complete Node tests, build, and manual mockup comparison.
+- Migration / rollback: no migration, provider, credential, storage, or external state. Revert the focused UI/CSS/tests/baselines and delivery records.
+
+#### STABLE record
+
+- Scope/Think: root framework and required sources previously active and rechecked for F-022; F-020/F-021 complete; current branch/UI/tests inspected; Next.js skill and RSC/data/image guidance read; approved mobile feed/video and shared-control panels inspected; “Next” explicitly approved F-022 on 2026-08-02.
+- Assess Risk: truthfulness, media rights, accessibility, mobile overflow, touch targets, search determinism, empty/fallback states, and regression assessed before coding.
+- Build: added a client-local Search view with keyword, category, and ISO-country filters over validated F-021 records; clear and honest empty-result states; working topbar and mobile navigation. Added a rights-safe vertical media simulation with CSS art, explicit no-stream/fallback disclosure, play/pause, mute, progress, captions/transcript, and related-story action. Added a mobile-only Feed/Search/Media dock.
+- Validate: 17/17 Node tests PASS; ESLint PASS; strict TypeScript PASS; vinext production build PASS; 64 committed baselines and 82/82 Playwright visual/interaction cases PASS across light/dark at 390×844, 768×1024, 1440×1000, and 1920×1080. Tests cover search match/empty/clear, media navigation, play/pause, mute, captions, transcript, related-story opening, console/resource/overlay guards, and horizontal overflow.
+- Evolve/visual comparison: search adapts the approved personalized-feed density without implying an account or personalization; the mobile media view follows the approved full-height vertical composition and shared media-control character. Manual review caught and corrected the fixed dock obscuring lower media controls; the final mobile composition keeps disclosure, headline, progress, controls, and dock visible. CSS art intentionally replaces video/publisher imagery.
+- React/Next.js review: no async client component, external fetch, route handler, server action, remote image, `<img>`, `<video>`, autoplay, effect, listener, data waterfall, or new heavy dependency. Derived filtering over four validated fixtures remains simple and intentionally unmemoized.
+- Acceptance status: automated and manual implementation evidence is complete; user visual/interaction acceptance remains required before `DONE`.
+- Files changed: `app/page.tsx`, `app/globals.css`, `tests/rendered-html.test.mjs`, `tests/visual-regression.spec.ts`, search/media and affected tracker/feed baselines, baseline README, `PRODUCT_TRACKER.md`, and `CLAUDE_HANDOFF.md`.
+- Security/editorial/legal: no query leaves the browser or persists; no real publisher/media/source asset, provider, credential, personal data, analytics, stream, download, or live claim. Fallback and AI-assisted/no-stream status are visible.
+- Accessibility/i18n/geographic fairness: labeled search input/selects, native controls, live result count, status empty state, pressed/expanded media states, labeled progress, transcript, touch targets, keyboard focus inheritance, reduced motion, and no-overflow evidence. Search treats Togo and priority markets identically; English-only copy remains a limitation.
+- Migration/rollback: no migration or external state. Revert the focused UI/CSS/tests/baselines and evidence records.
+- Next approval required: user reviews F-022 search, mobile dock, and media simulation. Do not close Phase 3 or advance to Phase 4 without approval.
 
 Copy this section for each feature.
 
