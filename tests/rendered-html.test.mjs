@@ -53,6 +53,9 @@ test("centralizes product identity and preserves living delivery records", async
   assert.match(page, /tracker\.sprints\.map/);
   assert.match(page, /trackerCheckpoints\.map/);
   assert.match(page, /data-theme=/);
+  assert.match(page, /function HomeIcon/);
+  assert.match(page, /<svg viewBox="0 0 24 24" width="16" height="16"/);
+  assert.doesNotMatch(page, /âŒ‚/);
   assert.match(css, /prefers-reduced-motion/);
   assert.match(css, /:focus-visible/);
 });

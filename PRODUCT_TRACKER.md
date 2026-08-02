@@ -340,6 +340,7 @@ Copy this section for each feature.
 - Requested outcome: establish consistent reusable navigation, card, badge, button, metric, panel, progress, and responsive interaction patterns.
 - Scope/evidence: current surfaces reuse shared CSS/component patterns; native controls, selected/pressed states, focus visibility, truthful demo states, touch sizing, mobile containment, and light/dark behavior verified.
 - Review finding/fix: user reported that mobile/tablet sidebar access was not visible. The ambiguous `N` opener was replaced by an explicit `☰ Menu` control with `aria-controls`/`aria-expanded`, an off-canvas drawer, close control, and dismissible backdrop.
+- Encoding correction, 2026-08-02: user evidence showed the NyaVista Home item rendering the mojibake literal `âŒ‚`. Replaced only that glyph with an inline, decorative SVG house using `currentColor`; preserved the label, native button, spacing, theme behavior, and navigation action. Focused source and drawer assertions reject the malformed literal and require one SVG icon.
 - Acceptance: user approved 2026-08-01 after the responsive issue; focused drawer tests pass at 390×844 and 768×1024; the full 26-case browser suite, lint, types, Node tests, and build pass.
 - Mockup/deviations: compact mobile header follows the mockup’s mobile navigation character while exposing a clearer labeled control for accessibility and discoverability.
 - Security/rights/editorial: no privileged behavior or live provider action introduced.

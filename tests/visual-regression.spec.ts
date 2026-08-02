@@ -37,6 +37,11 @@ for (const surface of surfaces) {
         if (surface.id !== "briefing" && await mobileNavigation.isVisible()) await mobileNavigation.click();
         if (surface.id === "tracker") await page.getByRole("button", { name: /Project tracker/ }).click();
         if (surface.id === "editorial") await page.getByRole("button", { name: /Editorial overview/ }).click();
+        if (surface.id !== "marketing") {
+          const homeItem = page.getByRole("button", { name: "NyaVista home" });
+          await expect(homeItem.locator("svg")).toHaveCount(1);
+          await expect(homeItem).not.toContainText("âŒ‚");
+        }
         if (theme === "dark") await page.getByRole("button", { name: "Switch to dark theme" }).click();
         await expect(page.locator(".app")).toHaveAttribute("data-theme", theme);
         await expect(page.locator("main")).toContainText(surface.marker);
@@ -112,6 +117,9 @@ for (const viewport of viewports.filter(({ id }) => id === "mobile" || id === "t
     await menu.click();
     await expect(menu).toHaveAttribute("aria-expanded", "true");
     await expect(sidebar).toBeInViewport();
+    const homeItem = sidebar.getByRole("button", { name: "NyaVista home" });
+    await expect(homeItem.locator("svg")).toHaveCount(1);
+    await expect(homeItem).not.toContainText("âŒ‚");
     await page.locator(".sidebar-backdrop").click({ position: { x: viewport.width - 20, y: 20 } });
     await expect(menu).toHaveAttribute("aria-expanded", "false");
     await expect(sidebar).not.toBeInViewport();

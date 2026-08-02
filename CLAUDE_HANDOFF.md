@@ -29,6 +29,15 @@ Required fields for every implementation entry:
 
 ## Implementation ledger
 
+### 2026-08-02 — Codex — F-012 navigation icon correction
+
+- Outcome: corrected the user-reported mojibake before “NyaVista home” with a stable inline SVG house icon.
+- Scope: one sidebar icon component, its 16px SVG sizing rule, focused source/browser assertions, affected baselines, and delivery records only.
+- STABLE: root framework and UI constraints already active; clean feature-branch baseline `d99dc76` inspected; screenshot confirmed literal `âŒ‚` source corruption; smallest architecture-aligned correction selected.
+- Accessibility/visual: SVG is decorative through the existing `aria-hidden` icon wrapper; accessible name remains “NyaVista home”; `currentColor` preserves hover/active/theme contrast and existing alignment.
+- Risk/rollback: no data, route, provider, permission, or migration impact. Revert the focused icon/CSS/test/evidence changes to roll back.
+- Next safe action: user verifies the corrected sidebar icon; Phase 2 closure remains the active gate.
+
 ### 2026-08-01 — Codex — F-017
 
 - Outcome: completed 24 typed marketing/trust route shells, safe metadata/canonical policy, and fail-safe robots/sitemap behavior.

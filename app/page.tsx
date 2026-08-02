@@ -19,6 +19,10 @@ function Icon({ children }: { children: React.ReactNode }) {
   return <span className="icon" aria-hidden="true">{children}</span>;
 }
 
+function HomeIcon() {
+  return <span className="icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M3.75 10.5 12 3.75l8.25 6.75v9a.75.75 0 0 1-.75.75h-5.25v-6h-4.5v6H4.5a.75.75 0 0 1-.75-.75v-9Z" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" /></svg></span>;
+}
+
 export default function Home() {
   const [view, setView] = useState<View>("marketing");
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -32,7 +36,7 @@ export default function Home() {
         <div className="brand"><span className="brand-mark">N</span><span>{product.name}</span><button className="nav-close" onClick={() => setNavOpen(false)} aria-label="Close navigation">×</button></div>
         <nav>
           <p className="nav-label">Workspace</p>
-          <button className="nav-item" onClick={() => { setView("marketing"); setNavOpen(false); }}><Icon>âŒ‚</Icon>NyaVista home</button>
+          <button className="nav-item" onClick={() => { setView("marketing"); setNavOpen(false); }}><HomeIcon />NyaVista home</button>
           <button className={view === "briefing" ? "nav-item active" : "nav-item"} onClick={() => { setView("briefing"); setNavOpen(false); }}><Icon>⌂</Icon>News intelligence</button>
           <button className={view === "tracker" ? "nav-item active" : "nav-item"} onClick={() => { setView("tracker"); setNavOpen(false); }}><Icon>◫</Icon>Project tracker<span className="nav-count">{tracker.features.length}</span></button>
           <button className={view === "editorial" ? "nav-item active" : "nav-item"} onClick={() => { setView("editorial"); setNavOpen(false); }}><Icon>✓</Icon>Editorial overview</button>
