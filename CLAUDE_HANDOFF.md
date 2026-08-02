@@ -20,18 +20,18 @@ Required fields for every implementation entry:
 | Field | Current value |
 |---|---|
 | Approved work | Phase 3 — F-020 global/country/region feed architecture |
-| Active tracker IDs | F-020 and F-021 complete; F-022 implemented and IN_REVIEW |
+| Active tracker IDs | F-020–F-022 and Phase 3 complete; Phase 4 unapproved |
 | Active agent | Codex |
 | STABLE reference | `STABLE_FRAMEWORK.md` at commit `f8ab99e` |
 | UI reference | `docs/design/nyavista-ui-mockup-light-dark.png` |
 | State | Demo-only local implementation; no live providers or production data |
-| Next gate | User reviews F-022 and decides Phase 3 closure; Phase 4 remains unapproved |
+| Next gate | User explicitly approves one Phase 4 item; authentication dependencies must be resolved before implementation |
 
 ## Implementation ledger
 
 ### 2026-08-02 — Codex — F-022
 
-- Outcome: implemented search, touch-first mobile navigation, and a truthful rights-safe demo media briefing; item is `IN_REVIEW` pending user acceptance.
+- Outcome: implemented and received user acceptance for search, touch-first mobile navigation, and a truthful rights-safe demo media briefing; F-022 and Phase 3 are `DONE`.
 - Scope: local keyword/category/country filtering, clear/empty states, topbar/mobile navigation, CSS-generated vertical media, simulated play/pause/mute/progress/captions/transcript, fallback/no-stream disclosure, and related-story action. Excluded live search/media, uploads, streaming, persistence, personalization, analytics, accounts, recommendations, production routes, and F-070.
 - STABLE/skills/mockup: root framework and required sources applied; F-020/F-021 dependencies complete; “Vertical Video (Mobile),” “Personalized Feed (Mobile),” and shared media-control panels reviewed in both themes; Next.js and React guidance confirmed the local client-state approach without fetch/API/image/player dependencies.
 - Verification: 17/17 Node tests, ESLint, strict TypeScript, and production build PASS; 64 baselines and 82/82 Playwright cases PASS at four breakpoints in both themes with search/empty/clear, media controls/transcript/open-story, resource/console/overlay, and overflow checks.
@@ -39,7 +39,7 @@ Required fields for every implementation entry:
 - Truth/fairness/rights: queries remain in memory only; no `<video>`, remote/publisher asset, autoplay, stream, provider, storage, analytics, or live claim. Togo and priority-market filters use equivalent ISO-based behavior.
 - Files: root client UI/CSS, focused rendered/browser tests, 16 new search/media baselines plus affected synchronized baselines, baseline README, tracker, and handoff.
 - Limitations/rollback: simulation only, English-only, four fictional stories, no real search index/media/personalization. Revert focused UI/test/baseline/docs changes; no migration.
-- Next safe action: user reviews F-022 and Phase 3 closure. Do not begin Phase 4 without explicit approval.
+- User acceptance/next safe action: user completed the guided review on 2026-08-02. Phase 3 is closed; do not begin Phase 4 without explicit approval and dependency review.
 
 ### 2026-08-02 — Codex — F-021
 
