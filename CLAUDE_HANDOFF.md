@@ -19,15 +19,26 @@ Required fields for every implementation entry:
 
 | Field | Current value |
 |---|---|
-| Approved work | Phase 2 — F-017 marketing routes, legal shells, and SEO |
-| Active tracker IDs | F-017 and F-014 complete; Phase 2 awaiting user review |
+| Approved work | Phase 3 — F-020 global/country/region feed architecture |
+| Active tracker IDs | F-020 complete; F-021 awaiting approval |
 | Active agent | Codex |
 | STABLE reference | `STABLE_FRAMEWORK.md` at commit `f8ab99e` |
 | UI reference | `docs/design/nyavista-ui-mockup-light-dark.png` |
 | State | Demo-only local implementation; no live providers or production data |
-| Next gate | User reviews F-017 and decides Phase 2 closure; Phase 3 remains unapproved |
+| Next gate | User reviews F-020; F-021 remains separately gated |
 
 ## Implementation ledger
+
+### 2026-08-02 — Codex — F-020
+
+- Outcome: closed the approved Phase 2 review and completed the provider-neutral global/country/region feed architecture required before public feed UI work.
+- Scope: Zod-validated ISO country codes, stable region IDs, discriminated feed scopes, bounded request/candidate contracts, deterministic geography matching, order-preserving selection, fictional fixtures, and geographic-fairness evidence. Excluded UI/routes, live providers, persistence, ingestion, ranking, personalization, and F-021/F-022.
+- STABLE: root framework and required repository sources reviewed at feature-branch baseline `d99dc76`; scope, acceptance, risks, tests, and rollback recorded before coding; implementation stayed within the domain layer.
+- Verification: 4/4 focused geography/fairness tests and 14/14 complete Node tests PASS; ESLint PASS; strict TypeScript PASS; vinext production build PASS. No visual baseline changed because this item has no UI output.
+- Fairness/editorial: commercial market priority is not accepted by the selection API; Togo, Canada, Japan, and global fixtures use the same contract and deterministic behavior; subjects remain separate from geography; no ranking or editorial-importance claim was introduced.
+- Security/live state: malformed identifiers, duplicates, unknown fields, oversized pages, and invalid candidates fail validation; no secrets, personal data, licensed content, network calls, live reporting, provider, or external state.
+- Files: `lib/geography.ts`, `tests/geography.test.ts`, `package.json`, `pnpm-lock.yaml`, `PRODUCT_TRACKER.md`, and `CLAUDE_HANDOFF.md`.
+- Rollback/next action: revert the focused module, tests, dependency/lock, and evidence records; no migration. User reviews F-020, then explicitly approves F-021 before public feed/story UI work.
 
 ### 2026-08-02 — Codex — F-012 navigation icon correction
 

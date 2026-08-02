@@ -9,7 +9,7 @@
     "dev": "vinext dev",
     "build": "vinext build",
     "start": "vinext start",
-    "test": "npm run build && node --test tests/rendered-html.test.mjs tests/product-config.test.ts tests/marketing.test.ts",
+    "test": "npm run build && node --test tests/rendered-html.test.mjs tests/product-config.test.ts tests/marketing.test.ts tests/geography.test.ts",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "visual:baseline": "playwright test tests/visual-regression.spec.ts --update-snapshots",
     "visual:test": "playwright test tests/visual-regression.spec.ts"
@@ -17,7 +17,8 @@
   "dependencies": {
     "next": "16.2.6",
     "react": "19.2.6",
-    "react-dom": "19.2.6"
+    "react-dom": "19.2.6",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.37.1",

@@ -21,11 +21,11 @@ This file is the delivery source of truth. Update it after evidence exists, not 
 |---|---|
 | Product | NyaVista |
 | Owner | E-DEAL EXPRESS LLC |
-| Current phase | Phase 2 marketing website — F-014 approved |
+| Current phase | Phase 3 public demo product — F-020 approved |
 | Overall status | IN_PROGRESS |
 | Release target | TBD |
 | Release owner | TBD |
-| Last updated | 2026-08-01 |
+| Last updated | 2026-08-02 |
 | Updated by | Codex |
 | STABLE framework path/version | `STABLE_FRAMEWORK.md` at repository root, reviewed at baseline commit `6265a47` |
 | Approved visual reference | `docs/design/nyavista-ui-mockup-light-dark.png` |
@@ -43,8 +43,8 @@ This file is the delivery source of truth. Update it after evidence exists, not 
 |---|---|---|---|---|---|---|
 | P0 | Audit and planning | NOT_STARTED | Architecture, routes, data, STABLE mapping, risks and backlog approved | — | — | — |
 | P1 | Foundation/design system | DONE | Scaffold/build valid; brand, company, theme and shared states complete | F-010–F-013 and F-015–F-016 accepted; lint, types, tests, build, 24 baselines, and 26 browser cases pass | — | User, 2026-08-01 |
-| P2 | Marketing website | IN_REVIEW | Global responsive pages, legal shells and SEO verified | F-014 and F-017 complete; 24 routes, safe SEO policy, 40 baselines, 50 browser cases, 10 Node tests, and build pass | Qualified legal review remains required before launch | User approval pending |
-| P3 | Public demo product | NOT_STARTED | Feeds, stories, geography, search and demo media verified | — | — | — |
+| P2 | Marketing website | DONE | Global responsive pages, legal shells and SEO verified | F-014 and F-017 complete; 24 routes, safe SEO policy, 40 baselines, 50 browser cases, 10 Node tests, and build pass | Qualified legal review remains required before launch | User, 2026-08-02 |
+| P3 | Public demo product | IN_PROGRESS | Feeds, stories, geography, search and demo media verified | F-020 approved as the first dependency-ordered item | No live news/provider data; all fixtures must remain fictional | User, 2026-08-02 |
 | P4 | Auth/personalization | NOT_STARTED | Auth, onboarding, preferences and saves persist securely | — | — | — |
 | P5 | Admin/editorial | NOT_STARTED | RBAC and review/source/media workflows verified | — | — | — |
 | P6 | Firebase persistence | NOT_STARTED | Repositories, rules, indexes, emulator and permission tests pass | — | — | — |
@@ -73,7 +73,7 @@ Create one row per independently testable outcome. Split rows that require diffe
 | F-013 | 1 | Establish visual-regression workflow | P1 | DONE | Codex | Root STABLE and approved mockup reviewed; Playwright workflow exercises navigation, themes, error states, overflow, and screenshots | Stable screenshots cover all current surfaces, both themes, and four agreed breakpoints | 24/24 visual tests PASS; 24 committed PNG baselines; mobile tracker overflow found and corrected | HIGH | F-011, F-012 | `playwright.config.ts`, `tests/visual-regression.spec.ts`, baseline README | Working tree |
 | F-014 | 2 | Marketing homepage visual implementation | P0 | DONE | Codex | Root STABLE at `6265a47`; full lifecycle, mockup comparison, and review evidence recorded below | Marketing panel hierarchy is reproduced responsively in light/dark themes | 8 marketing screenshots; 38/38 browser cases; semantic/a11y assertions; lint/types/tests/build PASS | HIGH | F-011, F-012 | Marketing | Working tree |
 | F-017 | 2 | Marketing routes, legal shells, and SEO | P0 | DONE | Codex | Root STABLE reviewed at `d1f2405`; complete lifecycle and vinext compatibility evidence below | Required route shells, truthful metadata/canonical policy, and legal-review states are implemented | 24 route registry tests; 10/10 Node tests; 40 baselines; 50 browser cases; build PASS | HIGH | F-010, F-014 | Marketing/trust/SEO | Working tree |
-| F-020 | 3 | Global/country/region feed architecture | P0 | NOT_STARTED | — | — | Configurable geography; no discriminatory hardcoding | Unit/E2E/fairness checks | HIGH | F-010 | Geographic coverage | — |
+| F-020 | 3 | Global/country/region feed architecture | P0 | DONE | Codex | `STABLE_FRAMEWORK.md` at repository root reviewed; Phase 2 closure and F-020 continuation approved 2026-08-02; complete lifecycle recorded below | Typed, schema-validated feed scopes support global, country, and region discovery without commercial-market or special-country ranking logic | 4 focused geography/fairness tests and 14/14 full Node tests, lint, strict types, and production build PASS | HIGH | F-010 | Geographic coverage | Working tree |
 | F-021 | 3 | News feed and story visual implementation | P0 | NOT_STARTED | — | — | Feed/story panels guide responsive, accessible light/dark screens | Screenshots/E2E/a11y | HIGH | F-012, F-020 | Public UX | — |
 | F-022 | 3 | Mobile feed and video visual implementation | P0 | NOT_STARTED | — | — | Mobile panels guide accessible touch-first responsive flows | Device screenshots/E2E | HIGH | F-012, media data | Public UX | — |
 | F-031 | 5 | Editorial dashboard visual implementation | P1 | NOT_STARTED | — | — | Admin panel guides metrics, queues, risks and coverage in both themes | Screenshots/E2E/a11y | HIGH | F-012, RBAC | Admin UX | — |
@@ -115,7 +115,7 @@ This is the canonical source for the Project Tracker UI. Sprints group phases fo
 | F-016 | S1 | P1 | Markdown-synchronized delivery hierarchy | P0 | DONE | 100% | DONE | Codex | User approved; parser, hierarchy UI, build gates, 24 baselines, and responsive interaction evidence complete | HIGH | F-001, F-015 |
 | F-014 | S1 | P2 | Marketing homepage visual implementation | P0 | DONE | 100% | DONE | Codex | Approved and implemented 2026-08-01; 8 responsive light/dark baselines and 38 browser cases pass | HIGH | F-011, F-012 |
 | F-017 | S1 | P2 | Marketing routes, legal shells, and SEO | P0 | DONE | 100% | DONE | Codex | 24 typed routes; review-labeled policy shells; fail-safe robots/canonical/sitemap; 40 baselines and 50 browser cases pass | HIGH | F-010, F-014 |
-| F-020 | S1 | P3 | Global/country/region feed architecture | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | Configurable geography, unit, E2E, and fairness checks required | HIGH | F-010 |
+| F-020 | S1 | P3 | Global/country/region feed architecture | P0 | DONE | 100% | DONE | Codex | Typed Zod contracts, bounded requests, deterministic matching, malformed-input rejection, and market-priority invariance pass 14/14 Node tests, lint, types, and build | HIGH | F-010 |
 | F-021 | S1 | P3 | News feed and story experience | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | Responsive feed/story screenshots, E2E, and accessibility required | HIGH | F-012, F-020 |
 | F-022 | S1 | P3 | Search, mobile feed, and demo media | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | Search/filter, device, E2E, and media-fallback evidence required | HIGH | F-012, F-020 |
 | F-023 | S2 | P4 | Authentication and onboarding | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | Auth, denial, verification, recovery, and security tests required | CRITICAL | F-010, F-030 |
@@ -202,6 +202,33 @@ This is the canonical source for the Project Tracker UI. Sprints group phases fo
 - Known limitations: qualified legal/editorial/privacy/accessibility review, verified public contacts, localized routes/`hreflang`, production origin, indexing approval, forms, analytics, and full Phase 12 trust workflows remain future gated work.
 - Rollback: revert route/config/shell/SEO/test/docs files and eight trust baselines; no migration or external state.
 - Acceptance result: required route shells and safe SEO infrastructure are implemented and verified; F-017 is complete.
+
+### F-020 Global/country/region feed architecture
+
+- Phase / epic: Phase 3 public demo product
+- Status / owner: DONE / Codex
+- Approved outcome: establish the provider-neutral geography and feed-selection domain required before building the public feed and story UI.
+- In scope: global, country, and region feed scopes; ISO country identifiers; stable region identifiers; schema validation at trust boundaries; deterministic scope matching; explicit separation of commercial market priority from editorial eligibility; fictional test fixtures; focused documentation.
+- Out of scope: live providers, ingestion, ranking/recommendation scoring, persistence, Firebase, user personalization, routes or new UI, story/source domain entities, automatic geography detection, translation, and F-021/F-022 work.
+- Dependencies: F-010 typed product configuration; written geography-neutrality and ISO requirements.
+- Acceptance criteria: valid global/country/region scopes parse consistently; malformed and mismatched inputs fail safely; country and region matching is deterministic; subject taxonomy remains separate; commercial priority cannot admit, reject, boost, or suppress feed candidates; Togo and other non-priority countries use the same model and behavior as priority markets.
+- Risks / mitigations: geographic bias or hidden priority leakage — make the selection contract geography-only and prove invariance in tests; premature data modeling — keep this slice provider-neutral and free of persistence; unbounded feeds — expose a validated bounded page-size contract for later repositories.
+- Verification plan: lint, strict TypeScript, focused Node unit tests including validation failures and market-priority invariance, existing Node regression suite, and production build. No visual comparison is applicable because this item changes no UI.
+- Migration / rollback: no data migration or external state. Revert the focused domain module, tests, dependency/lock changes if required, and this evidence record.
+
+#### STABLE record
+
+- Scope/Think: root `STABLE_FRAMEWORK.md`, constraints, product specification, tracker, README, existing product configuration, and current tests inspected; Phase 2 closure and F-020 continuation approved 2026-08-02.
+- Assess Risk: geography fairness, taxonomy coupling, malformed identifiers, commercial-priority leakage, pagination bounds, future provider coupling, and regression risk identified before coding.
+- Build: added a provider-neutral geography domain in `lib/geography.ts` with Zod schemas for ISO country codes, stable region IDs, discriminated global/country/region scopes, bounded feed requests, validated candidates, deterministic scope matching, and order-preserving bounded selection. Added fictional tests in `tests/geography.test.ts`; no UI, route, persistence, or provider was introduced.
+- Validate: 4/4 focused geography/fairness tests and 14/14 complete Node tests PASS; ESLint PASS; strict TypeScript PASS; vinext production build PASS on 2026-08-02. Visual comparison is not applicable because no UI changed; the existing 50-case visual suite was unaffected and not regenerated.
+- Evolve: provider and repository layers can consume the validated `FeedRequest` contract later; ranking remains deliberately absent until a separately approved, explainable policy exists. Subject IDs remain an independent candidate dimension and do not affect geography matching.
+- Acceptance result: all F-020 criteria satisfied. Togo (`TG`), Canada (`CA`), Japan (`JP`), and a global fixture use the same candidate contract; tests prove commercial-market configuration is not an input to selection. F-020 is complete.
+- Files changed: `lib/geography.ts`, `tests/geography.test.ts`, `package.json`, `pnpm-lock.yaml`, `PRODUCT_TRACKER.md`, and `CLAUDE_HANDOFF.md`.
+- Security/editorial/legal: strict validation rejects malformed or excessive boundary data; no credentials, personal data, publisher content, rights decisions, live reporting, ranking claims, or external calls.
+- Accessibility/i18n/geographic fairness: no UI or screen-reader surface changed; ISO country codes and geography-neutral region slugs are locale-independent identifiers; non-priority countries receive identical matching behavior; translations and localized names remain out of scope.
+- Migration/rollback: no migration or external state. Revert the focused module, tests, Zod dependency/lock update, and evidence records.
+- Next approval required: review F-020. F-021 is the next dependency-ordered Phase 3 item and remains separately gated.
 
 Copy this section for each feature.
 
