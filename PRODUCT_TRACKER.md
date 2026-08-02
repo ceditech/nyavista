@@ -29,10 +29,10 @@ This file is the delivery source of truth. Update it after evidence exists, not 
 | Updated by | Codex |
 | STABLE framework path/version | `STABLE_FRAMEWORK.md` at repository root, reviewed at baseline commit `6265a47` |
 | Approved visual reference | `docs/design/nyavista-ui-mockup-light-dark.png` |
-| Visual baseline status | PASS — 32 Playwright baselines across 4 surfaces, 2 themes, and 4 breakpoints |
+| Visual baseline status | PASS — 40 Playwright baselines across 5 surfaces, 2 themes, and 4 breakpoints |
 | Highest open risk | First pass is demo-only; persistence, authentication, ingestion, AI, and publishing are not live |
 | Build | PASS — `vinext build` (2026-08-01) |
-| Tests | PASS — 6/6 Node tests and 38/38 Playwright visual/interaction tests (2026-08-01) |
+| Tests | PASS — 10/10 Node tests and 50/50 Playwright visual/interaction tests (2026-08-01) |
 | Security review | NOT_STARTED |
 | Accessibility review | IN_REVIEW — semantic DOM, keyboard focus, responsive navigation, reduced motion |
 | Legal/editorial review | NOT_STARTED |
@@ -43,7 +43,7 @@ This file is the delivery source of truth. Update it after evidence exists, not 
 |---|---|---|---|---|---|---|
 | P0 | Audit and planning | NOT_STARTED | Architecture, routes, data, STABLE mapping, risks and backlog approved | — | — | — |
 | P1 | Foundation/design system | DONE | Scaffold/build valid; brand, company, theme and shared states complete | F-010–F-013 and F-015–F-016 accepted; lint, types, tests, build, 24 baselines, and 26 browser cases pass | — | User, 2026-08-01 |
-| P2 | Marketing website | IN_PROGRESS | Global responsive pages, legal shells and SEO verified | F-014 explicitly approved; visual implementation in progress | F-017 remains required for route/legal/SEO completion | User, 2026-08-01 |
+| P2 | Marketing website | IN_REVIEW | Global responsive pages, legal shells and SEO verified | F-014 and F-017 complete; 24 routes, safe SEO policy, 40 baselines, 50 browser cases, 10 Node tests, and build pass | Qualified legal review remains required before launch | User approval pending |
 | P3 | Public demo product | NOT_STARTED | Feeds, stories, geography, search and demo media verified | — | — | — |
 | P4 | Auth/personalization | NOT_STARTED | Auth, onboarding, preferences and saves persist securely | — | — | — |
 | P5 | Admin/editorial | NOT_STARTED | RBAC and review/source/media workflows verified | — | — | — |
@@ -72,6 +72,7 @@ Create one row per independently testable outcome. Split rows that require diffe
 | F-012 | 1 | Build mockup-aligned shared components | P0 | DONE | Codex | Shared component patterns reviewed across all current surfaces and breakpoints; user accepted 2026-08-01 | Navigation, cards, metrics, badges, buttons, panels, progress, and responsive states are consistent and accessible | Mobile Menu discoverability corrected; 26 browser tests, lint, types, and build PASS | HIGH | F-011 | Components | Working tree |
 | F-013 | 1 | Establish visual-regression workflow | P1 | DONE | Codex | Root STABLE and approved mockup reviewed; Playwright workflow exercises navigation, themes, error states, overflow, and screenshots | Stable screenshots cover all current surfaces, both themes, and four agreed breakpoints | 24/24 visual tests PASS; 24 committed PNG baselines; mobile tracker overflow found and corrected | HIGH | F-011, F-012 | `playwright.config.ts`, `tests/visual-regression.spec.ts`, baseline README | Working tree |
 | F-014 | 2 | Marketing homepage visual implementation | P0 | DONE | Codex | Root STABLE at `6265a47`; full lifecycle, mockup comparison, and review evidence recorded below | Marketing panel hierarchy is reproduced responsively in light/dark themes | 8 marketing screenshots; 38/38 browser cases; semantic/a11y assertions; lint/types/tests/build PASS | HIGH | F-011, F-012 | Marketing | Working tree |
+| F-017 | 2 | Marketing routes, legal shells, and SEO | P0 | DONE | Codex | Root STABLE reviewed at `d1f2405`; complete lifecycle and vinext compatibility evidence below | Required route shells, truthful metadata/canonical policy, and legal-review states are implemented | 24 route registry tests; 10/10 Node tests; 40 baselines; 50 browser cases; build PASS | HIGH | F-010, F-014 | Marketing/trust/SEO | Working tree |
 | F-020 | 3 | Global/country/region feed architecture | P0 | NOT_STARTED | — | — | Configurable geography; no discriminatory hardcoding | Unit/E2E/fairness checks | HIGH | F-010 | Geographic coverage | — |
 | F-021 | 3 | News feed and story visual implementation | P0 | NOT_STARTED | — | — | Feed/story panels guide responsive, accessible light/dark screens | Screenshots/E2E/a11y | HIGH | F-012, F-020 | Public UX | — |
 | F-022 | 3 | Mobile feed and video visual implementation | P0 | NOT_STARTED | — | — | Mobile panels guide accessible touch-first responsive flows | Device screenshots/E2E | HIGH | F-012, media data | Public UX | — |
@@ -113,7 +114,7 @@ This is the canonical source for the Project Tracker UI. Sprints group phases fo
 | F-015 | S1 | P1 | Living sprint tracker and agent handoff foundation | P0 | DONE | 100% | DONE | Codex | User approved; responsive shell, handoff, truthful demo states, and Menu drawer evidence complete | HIGH | F-000, F-001, F-011 |
 | F-016 | S1 | P1 | Markdown-synchronized delivery hierarchy | P0 | DONE | 100% | DONE | Codex | User approved; parser, hierarchy UI, build gates, 24 baselines, and responsive interaction evidence complete | HIGH | F-001, F-015 |
 | F-014 | S1 | P2 | Marketing homepage visual implementation | P0 | DONE | 100% | DONE | Codex | Approved and implemented 2026-08-01; 8 responsive light/dark baselines and 38 browser cases pass | HIGH | F-011, F-012 |
-| F-017 | S1 | P2 | Marketing routes, legal shells, and SEO | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | Required routes, metadata, canonicalization, and legal review required | HIGH | F-010, F-014 |
+| F-017 | S1 | P2 | Marketing routes, legal shells, and SEO | P0 | DONE | 100% | DONE | Codex | 24 typed routes; review-labeled policy shells; fail-safe robots/canonical/sitemap; 40 baselines and 50 browser cases pass | HIGH | F-010, F-014 |
 | F-020 | S1 | P3 | Global/country/region feed architecture | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | Configurable geography, unit, E2E, and fairness checks required | HIGH | F-010 |
 | F-021 | S1 | P3 | News feed and story experience | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | Responsive feed/story screenshots, E2E, and accessibility required | HIGH | F-012, F-020 |
 | F-022 | S1 | P3 | Search, mobile feed, and demo media | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | Search/filter, device, E2E, and media-fallback evidence required | HIGH | F-012, F-020 |
@@ -173,6 +174,34 @@ This is the canonical source for the Project Tracker UI. Sprints group phases fo
 - Acceptance criteria: approved hierarchy and design language; truthful demo labeling; functional CTA/navigation/theme controls; semantic landmarks and headings; no horizontal overflow or failed resources; visual evidence for both themes and all required breakpoints; all repository gates pass.
 - Rollback: revert the focused F-014 UI/test/documentation changes and restore the prior marketing/briefing baselines; no migration or external state exists.
 - Acceptance result: all criteria satisfied; F-014 is complete. F-017 and Phase 2 completion remain separately gated.
+
+### F-017 Marketing routes, legal shells, and SEO
+
+- Phase / epic: Phase 2 marketing website
+- Owner: Codex
+- Priority / risk: P0 / HIGH
+- Status: DONE
+- Requested outcome: provide the specified marketing information architecture, truthful legal/trust shells, and safe SEO/canonical infrastructure.
+- In scope: 24 typed single-segment marketing/trust routes, shared responsive shell, per-route metadata, legal/editorial review warnings, internal navigation, `robots.txt`, conditional sitemap/canonical URLs, tests, responsive evidence, and setup documentation.
+- Out of scope: finalized legal advice, invented contacts/domain/prices, forms or data collection, localized routes/`hreflang`, production indexing, analytics, authentication, providers, persistence, publishing, or deployment.
+- Dependencies: F-010 and F-014 complete.
+- Data/provider/migration impact: none; static configuration and presentation only; no provider, credential, database, or migration.
+- Security/rights/privacy/editorial: no personal data or submissions; legal shells explicitly non-operative and review-required; rights, source, AI, correction, recommendation, and community principles remain truthful development drafts.
+- Accessibility/i18n/fairness: semantic landmarks, headings, navigation, notices, visible focus, native controls, reduced motion, light/dark, responsive containment; English-only; consistent country-neutral language.
+- Mockup panels: Marketing Homepage light/dark and shared typography/cards/buttons; trust routes extend that system because no separate legal-page panel exists.
+- Baseline: `docs/design/nyavista-ui-mockup-light-dark.png`, implementation baseline `d1f2405`; required 390×844, 768×1024, 1440×1000, and 1920×1080 in both themes.
+
+#### STABLE record
+
+- Scope/Think: preserved F-014 and modeled all named marketing plus required trust routes through one typed registry and one shared shell rather than duplicated pages.
+- Assess Risk: blocked fictional legal/domain/contact/pricing claims; required visible review notices; validated HTTPS origin before canonical/sitemap output; retained global `noindex`; planned unknown-route 404 and route/render checks.
+- Build: added route registry, dynamic route metadata/rendering, responsive information shell, real marketing navigation, review-state legal content, fail-safe robots/sitemap behavior, configuration tests, server route tests, README setup guidance, and representative trust screenshots.
+- Validate: ESLint PASS; strict TypeScript PASS; production build PASS; 10/10 Node tests PASS; `/robots.txt`, `/sitemap.xml`, `/product`, `/terms`, and `/recommendation-methodology` return 200; 40/40 baselines and 50/50 Playwright cases PASS with console/resource/overlay/overflow guards.
+- Evolve/visual comparison: representative privacy shell reviewed in light desktop and dark mobile. It preserves F-014 typography, compact navigation, restrained borders/depth, cards, and theme identity. Legal copy uses wider reading proportions rather than the image-led homepage; mobile stacks notices/cards. Static anchors intentionally replace `next/link` because vinext 0.0.50 produced a duplicate-React hydration error; full-page navigation is the tested progressive-enhancement fallback.
+- Canonical behavior: `NEXT_PUBLIC_SITE_URL` must be a clean HTTPS origin; without it, canonical URLs are omitted, sitemap is empty, and robots disallow all crawling. No domain is invented.
+- Known limitations: qualified legal/editorial/privacy/accessibility review, verified public contacts, localized routes/`hreflang`, production origin, indexing approval, forms, analytics, and full Phase 12 trust workflows remain future gated work.
+- Rollback: revert route/config/shell/SEO/test/docs files and eight trust baselines; no migration or external state.
+- Acceptance result: required route shells and safe SEO infrastructure are implemented and verified; F-017 is complete.
 
 Copy this section for each feature.
 
@@ -467,15 +496,15 @@ Copy this section for each feature.
 |---|---|---|---|---|---|
 | Lint | `pnpm lint` | PASS | 2026-08-01 | ESLint | — |
 | Type check | `pnpm exec tsc --noEmit` | PASS | 2026-08-01 | Strict TypeScript | — |
-| Unit/component | `pnpm test` | PASS | 2026-08-01 | 6/6 Node tests | — |
+| Unit/component | `pnpm test` | PASS | 2026-08-01 | 10/10 Node configuration/render/route tests | — |
 | Integration/E2E | Repository-defined | NOT_RUN | — | — | — |
 | Firebase Rules | Emulator/test suite | NOT_RUN | — | — | — |
 | Accessibility | Automated + manual | NOT_RUN | — | — | — |
 | Security | Review/tests | NOT_RUN | — | — | — |
 | Production build | `pnpm build` / `pnpm test` | PASS | 2026-08-01 | vinext/Vite production build | — |
-| Light-theme visual regression | `pnpm visual:test` | PASS | 2026-08-01 | 16 screenshot states plus interactions | — |
-| Dark-theme visual regression | `pnpm visual:test` | PASS | 2026-08-01 | 16 screenshot states plus interactions | — |
-| Responsive mockup comparison | Mobile/tablet/desktop/large desktop | PASS | 2026-08-01 | 32 baselines; 38 browser cases | — |
+| Light-theme visual regression | `pnpm visual:test` | PASS | 2026-08-01 | 20 screenshot states plus interactions | — |
+| Dark-theme visual regression | `pnpm visual:test` | PASS | 2026-08-01 | 20 screenshot states plus interactions | — |
+| Responsive mockup comparison | Mobile/tablet/desktop/large desktop | PASS | 2026-08-01 | 40 baselines; 50 browser cases | — |
 
 ## Documentation tracker
 

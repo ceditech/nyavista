@@ -53,6 +53,29 @@ for (const surface of surfaces) {
   }
 }
 
+for (const theme of themes) {
+  for (const viewport of viewports) {
+    test(`trust route · ${theme} · ${viewport.id}`, async ({ page }) => {
+      const consoleErrors: string[] = [];
+      const failedResponses: string[] = [];
+      page.on("console", (message) => { if (message.type() === "error" && !message.text().startsWith("Failed to load resource:")) consoleErrors.push(message.text()); });
+      page.on("response", (response) => { if (response.status() >= 400) failedResponses.push(`${response.status()} ${response.url()}`); });
+      await page.setViewportSize({ width: viewport.width, height: viewport.height });
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await page.goto("/privacy", { waitUntil: "networkidle" });
+      if (theme === "dark") await page.getByRole("button", { name: "Switch to dark theme" }).click();
+      await expect(page.locator(".app")).toHaveAttribute("data-theme", theme);
+      await expect(page.getByRole("heading", { level: 1, name: /Privacy notice/ })).toBeVisible();
+      await expect(page.getByRole("note")).toContainText("Review required");
+      const horizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
+      expect(horizontalOverflow, "trust page must not overflow horizontally").toBe(false);
+      expect(consoleErrors).toEqual([]);
+      expect(failedResponses).toEqual([]);
+      await expect(page).toHaveScreenshot(`trust-${theme}-${viewport.id}.png`);
+    });
+  }
+}
+
 for (const viewport of viewports) {
   test(`marketing interactions · ${viewport.id}`, async ({ page }) => {
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
@@ -64,6 +87,16 @@ for (const viewport of viewports) {
     await expect(page.locator(".app")).toHaveAttribute("data-theme", "dark");
     await page.getByRole("button", { name: /Explore NyaVista/ }).click();
     await expect(page.getByRole("heading", { name: /Every story/ })).toBeVisible();
+  });
+}
+
+for (const viewport of viewports) {
+  test(`marketing route navigation · ${viewport.id}`, async ({ page }) => {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+    await page.goto("/privacy", { waitUntil: "networkidle" });
+    await expect(page.getByRole("heading", { name: /Privacy notice/ })).toBeVisible();
+    await page.getByRole("link", { name: "NyaVista home" }).click();
+    await expect(page.getByRole("heading", { name: "Understand the news in minutes, not hours." })).toBeVisible();
   });
 }
 

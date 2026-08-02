@@ -19,15 +19,29 @@ Required fields for every implementation entry:
 
 | Field | Current value |
 |---|---|
-| Approved work | Phase 2 — F-014 marketing homepage visual implementation |
-| Active tracker IDs | F-014 complete; Phase 1 items F-010–F-013 and F-015–F-016 complete |
+| Approved work | Phase 2 — F-017 marketing routes, legal shells, and SEO |
+| Active tracker IDs | F-017 and F-014 complete; Phase 2 awaiting user review |
 | Active agent | Codex |
 | STABLE reference | `STABLE_FRAMEWORK.md` at commit `f8ab99e` |
 | UI reference | `docs/design/nyavista-ui-mockup-light-dark.png` |
 | State | Demo-only local implementation; no live providers or production data |
-| Next gate | User review of F-014; F-017 and all later phase work remain unapproved |
+| Next gate | User reviews F-017 and decides Phase 2 closure; Phase 3 remains unapproved |
 
 ## Implementation ledger
+
+### 2026-08-01 — Codex — F-017
+
+- Outcome: completed 24 typed marketing/trust route shells, safe metadata/canonical policy, and fail-safe robots/sitemap behavior.
+- Scope: shared responsive information shell; product, feature, format, audience, company, FAQ, and required policy routes; per-route metadata; visible review labels; internal navigation; HTTPS-origin validation; route/config/render/visual tests; README setup guidance.
+- Excluded: finalized legal advice, verified contacts/domain/pricing, forms/data collection, localized routes/`hreflang`, production indexing, analytics, auth, providers, persistence, publishing, and deployment.
+- STABLE/mockup: root framework and required documents reviewed at baseline `d1f2405`; explicit F-017 approval inferred from “Next”; F-014 marketing/shared-system panels guided both themes and four breakpoints; scope/risks/tests/rollback recorded before implementation.
+- Verification: ESLint PASS; strict TypeScript PASS; production build PASS; 10/10 Node tests PASS; representative endpoints return 200; 40/40 baselines and 50/50 Playwright cases PASS with console/resource/overlay/overflow guards.
+- SEO truthfulness: without a clean HTTPS `NEXT_PUBLIC_SITE_URL`, canonical URLs are omitted, sitemap is empty, and robots disallow all. No production domain was invented.
+- Legal/editorial/privacy: every relevant shell is visibly a development-stage draft requiring qualified review; no operative legal claim, contact address, personal-data collection, or live workflow was invented.
+- Compatibility decision: static semantic anchors replace `next/link` because vinext 0.0.50 produced a duplicate-React hydration failure in browser validation; ordinary navigation is accessible, tested, and progressively enhanced.
+- Files: `lib/marketing.ts`, `app/[slug]/page.tsx`, `app/[slug]/marketing-info-page.tsx`, `app/robots.ts`, `app/sitemap.ts`, root marketing navigation/styles, tests/baselines, README, tracker, and handoff.
+- Rollback: revert the focused F-017 route/config/UI/SEO/test/doc changes and eight trust screenshots; no migration or external state.
+- Next safe action: user reviews F-017 and Phase 2 closure. Do not begin Phase 3 without explicit approval.
 
 ### 2026-08-01 — Codex — F-014
 
@@ -62,8 +76,7 @@ Required fields for every implementation entry:
 
 | Priority | Tracker ID | Next action | Required evidence | Owner |
 |---|---|---|---|---|
-| P0 | F-014 review | User reviews completed marketing homepage at the local feature-branch server | Acceptance decision | User |
-| P1 | F-017 | Await explicit approval after F-014 review | Marketing routes, legal shells, and SEO evidence | Unassigned |
+| P0 | Phase 2 review | Review F-017 routes, trust/legal labeling, and safe SEO behavior | User acceptance/closure decision | User |
 
 ### 2026-08-01 — Codex — F-013
 

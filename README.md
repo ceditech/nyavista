@@ -28,3 +28,9 @@ pnpm build
 - `CLAUDE_HANDOFF.md` is the living cross-agent implementation ledger.
 - `STABLE_FRAMEWORK.md` governs every implementation lifecycle.
 - `docs/design/nyavista-ui-mockup-light-dark.png` is the approved UI reference.
+
+## Marketing and trust routes
+
+Phase 2 currently exposes typed, shared route shells for product, feature, audience, format, company, and required trust/legal information. The legal, editorial, privacy, copyright, corrections, community, recommendation, and accessibility text is development-stage content requiring qualified review before launch; it is not operative legal advice or a finalized production policy.
+
+The local demo remains `noindex`. Canonical URLs and sitemap entries are emitted only when `NEXT_PUBLIC_SITE_URL` is a clean HTTPS origin with no path, credentials, query, or fragment, for example `https://www.nyavista.example`. Do not configure a placeholder as a production domain. Without this value, `/robots.txt` disallows crawling and `/sitemap.xml` is intentionally empty.

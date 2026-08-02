@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-html-link-for-pages -- vinext 0.0.50 next/link hydration can load a duplicate React runtime; static marketing anchors are the safe progressive-enhancement path. */
 
 import { useState } from "react";
 import trackerMarkdown from "virtual:product-tracker";
@@ -79,7 +80,7 @@ function Marketing({ theme, onToggleTheme, onExplore }: { theme: "light" | "dark
     <header className="marketing-header">
       <a className="marketing-brand" href="#marketing-main" aria-label="NyaVista home"><span className="brand-mark">N</span>{product.name}</a>
       <nav className="marketing-nav" aria-label="Marketing navigation">
-        <a href="#features">Features</a><a href="#principles">How it works</a><button onClick={onExplore}>Global coverage</button>
+        <a href="/product">Product</a><a href="/features">Features</a><a href="/how-it-works">How it works</a><a href="/global-coverage">Global coverage</a>
       </nav>
       <div className="marketing-actions"><button className="theme-toggle" onClick={onToggleTheme} aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`}><span aria-hidden="true">{theme === "light" ? "☾" : "☀"}</span>{theme === "light" ? "Dark" : "Light"}</button><button className="button primary marketing-explore" onClick={onExplore}>Explore demo</button></div>
     </header>
@@ -93,7 +94,7 @@ function Marketing({ theme, onToggleTheme, onExplore }: { theme: "light" | "dark
       <section id="principles" className="marketing-principles" aria-labelledby="principles-title"><div className="sr-only"><h2 id="principles-title">How NyaVista is designed to help</h2></div>{principles.map((principle) => <article key={principle.title}><Icon>{principle.icon}</Icon><h3>{principle.title}</h3><p>{principle.copy}</p></article>)}</section>
       <section id="features" className="marketing-promise" aria-label="Product promise"><p><strong>AI-assisted.</strong> Human-reviewed. Source-transparent.</p><span className="pill pill-violet">Planning preview</span></section>
     </main>
-    <footer className="marketing-footer"><span>{product.name} is a proprietary product of {product.owner}, a United States company.</span><button onClick={onExplore}>Enter demo workspace →</button></footer>
+    <footer className="marketing-footer"><span>{product.name} is a proprietary product of {product.owner}, a United States company.</span><nav aria-label="Trust and legal"><a href="/editorial-standards">Editorial standards</a><a href="/privacy">Privacy</a><a href="/accessibility">Accessibility</a></nav><button onClick={onExplore}>Enter demo workspace →</button></footer>
   </div>;
 }
 

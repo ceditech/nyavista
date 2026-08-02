@@ -9,6 +9,13 @@ async function render() {
   return worker.fetch(new Request("http://localhost/", { headers: { accept: "text/html" } }), { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } }, { waitUntil() {}, passThroughOnException() {} });
 }
 
+async function renderPath(pathname) {
+  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
+  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}-${pathname}`);
+  const { default: worker } = await import(workerUrl.href);
+  return worker.fetch(new Request(`http://localhost${pathname}`, { headers: { accept: "text/html" } }), { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } }, { waitUntil() {}, passThroughOnException() {} });
+}
+
 test("server-renders the NyaVista demo shell truthfully", async () => {
   const response = await render();
   assert.equal(response.status, 200);
@@ -53,7 +60,7 @@ test("centralizes product identity and preserves living delivery records", async
 test("keeps the complete visual baseline matrix", async () => {
   const files = await readdir(new URL("./visual-baselines/", import.meta.url));
   const pngs = files.filter((file) => file.endsWith(".png"));
-  assert.equal(pngs.length, 32);
+  assert.equal(pngs.length, 40);
   for (const surface of ["marketing", "briefing", "tracker", "editorial"]) {
     for (const theme of ["light", "dark"]) {
       for (const viewport of ["mobile", "tablet", "desktop", "large-desktop"]) {
@@ -61,4 +68,19 @@ test("keeps the complete visual baseline matrix", async () => {
       }
     }
   }
+  for (const theme of ["light", "dark"]) {
+    for (const viewport of ["mobile", "tablet", "desktop", "large-desktop"]) assert.ok(pngs.includes(`trust-${theme}-${viewport}.png`));
+  }
+});
+
+test("server-renders truthful marketing and legal route shells", async () => {
+  const [productResponse, privacyResponse, unknownResponse] = await Promise.all([renderPath("/product"), renderPath("/privacy"), renderPath("/not-a-marketing-route")]);
+  assert.equal(productResponse.status, 200);
+  assert.match(await productResponse.text(), /A clearer way to understand the news/);
+  assert.equal(privacyResponse.status, 200);
+  const privacy = await privacyResponse.text();
+  assert.match(privacy, /Privacy notice/);
+  assert.match(privacy, /Review required/);
+  assert.match(privacy, /No account, contact, analytics, or personalization data is collected/);
+  assert.equal(unknownResponse.status, 404);
 });
