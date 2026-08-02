@@ -4,16 +4,12 @@
 import { useState } from "react";
 import trackerMarkdown from "virtual:product-tracker";
 import { product } from "../lib/product";
+import { selectFeedCandidates } from "../lib/geography";
+import { demoStories, type DemoStory } from "../lib/stories";
 import { parseProductTracker, trackerCheckpoints, type TrackerFeature, type TrackerStatus } from "../lib/tracker";
 
-type View = "marketing" | "briefing" | "tracker" | "editorial";
+type View = "marketing" | "briefing" | "story" | "tracker" | "editorial";
 const tracker = parseProductTracker(trackerMarkdown);
-
-const stories = [
-  { tag: "GLOBAL · ECONOMY", title: "How cities are preparing public services for longer heat seasons", summary: "A multi-source demo briefing comparing adaptation plans, funding questions, and local trade-offs.", sources: 5, time: "6 min", accent: "gold" },
-  { tag: "TECHNOLOGY", title: "Small-language AI tools gain new investment and research attention", summary: "What new models could mean for access, preservation, and responsible deployment.", sources: 4, time: "4 min", accent: "violet" },
-  { tag: "HEALTH", title: "Regional care networks test shared capacity planning", summary: "A fictional overview of the operational questions being evaluated across several markets.", sources: 3, time: "3 min", accent: "green" },
-];
 
 function Icon({ children }: { children: React.ReactNode }) {
   return <span className="icon" aria-hidden="true">{children}</span>;
@@ -27,6 +23,7 @@ export default function Home() {
   const [view, setView] = useState<View>("marketing");
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [navOpen, setNavOpen] = useState(false);
+  const [selectedStory, setSelectedStory] = useState<DemoStory>(demoStories[0]);
 
   return (
     <div className="app" data-theme={theme}>
@@ -37,7 +34,7 @@ export default function Home() {
         <nav>
           <p className="nav-label">Workspace</p>
           <button className="nav-item" onClick={() => { setView("marketing"); setNavOpen(false); }}><HomeIcon />NyaVista home</button>
-          <button className={view === "briefing" ? "nav-item active" : "nav-item"} onClick={() => { setView("briefing"); setNavOpen(false); }}><Icon>⌂</Icon>News intelligence</button>
+          <button className={view === "briefing" || view === "story" ? "nav-item active" : "nav-item"} onClick={() => { setView("briefing"); setNavOpen(false); }}><Icon>⌂</Icon>News intelligence</button>
           <button className={view === "tracker" ? "nav-item active" : "nav-item"} onClick={() => { setView("tracker"); setNavOpen(false); }}><Icon>◫</Icon>Project tracker<span className="nav-count">{tracker.features.length}</span></button>
           <button className={view === "editorial" ? "nav-item active" : "nav-item"} onClick={() => { setView("editorial"); setNavOpen(false); }}><Icon>✓</Icon>Editorial overview</button>
           <p className="nav-label">Explore</p>
@@ -53,7 +50,7 @@ export default function Home() {
       <div className="workspace">
         <header className="topbar">
           <button className="mobile-menu" onClick={() => setNavOpen(true)} aria-label="Open navigation" aria-expanded={navOpen} aria-controls="primary-navigation"><span aria-hidden="true">☰</span><strong>Menu</strong></button>
-          <div><p className="eyebrow">{product.owner} · {product.foundingCountry}</p><strong>{view === "tracker" ? "Delivery workspace" : view === "editorial" ? "Editorial command centre" : "Global intelligence briefing"}</strong></div>
+          <div><p className="eyebrow">{product.owner} · {product.foundingCountry}</p><strong>{view === "tracker" ? "Delivery workspace" : view === "editorial" ? "Editorial command centre" : view === "story" ? "Story intelligence" : "Global intelligence briefing"}</strong></div>
           <div className="top-actions">
             <button className="icon-button" aria-label="Search">⌕</button>
             <button className="theme-toggle" onClick={() => setTheme(theme === "light" ? "dark" : "light")} aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`}><span>{theme === "light" ? "☾" : "☀"}</span>{theme === "light" ? "Dark" : "Light"}</button>
@@ -62,7 +59,8 @@ export default function Home() {
         </header>
 
         <main id="main">
-          {view === "briefing" && <Briefing onOpenTracker={() => setView("tracker")} />}
+          {view === "briefing" && <Briefing onOpenTracker={() => setView("tracker")} onOpenStory={(story) => { setSelectedStory(story); setView("story"); }} />}
+          {view === "story" && <StoryDetail story={selectedStory} onBack={() => setView("briefing")} />}
           {view === "tracker" && <Tracker />}
           {view === "editorial" && <Editorial />}
         </main>
@@ -102,16 +100,51 @@ function Marketing({ theme, onToggleTheme, onExplore }: { theme: "light" | "dark
   </div>;
 }
 
-function Briefing({ onOpenTracker }: { onOpenTracker: () => void }) {
-  return <div className="page briefing-page">
-    <section className="hero">
-      <div className="hero-copy"><span className="pill pill-indigo">DEMO CONTENT · NOT LIVE REPORTING</span><h1>Every story.<br /><em>A clearer view.</em></h1><p>Understand complex developments through transparent, multi-source context—designed for a global audience.</p><div className="button-row"><button className="button primary">Explore the briefing <span>→</span></button><button className="button secondary" onClick={onOpenTracker}>View build progress</button></div></div>
-      <div className="hero-visual" aria-label="Abstract global coverage visual"><div className="orb orb-one"/><div className="orb orb-two"/><div className="grid-lines"/><div className="visual-card"><span>Global coverage</span><strong>Country-neutral by design</strong><small>Fictional planning preview</small></div></div>
+function Briefing({ onOpenTracker, onOpenStory }: { onOpenTracker: () => void; onOpenStory: (story: DemoStory) => void }) {
+  const [countryCode, setCountryCode] = useState<"global" | "TG" | "CA" | "JP">("global");
+  const visibleStories = selectFeedCandidates(demoStories, {
+    scope: countryCode === "global" ? { kind: "global" } : { kind: "country", countryCode },
+    pageSize: 20,
+  });
+  const feature = visibleStories[0];
+  const compactStories = visibleStories.slice(1);
+
+  return <div className="page briefing-page public-feed">
+    <section className="feed-heading" aria-labelledby="feed-title">
+      <div><span className="pill pill-indigo">DEMO CONTENT · NOT LIVE REPORTING</span><p className="eyebrow">GLOBAL NEWS INTELLIGENCE</p><h1 id="feed-title">A clearer view of what matters.</h1><p>Fictional multi-source briefings organized through country-neutral geography controls.</p></div>
+      <button className="button secondary compact" onClick={onOpenTracker}>View build progress</button>
     </section>
-    <section className="trust-strip" aria-label="Product principles"><div><Icon>◎</Icon><span><strong>Multi-source clarity</strong>Compare perspectives</span></div><div><Icon>◌</Icon><span><strong>Audio & video</strong>Accessible explainers</span></div><div><Icon>◈</Icon><span><strong>Global coverage</strong>Local context, global impact</span></div><div><Icon>▣</Icon><span><strong>Source transparent</strong>Attribution first</span></div></section>
-    <div className="section-heading"><div><p className="eyebrow">TODAY’S DEMO BRIEFING</p><h2>Stories worth understanding</h2></div><button className="text-button">View global feed →</button></div>
-    <section className="story-grid">{stories.map((story) => <article className="story-card" key={story.title}><div className={`story-art ${story.accent}`}><span>{story.tag.split(" · ")[0]}</span></div><div className="story-content"><span className="story-tag">{story.tag}</span><h3>{story.title}</h3><p>{story.summary}</p><div className="story-meta"><span>Based on {story.sources} fictional sources</span><span>{story.time}</span></div></div></article>)}</section>
+    <div className="feed-controls" role="group" aria-label="Filter demo stories by geography">
+      {([['global', 'Worldwide'], ['TG', 'Togo'], ['CA', 'Canada'], ['JP', 'Japan']] as const).map(([value, label]) => <button key={value} className={countryCode === value ? "feed-chip active" : "feed-chip"} aria-pressed={countryCode === value} onClick={() => setCountryCode(value)}>{label}</button>)}
+    </div>
+    {feature ? <div className="feed-layout">
+      <div className="feed-stream">
+        <article className="feed-feature">
+          <button className={`feed-feature-art ${feature.accent}`} onClick={() => onOpenStory(feature)} aria-label={`Open story: ${feature.headline}`}><span>{feature.geographyLabel}</span></button>
+          <div className="feed-feature-copy"><span className="story-tag">{feature.geographyLabel} · {feature.category}</span><h2><button onClick={() => onOpenStory(feature)}>{feature.headline}</button></h2><p>{feature.summary}</p><div className="story-meta"><span>{feature.updatedLabel}</span><span>Based on {feature.sourceCount} fictional sources</span><span>{feature.readingMinutes} min</span></div><button className="text-button" onClick={() => onOpenStory(feature)}>Open full story →</button></div>
+        </article>
+        <section className="feed-list" aria-label="More demo stories">{compactStories.map((story) => <article className="feed-row" key={story.id}><div className={`feed-thumb ${story.accent}`} aria-hidden="true"/><div><span className="story-tag">{story.geographyLabel} · {story.category}</span><h3><button onClick={() => onOpenStory(story)}>{story.headline}</button></h3><p>{story.summary}</p><div className="story-meta"><span>{story.updatedLabel}</span><span>{story.sourceCount} fictional sources · {story.readingMinutes} min</span></div></div></article>)}</section>
+      </div>
+      <aside className="feed-rail" aria-label="Demo feed context"><section><p className="eyebrow">TRENDING IN THIS DEMO</p><ol>{demoStories.slice(0, 4).map((story, index) => <li key={story.id}><span>{index + 1}</span><button onClick={() => onOpenStory(story)}>{story.headline}</button></li>)}</ol></section><section><p className="eyebrow">TRANSPARENCY</p><h2>How this feed works</h2><p>Order follows the fictional fixture registry. Commercial market priority is not used to admit, boost, or suppress stories.</p><span className="pill pill-gold">No live ranking</span></section></aside>
+    </div> : <section className="feed-empty" role="status"><h2>No demo stories in this view</h2><p>This honest empty state does not imply missing live coverage.</p><button className="button secondary" onClick={() => setCountryCode("global")}>Return to worldwide demo</button></section>}
   </div>;
+}
+
+function StoryDetail({ story, onBack }: { story: DemoStory; onBack: () => void }) {
+  return <article className="page story-detail">
+    <button className="story-back" onClick={onBack}>← Back to demo feed</button>
+    <header className="story-header"><span className="pill pill-indigo">AI-ASSISTED DEMO · HUMAN REVIEW NOT CONNECTED</span><p className="story-tag">{story.geographyLabel} · {story.category}</p><h1>{story.headline}</h1><p>{story.summary}</p><div className="story-meta"><span>{story.updatedLabel}</span><span>Based on {story.sourceCount} fictional sources</span><span>{story.readingMinutes} min read</span></div></header>
+    <nav className="story-tabs" aria-label="Story sections"><a href="#why">Why it matters</a><a href="#points">Key points</a><a href="#sources">Sources</a><a href="#timeline">Timeline</a></nav>
+    <div className="story-detail-grid">
+      <div className="story-narrative">
+        <section id="why" className="detail-panel why-panel"><p className="eyebrow">WHY IT MATTERS</p><h2>Context before conclusions</h2><p>{story.whyItMatters}</p><span className="pill pill-gold">AI-assisted demo summary</span></section>
+        <section id="points" className="detail-panel"><p className="eyebrow">KEY POINTS</p><h2>What the fictional source set indicates</h2><ul className="key-points">{story.keyPoints.map((point) => <li key={point}>{point}</li>)}</ul></section>
+        <section className="detail-panel uncertainty"><p className="eyebrow">UNCERTAINTY</p><h2>What is not established</h2><p>{story.uncertainty}</p></section>
+        <section id="timeline" className="detail-panel"><p className="eyebrow">TIMELINE</p><h2>How the demo story develops</h2><ol className="story-timeline">{story.timeline.map((event) => <li key={event.label}><strong>{event.label}</strong><span>{event.detail}</span></li>)}</ol></section>
+      </div>
+      <aside id="sources" className="detail-panel source-register"><p className="eyebrow">SOURCE TRANSPARENCY</p><h2>{story.sourceCount} fictional source records</h2><p className="source-disclosure">These entries test attribution hierarchy only. They are not publishers or live links.</p>{story.sources.map((source) => <section key={source.name}><div><strong>{source.name}</strong><span className="badge">{source.type.replaceAll("-", " ")}</span></div><small>{source.geography}</small><p>{source.note}</p></section>)}</aside>
+    </div>
+  </article>;
 }
 
 /* Previous hard-coded tracker retained temporarily for history.

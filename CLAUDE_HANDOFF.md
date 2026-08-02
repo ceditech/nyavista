@@ -20,14 +20,26 @@ Required fields for every implementation entry:
 | Field | Current value |
 |---|---|
 | Approved work | Phase 3 — F-020 global/country/region feed architecture |
-| Active tracker IDs | F-020 complete; F-021 awaiting approval |
+| Active tracker IDs | F-020 complete; F-021 implemented and IN_REVIEW |
 | Active agent | Codex |
 | STABLE reference | `STABLE_FRAMEWORK.md` at commit `f8ab99e` |
 | UI reference | `docs/design/nyavista-ui-mockup-light-dark.png` |
 | State | Demo-only local implementation; no live providers or production data |
-| Next gate | User reviews F-020; F-021 remains separately gated |
+| Next gate | User reviews F-021 feed/detail; F-022 remains separately gated |
 
 ## Implementation ledger
+
+### 2026-08-02 — Codex — F-021
+
+- Outcome: implemented the approved responsive public demo feed and story-detail experience; item is `IN_REVIEW` pending user acceptance.
+- Scope: strict fictional story registry; F-020 global/country filters; feature and compact feed cards; context/transparency rail; detail context, key points, uncertainty, timeline, and fictional source register; responsive interactions and visual evidence. Excluded live providers, real sources/media, persistence, ranking, search, personalization, production routes, and F-022.
+- STABLE/skills/mockup: root framework and required sources reviewed; “News Home Feed (Desktop)” and “Story Detail (Desktop)” light/dark panels inspected; Next.js App Router guidance shaped the existing client-shell boundary; React best-practices review found no waterfall, effect, serialization, inline-component, or bundle concern.
+- Verification: 3/3 focused story tests and 17/17 complete Node tests PASS; ESLint PASS; strict TypeScript PASS; production build PASS; 48 baselines and 62/62 Playwright cases PASS at four breakpoints in both themes with geography filter, open/back, disclosure, console/resource/overlay, and overflow checks.
+- Visual/accessibility: desktop feed/detail hierarchy aligns with the approved panels; mobile stacks content and retains scrollable section navigation; native controls, pressed state, semantic landmarks/headings, visible focus inheritance, touch targets, reduced motion, and no horizontal overflow.
+- Truth/fairness/rights: all stories and sources are explicitly fictional; uncertainty and AI-assisted/no-human-review states are visible; no publisher assets or external links; Togo and commercial-priority markets use the same F-020 contract with no ranking input.
+- Files: `lib/stories.ts`, `lib/geography.ts`, `app/page.tsx`, `app/globals.css`, focused tests, 16 refreshed/new feed/story baselines plus two tracker mobile evidence updates, baseline README, package script, tracker, and handoff.
+- Limitations/rollback: demo-only English content, no live sources, real routes, persistence, media, search, or personalization. Revert the focused domain/UI/test/baseline/docs changes; no migration.
+- Next safe action: user reviews F-021. Do not start F-022 without approval.
 
 ### 2026-08-02 — Codex — F-020
 

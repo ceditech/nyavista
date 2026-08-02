@@ -2,7 +2,8 @@ import { expect, test } from "@playwright/test";
 
 const surfaces = [
   { id: "marketing", marker: "Understand the news in minutes, not hours." },
-  { id: "briefing", marker: "Every story." },
+  { id: "briefing", marker: "A clearer view of what matters." },
+  { id: "story", marker: "Context before conclusions" },
   { id: "tracker", marker: "Every sprint, phase, and feature" },
   { id: "editorial", marker: "Editorial clarity at every gate." },
 ] as const;
@@ -34,7 +35,8 @@ for (const surface of surfaces) {
         await page.goto("/", { waitUntil: "networkidle" });
         if (surface.id !== "marketing") await page.getByRole("button", { name: /Explore NyaVista/ }).click();
         const mobileNavigation = page.getByRole("button", { name: "Open navigation" });
-        if (surface.id !== "briefing" && await mobileNavigation.isVisible()) await mobileNavigation.click();
+        if (surface.id !== "briefing" && surface.id !== "story" && await mobileNavigation.isVisible()) await mobileNavigation.click();
+        if (surface.id === "story") await page.getByRole("button", { name: /Open story:/ }).first().click();
         if (surface.id === "tracker") await page.getByRole("button", { name: /Project tracker/ }).click();
         if (surface.id === "editorial") await page.getByRole("button", { name: /Editorial overview/ }).click();
         if (surface.id !== "marketing") {
@@ -56,6 +58,23 @@ for (const surface of surfaces) {
       });
     }
   }
+}
+
+for (const viewport of viewports) {
+  test(`feed and story interactions · ${viewport.id}`, async ({ page }) => {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+    await page.goto("/", { waitUntil: "networkidle" });
+    await page.getByRole("button", { name: /Explore NyaVista/ }).click();
+    await page.getByRole("button", { name: "Togo" }).click();
+    await expect(page.getByRole("heading", { name: /Small-language AI tools/ })).toBeVisible();
+    await expect(page.locator(".feed-stream").getByText("How cities are preparing public services", { exact: false })).toHaveCount(0);
+    await page.getByRole("button", { name: /Open story:/ }).click();
+    await expect(page.getByRole("heading", { level: 1, name: /Small-language AI tools/ })).toBeVisible();
+    await expect(page.getByText("fictional source records")).toBeVisible();
+    await expect(page.getByText("What is not established")).toBeVisible();
+    await page.getByRole("button", { name: /Back to demo feed/ }).click();
+    await expect(page.getByRole("heading", { name: /Small-language AI tools/ })).toBeVisible();
+  });
 }
 
 for (const theme of themes) {
@@ -91,7 +110,7 @@ for (const viewport of viewports) {
     await page.getByRole("button", { name: "Switch to dark theme" }).click();
     await expect(page.locator(".app")).toHaveAttribute("data-theme", "dark");
     await page.getByRole("button", { name: /Explore NyaVista/ }).click();
-    await expect(page.getByRole("heading", { name: /Every story/ })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /A clearer view of what matters/ })).toBeVisible();
   });
 }
 

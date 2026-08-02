@@ -58,10 +58,18 @@ export function candidateMatchesScope(candidate: FeedCandidate, scope: FeedScope
     || candidate.countryCodes.some((countryCode) => scope.countryCodes.includes(countryCode));
 }
 
-export function selectFeedCandidates(candidates: readonly FeedCandidate[], requestValue: unknown): FeedCandidate[] {
+export function selectFeedCandidates<T extends FeedCandidate>(candidates: readonly T[], requestValue: unknown): T[] {
   const request = parseFeedRequest(requestValue);
   return candidates
-    .map((candidate) => feedCandidateSchema.parse(candidate))
+    .map((candidate) => {
+      feedCandidateSchema.parse({
+        id: candidate.id,
+        countryCodes: candidate.countryCodes,
+        regionIds: candidate.regionIds,
+        subjectIds: candidate.subjectIds,
+      });
+      return candidate;
+    })
     .filter((candidate) => candidateMatchesScope(candidate, request.scope))
     .slice(0, request.pageSize);
 }

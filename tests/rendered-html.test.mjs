@@ -36,12 +36,13 @@ test("server-renders the NyaVista demo shell truthfully", async () => {
 });
 
 test("centralizes product identity and preserves living delivery records", async () => {
-  const [product, tracker, handoff, page, css] = await Promise.all([
+  const [product, tracker, handoff, page, css, stories] = await Promise.all([
     readFile(new URL("../lib/product.ts", import.meta.url), "utf8"),
     readFile(new URL("../PRODUCT_TRACKER.md", import.meta.url), "utf8"),
     readFile(new URL("../CLAUDE_HANDOFF.md", import.meta.url), "utf8"),
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../lib/stories.ts", import.meta.url), "utf8"),
   ]);
   assert.match(product, /E-DEAL EXPRESS LLC/);
   assert.match(product, /United States/);
@@ -56,6 +57,10 @@ test("centralizes product identity and preserves living delivery records", async
   assert.match(page, /function HomeIcon/);
   assert.match(page, /<svg viewBox="0 0 24 24" width="16" height="16"/);
   assert.doesNotMatch(page, /âŒ‚/);
+  assert.match(page, /function StoryDetail/);
+  assert.match(page, /selectFeedCandidates/);
+  assert.match(stories, /Fictional public planning record/);
+  assert.match(stories, /sourceCount/);
   assert.match(css, /prefers-reduced-motion/);
   assert.match(css, /:focus-visible/);
 });
@@ -63,8 +68,8 @@ test("centralizes product identity and preserves living delivery records", async
 test("keeps the complete visual baseline matrix", async () => {
   const files = await readdir(new URL("./visual-baselines/", import.meta.url));
   const pngs = files.filter((file) => file.endsWith(".png"));
-  assert.equal(pngs.length, 40);
-  for (const surface of ["marketing", "briefing", "tracker", "editorial"]) {
+  assert.equal(pngs.length, 48);
+  for (const surface of ["marketing", "briefing", "story", "tracker", "editorial"]) {
     for (const theme of ["light", "dark"]) {
       for (const viewport of ["mobile", "tablet", "desktop", "large-desktop"]) {
         assert.ok(pngs.includes(`${surface}-${theme}-${viewport}.png`));

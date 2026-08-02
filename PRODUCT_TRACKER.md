@@ -21,7 +21,7 @@ This file is the delivery source of truth. Update it after evidence exists, not 
 |---|---|
 | Product | NyaVista |
 | Owner | E-DEAL EXPRESS LLC |
-| Current phase | Phase 3 public demo product — F-020 approved |
+| Current phase | Phase 3 public demo product — F-021 approved |
 | Overall status | IN_PROGRESS |
 | Release target | TBD |
 | Release owner | TBD |
@@ -44,7 +44,7 @@ This file is the delivery source of truth. Update it after evidence exists, not 
 | P0 | Audit and planning | NOT_STARTED | Architecture, routes, data, STABLE mapping, risks and backlog approved | — | — | — |
 | P1 | Foundation/design system | DONE | Scaffold/build valid; brand, company, theme and shared states complete | F-010–F-013 and F-015–F-016 accepted; lint, types, tests, build, 24 baselines, and 26 browser cases pass | — | User, 2026-08-01 |
 | P2 | Marketing website | DONE | Global responsive pages, legal shells and SEO verified | F-014 and F-017 complete; 24 routes, safe SEO policy, 40 baselines, 50 browser cases, 10 Node tests, and build pass | Qualified legal review remains required before launch | User, 2026-08-02 |
-| P3 | Public demo product | IN_PROGRESS | Feeds, stories, geography, search and demo media verified | F-020 approved as the first dependency-ordered item | No live news/provider data; all fixtures must remain fictional | User, 2026-08-02 |
+| P3 | Public demo product | IN_PROGRESS | Feeds, stories, geography, search and demo media verified | F-020 complete; F-021 approved and in progress | No live news/provider data; all fixtures must remain fictional | User, 2026-08-02 |
 | P4 | Auth/personalization | NOT_STARTED | Auth, onboarding, preferences and saves persist securely | — | — | — |
 | P5 | Admin/editorial | NOT_STARTED | RBAC and review/source/media workflows verified | — | — | — |
 | P6 | Firebase persistence | NOT_STARTED | Repositories, rules, indexes, emulator and permission tests pass | — | — | — |
@@ -74,7 +74,7 @@ Create one row per independently testable outcome. Split rows that require diffe
 | F-014 | 2 | Marketing homepage visual implementation | P0 | DONE | Codex | Root STABLE at `6265a47`; full lifecycle, mockup comparison, and review evidence recorded below | Marketing panel hierarchy is reproduced responsively in light/dark themes | 8 marketing screenshots; 38/38 browser cases; semantic/a11y assertions; lint/types/tests/build PASS | HIGH | F-011, F-012 | Marketing | Working tree |
 | F-017 | 2 | Marketing routes, legal shells, and SEO | P0 | DONE | Codex | Root STABLE reviewed at `d1f2405`; complete lifecycle and vinext compatibility evidence below | Required route shells, truthful metadata/canonical policy, and legal-review states are implemented | 24 route registry tests; 10/10 Node tests; 40 baselines; 50 browser cases; build PASS | HIGH | F-010, F-014 | Marketing/trust/SEO | Working tree |
 | F-020 | 3 | Global/country/region feed architecture | P0 | DONE | Codex | `STABLE_FRAMEWORK.md` at repository root reviewed; Phase 2 closure and F-020 continuation approved 2026-08-02; complete lifecycle recorded below | Typed, schema-validated feed scopes support global, country, and region discovery without commercial-market or special-country ranking logic | 4 focused geography/fairness tests and 14/14 full Node tests, lint, strict types, and production build PASS | HIGH | F-010 | Geographic coverage | Working tree |
-| F-021 | 3 | News feed and story visual implementation | P0 | NOT_STARTED | — | — | Feed/story panels guide responsive, accessible light/dark screens | Screenshots/E2E/a11y | HIGH | F-012, F-020 | Public UX | — |
+| F-021 | 3 | News feed and story visual implementation | P0 | IN_REVIEW | Codex | Root STABLE, approved feed/story mockup panels, current shell, F-020 contracts, Next.js App Router guidance, and React quality review completed | Responsive feed and story-detail demo expose geography, context, source transparency, uncertainty, and accessible interaction in both themes | 17/17 Node tests, lint, strict types, build, 48 baselines, and 62/62 browser cases PASS; user review pending | HIGH | F-012, F-020 | Public UX | Working tree |
 | F-022 | 3 | Mobile feed and video visual implementation | P0 | NOT_STARTED | — | — | Mobile panels guide accessible touch-first responsive flows | Device screenshots/E2E | HIGH | F-012, media data | Public UX | — |
 | F-031 | 5 | Editorial dashboard visual implementation | P1 | NOT_STARTED | — | — | Admin panel guides metrics, queues, risks and coverage in both themes | Screenshots/E2E/a11y | HIGH | F-012, RBAC | Admin UX | — |
 | F-030 | 6 | Server-side RBAC and Firebase rules | P0 | NOT_STARTED | — | — | Unauthorized access denied in UI and backend | Rules/integration tests | CRITICAL | Auth/data model | Security | — |
@@ -116,7 +116,7 @@ This is the canonical source for the Project Tracker UI. Sprints group phases fo
 | F-014 | S1 | P2 | Marketing homepage visual implementation | P0 | DONE | 100% | DONE | Codex | Approved and implemented 2026-08-01; 8 responsive light/dark baselines and 38 browser cases pass | HIGH | F-011, F-012 |
 | F-017 | S1 | P2 | Marketing routes, legal shells, and SEO | P0 | DONE | 100% | DONE | Codex | 24 typed routes; review-labeled policy shells; fail-safe robots/canonical/sitemap; 40 baselines and 50 browser cases pass | HIGH | F-010, F-014 |
 | F-020 | S1 | P3 | Global/country/region feed architecture | P0 | DONE | 100% | DONE | Codex | Typed Zod contracts, bounded requests, deterministic matching, malformed-input rejection, and market-priority invariance pass 14/14 Node tests, lint, types, and build | HIGH | F-010 |
-| F-021 | S1 | P3 | News feed and story experience | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | Responsive feed/story screenshots, E2E, and accessibility required | HIGH | F-012, F-020 |
+| F-021 | S1 | P3 | News feed and story experience | P0 | IN_REVIEW | 95% | REVIEW | Codex | Typed fictional stories, F-020 geography controls, feed/detail interactions, source/uncertainty states, 48 baselines, and 62 browser cases pass; awaiting user acceptance | HIGH | F-012, F-020 |
 | F-022 | S1 | P3 | Search, mobile feed, and demo media | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | Search/filter, device, E2E, and media-fallback evidence required | HIGH | F-012, F-020 |
 | F-023 | S2 | P4 | Authentication and onboarding | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | Auth, denial, verification, recovery, and security tests required | CRITICAL | F-010, F-030 |
 | F-024 | S2 | P4 | Preferences, follows, bookmarks, and history | P1 | NOT_STARTED | 0% | SCOPE | Unassigned | Persistence, privacy, locale, and E2E tests required | HIGH | F-023, F-034 |
@@ -229,6 +229,34 @@ This is the canonical source for the Project Tracker UI. Sprints group phases fo
 - Accessibility/i18n/geographic fairness: no UI or screen-reader surface changed; ISO country codes and geography-neutral region slugs are locale-independent identifiers; non-priority countries receive identical matching behavior; translations and localized names remain out of scope.
 - Migration/rollback: no migration or external state. Revert the focused module, tests, Zod dependency/lock update, and evidence records.
 - Next approval required: review F-020. F-021 is the next dependency-ordered Phase 3 item and remains separately gated.
+
+### F-021 News feed and story experience
+
+- Phase / epic: Phase 3 public demo product
+- Status / owner: IN_REVIEW / Codex
+- Approved outcome: turn the current briefing preview into a coherent, responsive public demo feed and story-detail experience aligned with the approved desktop feed/detail panels.
+- In scope: typed fictional story fixtures validated at the domain boundary; global and country feed controls consuming F-020; feature and compact story cards; trending/context rail; story detail with why-it-matters, key points, source register, timeline, uncertainty/disclosure states; working back/open interactions; both themes and mobile/tablet/desktop/large-desktop verification.
+- Out of scope: live news/providers, ingestion, real publisher links or media, search, video/audio playback, personalization, bookmarks/sharing persistence, authentication, ranking/recommendations, comments, production routes/SEO, and F-022.
+- Mockup panels: “News Home Feed (Desktop)” and “Story Detail (Desktop)” in light/dark; mobile behavior adapts their hierarchy using the existing responsive shell because the dedicated mobile panel is reserved for F-022.
+- Acceptance criteria: feed controls visibly and deterministically filter fictional stories by geography; opening a card renders the matching detail and returning preserves the shell; content is explicitly non-live and AI-assisted/demo; geography, category, time, source count, why/context, key points, source records, timeline, and uncertainty are visible; semantic controls and focus states work; no failed resources, overlays, console errors, or horizontal overflow; all repository gates pass.
+- Risks / mitigations: accidental live/editorial claims — prominent demo disclosure and fictional source labels; geographic bias — consume F-020 only and avoid ranking; rights — CSS-generated art and no external publisher assets; dense detail on small screens — responsive stacking and overflow checks; regression — preserve tracker/editorial/marketing views and extend existing Playwright coverage.
+- Verification plan: focused story-schema/domain tests, rendered-source checks, Playwright interactions and screenshots in both themes at four breakpoints, lint, strict TypeScript, complete Node suite, production build, and manual comparison against the two approved panels.
+- Migration / rollback: no migration, provider, credential, or external state. Revert the focused story module, feed/detail UI and CSS, tests/baselines, and delivery records.
+
+#### STABLE record
+
+- Scope/Think: root framework and required repository documents reviewed; F-020 dependency complete; current feature-branch UI/tests inspected; Next.js App Router skill and relevant routing/RSC/data/metadata/error guidance read; approved feed/detail panels inspected; F-021 explicitly approved by “Next” on 2026-08-02.
+- Assess Risk: truthfulness, source rights, geography fairness, responsive density, keyboard semantics, theme parity, schema failures, and regression to existing workspace surfaces assessed before coding.
+- Build: added `lib/stories.ts` with strict Zod-validated fictional story/source/timeline records; generalized F-020 selection over validated domain extensions without weakening its strict base projection; replaced the briefing preview with geography controls, feature/compact cards, trending/transparency rail, and honest empty-state support; added an in-shell story detail with context, key points, uncertainty, timeline, and fictional source register.
+- Validate: 3/3 story tests and 17/17 complete Node tests PASS; ESLint PASS; strict TypeScript PASS; vinext production build PASS; 48 committed light/dark baselines and 62/62 Playwright visual/interaction cases PASS across 390×844, 768×1024, 1440×1000, and 1920×1080. Browser cases cover Togo filtering, story open/back, disclosure/source states, console/resource/overlay failure guards, and horizontal overflow.
+- Evolve/visual comparison: the desktop feed preserves the approved feature-story/compact-list/context-rail hierarchy; the story view preserves large editorial headline, section navigation, context/key-point panels, source rail, and restrained semantic color. Mobile stacks detail panels and keeps section navigation horizontally available. CSS-generated abstract art intentionally replaces publisher imagery; dedicated mobile feed/video behavior remains F-022.
+- React/Next.js review: no async client component, data waterfall, non-serializable boundary, external fetch, inline component, unnecessary effect, or heavy dependency was introduced. Derived feed selection remains synchronous over four demo records and is not prematurely memoized.
+- Acceptance status: automated and manual implementation evidence is complete; user visual/interaction acceptance remains required before `DONE`.
+- Files changed: `lib/stories.ts`, `lib/geography.ts`, `app/page.tsx`, `app/globals.css`, `tests/stories.test.ts`, `tests/rendered-html.test.mjs`, `tests/visual-regression.spec.ts`, briefing/story baselines, baseline README, `package.json`, `PRODUCT_TRACKER.md`, and `CLAUDE_HANDOFF.md`.
+- Security/editorial/legal: strict story/source validation; no external links, publisher names/assets, live claims, credentials, personal data, ranking, provider calls, or publishing behavior. Demo and uncertainty disclosures are prominent.
+- Accessibility/i18n/geographic fairness: semantic headings/articles/asides/navigation, native pressed-state filters, descriptive open/back controls, visible focus inheritance, touch-sized controls, reduced-motion inheritance, and responsive no-overflow evidence. English-only labels remain a documented limitation; Togo and priority markets use the identical F-020 selection path.
+- Migration/rollback: no migration or external state. Revert the focused module, generic selector extension, UI/CSS/tests/baselines, package script, and evidence records.
+- Next approval required: user reviews F-021 feed and story detail in both themes and responsive views. Do not begin F-022 until approved.
 
 Copy this section for each feature.
 
