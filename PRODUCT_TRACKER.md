@@ -21,18 +21,18 @@ This file is the delivery source of truth. Update it after evidence exists, not 
 |---|---|
 | Product | NyaVista |
 | Owner | E-DEAL EXPRESS LLC |
-| Current phase | Phase 0 audit + approved Phase 1 first-pass foundation |
+| Current phase | Phase 2 marketing website — F-014 approved |
 | Overall status | IN_PROGRESS |
 | Release target | TBD |
 | Release owner | TBD |
 | Last updated | 2026-08-01 |
 | Updated by | Codex |
-| STABLE framework path/version | `STABLE_FRAMEWORK.md` at repository root, commit `f8ab99e` |
+| STABLE framework path/version | `STABLE_FRAMEWORK.md` at repository root, reviewed at baseline commit `6265a47` |
 | Approved visual reference | `docs/design/nyavista-ui-mockup-light-dark.png` |
-| Visual baseline status | PASS — 24 Playwright baselines across 3 surfaces, 2 themes, and 4 breakpoints |
+| Visual baseline status | PASS — 32 Playwright baselines across 4 surfaces, 2 themes, and 4 breakpoints |
 | Highest open risk | First pass is demo-only; persistence, authentication, ingestion, AI, and publishing are not live |
 | Build | PASS — `vinext build` (2026-08-01) |
-| Tests | PASS — 6/6 Node tests and 24/24 Playwright visual tests (2026-08-01) |
+| Tests | PASS — 6/6 Node tests and 38/38 Playwright visual/interaction tests (2026-08-01) |
 | Security review | NOT_STARTED |
 | Accessibility review | IN_REVIEW — semantic DOM, keyboard focus, responsive navigation, reduced motion |
 | Legal/editorial review | NOT_STARTED |
@@ -42,8 +42,8 @@ This file is the delivery source of truth. Update it after evidence exists, not 
 | ID | Phase | Status | Exit criteria | Evidence | Risks/blockers | Approved by/date |
 |---|---|---|---|---|---|---|
 | P0 | Audit and planning | NOT_STARTED | Architecture, routes, data, STABLE mapping, risks and backlog approved | — | — | — |
-| P1 | Foundation/design system | NOT_STARTED | Scaffold/build valid; brand, company, theme and shared states complete | — | — | — |
-| P2 | Marketing website | NOT_STARTED | Global responsive pages, legal shells and SEO verified | — | — | — |
+| P1 | Foundation/design system | DONE | Scaffold/build valid; brand, company, theme and shared states complete | F-010–F-013 and F-015–F-016 accepted; lint, types, tests, build, 24 baselines, and 26 browser cases pass | — | User, 2026-08-01 |
+| P2 | Marketing website | IN_PROGRESS | Global responsive pages, legal shells and SEO verified | F-014 explicitly approved; visual implementation in progress | F-017 remains required for route/legal/SEO completion | User, 2026-08-01 |
 | P3 | Public demo product | NOT_STARTED | Feeds, stories, geography, search and demo media verified | — | — | — |
 | P4 | Auth/personalization | NOT_STARTED | Auth, onboarding, preferences and saves persist securely | — | — | — |
 | P5 | Admin/editorial | NOT_STARTED | RBAC and review/source/media workflows verified | — | — | — |
@@ -71,7 +71,7 @@ Create one row per independently testable outcome. Split rows that require diffe
 | F-011 | 1 | Translate approved mockup into design tokens | P0 | DONE | Codex | Approved mockup and both themes reviewed; user accepted 2026-08-01 | Shared semantic colors, typography, spacing, radii, elevation, focus, reduced motion, and states remain coherent | 24 visual baselines, 26 browser tests, lint, types, and user review PASS | HIGH | F-000, F-001 | Components/design system | Working tree |
 | F-012 | 1 | Build mockup-aligned shared components | P0 | DONE | Codex | Shared component patterns reviewed across all current surfaces and breakpoints; user accepted 2026-08-01 | Navigation, cards, metrics, badges, buttons, panels, progress, and responsive states are consistent and accessible | Mobile Menu discoverability corrected; 26 browser tests, lint, types, and build PASS | HIGH | F-011 | Components | Working tree |
 | F-013 | 1 | Establish visual-regression workflow | P1 | DONE | Codex | Root STABLE and approved mockup reviewed; Playwright workflow exercises navigation, themes, error states, overflow, and screenshots | Stable screenshots cover all current surfaces, both themes, and four agreed breakpoints | 24/24 visual tests PASS; 24 committed PNG baselines; mobile tracker overflow found and corrected | HIGH | F-011, F-012 | `playwright.config.ts`, `tests/visual-regression.spec.ts`, baseline README | Working tree |
-| F-014 | 2 | Marketing homepage visual implementation | P0 | NOT_STARTED | — | — | Marketing panel hierarchy is reproduced responsively in light/dark themes | Screenshots/E2E/a11y | HIGH | F-011, F-012 | Marketing | — |
+| F-014 | 2 | Marketing homepage visual implementation | P0 | DONE | Codex | Root STABLE at `6265a47`; full lifecycle, mockup comparison, and review evidence recorded below | Marketing panel hierarchy is reproduced responsively in light/dark themes | 8 marketing screenshots; 38/38 browser cases; semantic/a11y assertions; lint/types/tests/build PASS | HIGH | F-011, F-012 | Marketing | Working tree |
 | F-020 | 3 | Global/country/region feed architecture | P0 | NOT_STARTED | — | — | Configurable geography; no discriminatory hardcoding | Unit/E2E/fairness checks | HIGH | F-010 | Geographic coverage | — |
 | F-021 | 3 | News feed and story visual implementation | P0 | NOT_STARTED | — | — | Feed/story panels guide responsive, accessible light/dark screens | Screenshots/E2E/a11y | HIGH | F-012, F-020 | Public UX | — |
 | F-022 | 3 | Mobile feed and video visual implementation | P0 | NOT_STARTED | — | — | Mobile panels guide accessible touch-first responsive flows | Device screenshots/E2E | HIGH | F-012, media data | Public UX | — |
@@ -112,7 +112,7 @@ This is the canonical source for the Project Tracker UI. Sprints group phases fo
 | F-013 | S1 | P1 | Establish visual-regression workflow | P1 | DONE | 100% | DONE | Codex | 24/24 Playwright baselines pass across briefing, tracker, and editorial; light/dark at mobile, tablet, desktop, and large desktop | HIGH | F-011, F-012 |
 | F-015 | S1 | P1 | Living sprint tracker and agent handoff foundation | P0 | DONE | 100% | DONE | Codex | User approved; responsive shell, handoff, truthful demo states, and Menu drawer evidence complete | HIGH | F-000, F-001, F-011 |
 | F-016 | S1 | P1 | Markdown-synchronized delivery hierarchy | P0 | DONE | 100% | DONE | Codex | User approved; parser, hierarchy UI, build gates, 24 baselines, and responsive interaction evidence complete | HIGH | F-001, F-015 |
-| F-014 | S1 | P2 | Marketing homepage visual implementation | P0 | DISCOVERY | 10% | SCOPE | Unassigned | Responsive light/dark screenshots, E2E, and accessibility required | HIGH | F-011, F-012 |
+| F-014 | S1 | P2 | Marketing homepage visual implementation | P0 | DONE | 100% | DONE | Codex | Approved and implemented 2026-08-01; 8 responsive light/dark baselines and 38 browser cases pass | HIGH | F-011, F-012 |
 | F-017 | S1 | P2 | Marketing routes, legal shells, and SEO | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | Required routes, metadata, canonicalization, and legal review required | HIGH | F-010, F-014 |
 | F-020 | S1 | P3 | Global/country/region feed architecture | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | Configurable geography, unit, E2E, and fairness checks required | HIGH | F-010 |
 | F-021 | S1 | P3 | News feed and story experience | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | Responsive feed/story screenshots, E2E, and accessibility required | HIGH | F-012, F-020 |
@@ -140,6 +140,39 @@ This is the canonical source for the Project Tracker UI. Sprints group phases fo
 | F-090 | S5 | P14 | Production release gate | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | Release report, environments, backup, rollback, smoke, and approvals required | CRITICAL | All P0/P1 work |
 
 ## Feature implementation card
+
+### F-014 Marketing homepage visual implementation
+
+- Phase / epic: Phase 2 marketing website
+- Owner: Codex
+- Priority / risk: P0 / HIGH
+- Status: DONE
+- Requested outcome: implement the approved marketing homepage panel as a responsive, accessible light/dark experience.
+- User and business value: give prospective users a clear, trustworthy explanation of NyaVista and a direct path into the truthful demo experience.
+- In scope: marketing header and navigation, approved hero hierarchy, product-principle cards, transparent demo disclosure, primary/secondary calls to action, theme interaction, and responsive visual evidence.
+- Out of scope: F-017 marketing route expansion, legal pages, pricing, forms, newsletter delivery, production SEO/canonical URLs, authentication, persistence, live news, providers, and deployment.
+- Dependencies: F-011 and F-012 complete and user-approved.
+- Files/components/services affected: `app/page.tsx`, `app/globals.css`, visual and rendered-output tests, visual baselines, tracker, and handoff.
+- Data/schema/migration impact: none; static fictional presentation only.
+- Provider and environment impact: none; no external calls, credentials, or new packages.
+- Rights/privacy/security impact: rights-safe CSS artwork only; no personal data, publisher assets, or privileged behavior.
+- Accessibility/localization/geographic-fairness impact: semantic landmarks, visible focus, keyboard/touch controls, reduced motion, no overflow, English-only copy; global/country-neutral positioning preserved.
+- Mockup panel(s) used: Marketing Homepage (Desktop), light and dark; shared colors, typography, chips, buttons, and cards strip.
+- Visual baseline path/version/hash: `docs/design/nyavista-ui-mockup-light-dark.png`; repository baseline `6265a47`.
+- Required themes/breakpoints: light/dark at 390×844, 768×1024, 1440×1000, and 1920×1080.
+
+#### STABLE record
+
+- Framework path and version/commit: `STABLE_FRAMEWORK.md` and directly required `STABLE_AI_CODING_SKILL.md`, baseline commit `6265a47`.
+- Pre-coding steps completed: required repository documents read; clean feature-branch worktree and existing UI/tests inspected; Phase 1 closure and explicit Phase 2/F-014 approval confirmed; applicable mockup panels compared; scope, exclusions, risks, acceptance, verification, and rollback defined.
+- Scope/Think: create the smallest visual-only marketing enhancement inside the existing demo shell and reuse semantic tokens/components; keep workspace and later routes intact.
+- Assess Risk: protect truthfulness, responsive navigation, light/dark contrast, keyboard access, existing tracker/editorial surfaces, and the committed screenshot matrix.
+- Build: added a dedicated marketing surface with semantic header/navigation/main/footer, specification-aligned headline, truthful demo disclosure, responsive hero, rights-safe abstract mosaic, reusable principle cards, product promise, theme control, and demo-workspace entry while preserving all Phase 1 surfaces.
+- Validate: ESLint PASS; strict TypeScript PASS; production build PASS; 6/6 Node tests PASS; 32/32 light/dark screenshots and 38/38 Playwright visual/interaction cases PASS at all four breakpoints. Browser cases reject overlays, console errors, failed resources, and horizontal overflow.
+- Evolve: desktop and mobile baselines were manually compared with the approved marketing panel. Calm editorial hierarchy, split hero, compact navigation, restrained borders/depth, principle cards, and theme identity align. CSS abstract art intentionally replaces generated photography for content-rights safety; the specification-mandated headline replaces incidental mockup copy; mobile collapses navigation and stacks content for usability.
+- Acceptance criteria: approved hierarchy and design language; truthful demo labeling; functional CTA/navigation/theme controls; semantic landmarks and headings; no horizontal overflow or failed resources; visual evidence for both themes and all required breakpoints; all repository gates pass.
+- Rollback: revert the focused F-014 UI/test/documentation changes and restore the prior marketing/briefing baselines; no migration or external state exists.
+- Acceptance result: all criteria satisfied; F-014 is complete. F-017 and Phase 2 completion remain separately gated.
 
 Copy this section for each feature.
 
@@ -397,6 +430,16 @@ Copy this section for each feature.
 - User acceptance: approved 2026-08-01.
 - Next approval required: formal Phase 1 closure decision; do not advance beyond the approved Phase 1 foundation.
 
+## Phase 1 closure record
+
+- Phase completed: P1 Foundation/design system, user-approved 2026-08-01 before F-014 authorization.
+- STABLE evidence: F-010–F-013 and F-015–F-016 each contain complete scope/build/validate/evolve records, acceptance results, limitations, and rollback notes.
+- Acceptance: typed product identity, semantic light/dark tokens, accessible shared components, visual-regression workflow, responsive app shell, living handoff, and Markdown-synchronized tracker are complete and user-accepted.
+- Verification at closure: ESLint, strict TypeScript, six Node tests, production build, 24 Phase 1 visual baselines, and 26 Phase 1 browser cases passed; the mobile sidebar discoverability correction is included.
+- Security/editorial/rights/accessibility/i18n/fairness: demo-only with no providers, secrets, persistence, or publishing; rights-safe abstract visuals; semantic/focus/reduced-motion/responsive evidence complete; full screen-reader certification and localization remain later gates.
+- Migration/rollback: none; focused source and baseline reverts only.
+- Approval/next phase: user explicitly approved Phase 1 closure and Phase 2/F-014 on 2026-08-01; no other Phase 2 item was authorized.
+
 ## Risk register
 
 | ID | Risk | Area | Likelihood | Impact | Severity | Mitigation | Trigger/indicator | Owner | Status |
@@ -430,9 +473,9 @@ Copy this section for each feature.
 | Accessibility | Automated + manual | NOT_RUN | — | — | — |
 | Security | Review/tests | NOT_RUN | — | — | — |
 | Production build | `pnpm build` / `pnpm test` | PASS | 2026-08-01 | vinext/Vite production build | — |
-| Light-theme visual regression | `pnpm visual:test` | PASS | 2026-08-01 | 12 screenshot states plus drawer interactions | — |
-| Dark-theme visual regression | `pnpm visual:test` | PASS | 2026-08-01 | 12 screenshot states plus drawer interactions | — |
-| Responsive mockup comparison | Mobile/tablet/desktop/large desktop | PASS | 2026-08-01 | 24 baselines; 26 browser cases | — |
+| Light-theme visual regression | `pnpm visual:test` | PASS | 2026-08-01 | 16 screenshot states plus interactions | — |
+| Dark-theme visual regression | `pnpm visual:test` | PASS | 2026-08-01 | 16 screenshot states plus interactions | — |
+| Responsive mockup comparison | Mobile/tablet/desktop/large desktop | PASS | 2026-08-01 | 32 baselines; 38 browser cases | — |
 
 ## Documentation tracker
 

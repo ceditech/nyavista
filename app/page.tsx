@@ -5,7 +5,7 @@ import trackerMarkdown from "virtual:product-tracker";
 import { product } from "../lib/product";
 import { parseProductTracker, trackerCheckpoints, type TrackerFeature, type TrackerStatus } from "../lib/tracker";
 
-type View = "briefing" | "tracker" | "editorial";
+type View = "marketing" | "briefing" | "tracker" | "editorial";
 const tracker = parseProductTracker(trackerMarkdown);
 
 const stories = [
@@ -19,17 +19,19 @@ function Icon({ children }: { children: React.ReactNode }) {
 }
 
 export default function Home() {
-  const [view, setView] = useState<View>("briefing");
+  const [view, setView] = useState<View>("marketing");
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [navOpen, setNavOpen] = useState(false);
 
   return (
     <div className="app" data-theme={theme}>
       <a className="skip-link" href="#main">Skip to main content</a>
+      {view === "marketing" ? <Marketing theme={theme} onToggleTheme={() => setTheme(theme === "light" ? "dark" : "light")} onExplore={() => setView("briefing")} /> : <>
       <aside id="primary-navigation" className={navOpen ? "sidebar open" : "sidebar"} aria-label="Primary navigation">
         <div className="brand"><span className="brand-mark">N</span><span>{product.name}</span><button className="nav-close" onClick={() => setNavOpen(false)} aria-label="Close navigation">×</button></div>
         <nav>
           <p className="nav-label">Workspace</p>
+          <button className="nav-item" onClick={() => { setView("marketing"); setNavOpen(false); }}><Icon>âŒ‚</Icon>NyaVista home</button>
           <button className={view === "briefing" ? "nav-item active" : "nav-item"} onClick={() => { setView("briefing"); setNavOpen(false); }}><Icon>⌂</Icon>News intelligence</button>
           <button className={view === "tracker" ? "nav-item active" : "nav-item"} onClick={() => { setView("tracker"); setNavOpen(false); }}><Icon>◫</Icon>Project tracker<span className="nav-count">{tracker.features.length}</span></button>
           <button className={view === "editorial" ? "nav-item active" : "nav-item"} onClick={() => { setView("editorial"); setNavOpen(false); }}><Icon>✓</Icon>Editorial overview</button>
@@ -60,8 +62,39 @@ export default function Home() {
           {view === "editorial" && <Editorial />}
         </main>
       </div>
+      </>}
     </div>
   );
+}
+
+function Marketing({ theme, onToggleTheme, onExplore }: { theme: "light" | "dark"; onToggleTheme: () => void; onExplore: () => void }) {
+  const principles = [
+    { icon: "◎", title: "Multi-source clarity", copy: "Compare perspectives and understand how a story is being framed." },
+    { icon: "◌", title: "Audio & video explainers", copy: "Choose concise, accessible formats built for different moments." },
+    { icon: "◈", title: "Global coverage", copy: "Connect local context with worldwide developments—country-neutral by design." },
+    { icon: "▣", title: "Source transparent", copy: "See source counts, disclosure states, and original reporting paths." },
+  ];
+
+  return <div className="marketing-shell">
+    <header className="marketing-header">
+      <a className="marketing-brand" href="#marketing-main" aria-label="NyaVista home"><span className="brand-mark">N</span>{product.name}</a>
+      <nav className="marketing-nav" aria-label="Marketing navigation">
+        <a href="#features">Features</a><a href="#principles">How it works</a><button onClick={onExplore}>Global coverage</button>
+      </nav>
+      <div className="marketing-actions"><button className="theme-toggle" onClick={onToggleTheme} aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`}><span aria-hidden="true">{theme === "light" ? "☾" : "☀"}</span>{theme === "light" ? "Dark" : "Light"}</button><button className="button primary marketing-explore" onClick={onExplore}>Explore demo</button></div>
+    </header>
+    <main id="marketing-main" className="marketing-main">
+      <section className="marketing-hero" aria-labelledby="marketing-title">
+        <div className="marketing-copy"><span className="pill pill-indigo">DEMO EXPERIENCE · NO LIVE REPORTING</span><p className="marketing-kicker">Every story. A clearer view.</p><h1 id="marketing-title">Understand the news in minutes, not hours.</h1><p>Build a clearer picture through transparent, multi-source context and accessible explainers—designed for a global audience.</p><div className="button-row"><button className="button primary" onClick={onExplore}>Explore NyaVista <span aria-hidden="true">→</span></button><a className="button secondary button-link" href="#principles">See how it works <span aria-hidden="true">↓</span></a></div><small className="marketing-disclosure">Fictional planning content. No live sources, recommendations, or AI providers are connected.</small></div>
+        <div className="marketing-mosaic" aria-label="Abstract, rights-safe illustration of global news coverage">
+          <div className="mosaic-tile city"><span>Local context</span></div><div className="mosaic-tile globe"><span>Global view</span></div><div className="mosaic-tile network"><span>Source connections</span></div><div className="mosaic-tile people"><span>Human perspective</span></div>
+        </div>
+      </section>
+      <section id="principles" className="marketing-principles" aria-labelledby="principles-title"><div className="sr-only"><h2 id="principles-title">How NyaVista is designed to help</h2></div>{principles.map((principle) => <article key={principle.title}><Icon>{principle.icon}</Icon><h3>{principle.title}</h3><p>{principle.copy}</p></article>)}</section>
+      <section id="features" className="marketing-promise" aria-label="Product promise"><p><strong>AI-assisted.</strong> Human-reviewed. Source-transparent.</p><span className="pill pill-violet">Planning preview</span></section>
+    </main>
+    <footer className="marketing-footer"><span>{product.name} is a proprietary product of {product.owner}, a United States company.</span><button onClick={onExplore}>Enter demo workspace →</button></footer>
+  </div>;
 }
 
 function Briefing({ onOpenTracker }: { onOpenTracker: () => void }) {

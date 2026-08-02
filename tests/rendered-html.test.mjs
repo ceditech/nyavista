@@ -20,10 +20,11 @@ test("server-renders the NyaVista demo shell truthfully", async () => {
   assert.match(html, /name="publisher" content="E-DEAL EXPRESS LLC"/i);
   assert.match(html, /property="og:locale" content="en_US"/i);
   assert.match(html, /name="theme-color" content="#031b2d" media="\(prefers-color-scheme: dark\)"/i);
-  assert.match(html, /Demo content/i);
-  assert.match(html, /not live reporting/i);
-  assert.match(html, /Global intelligence briefing/);
-  assert.match(html, /Project tracker/);
+  assert.match(html, /Demo experience/i);
+  assert.match(html, /no live reporting/i);
+  assert.match(html, /Understand the news in minutes, not hours/i);
+  assert.match(html, /Marketing navigation/);
+  assert.match(html, /Fictional planning content/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/i);
 });
 
@@ -52,8 +53,8 @@ test("centralizes product identity and preserves living delivery records", async
 test("keeps the complete visual baseline matrix", async () => {
   const files = await readdir(new URL("./visual-baselines/", import.meta.url));
   const pngs = files.filter((file) => file.endsWith(".png"));
-  assert.equal(pngs.length, 24);
-  for (const surface of ["briefing", "tracker", "editorial"]) {
+  assert.equal(pngs.length, 32);
+  for (const surface of ["marketing", "briefing", "tracker", "editorial"]) {
     for (const theme of ["light", "dark"]) {
       for (const viewport of ["mobile", "tablet", "desktop", "large-desktop"]) {
         assert.ok(pngs.includes(`${surface}-${theme}-${viewport}.png`));

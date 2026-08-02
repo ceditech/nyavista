@@ -19,15 +19,30 @@ Required fields for every implementation entry:
 
 | Field | Current value |
 |---|---|
-| Approved work | Phase 0 audit plus Phase 1 first-pass foundation |
-| Active tracker IDs | F-001; F-010, F-011, F-012, F-013, F-015, and F-016 complete |
+| Approved work | Phase 2 — F-014 marketing homepage visual implementation |
+| Active tracker IDs | F-014 complete; Phase 1 items F-010–F-013 and F-015–F-016 complete |
 | Active agent | Codex |
 | STABLE reference | `STABLE_FRAMEWORK.md` at commit `f8ab99e` |
 | UI reference | `docs/design/nyavista-ui-mockup-light-dark.png` |
 | State | Demo-only local implementation; no live providers or production data |
-| Next gate | Review Phase 1 evidence; obtain approval before advancing into a full Phase 2, 3, or 5 implementation |
+| Next gate | User review of F-014; F-017 and all later phase work remain unapproved |
 
 ## Implementation ledger
+
+### 2026-08-01 — Codex — F-014
+
+- Outcome: completed the approved Phase 2 marketing homepage visual implementation and kept Phase 1 workspace surfaces intact.
+- Scope: dedicated marketing header/navigation, specification headline, truthful demo disclosure, responsive split hero, rights-safe abstract coverage mosaic, four product-principle cards, product promise, light/dark switch, and demo-workspace entry.
+- Excluded: F-017 routes, legal shells, pricing/forms, production SEO, authentication, persistence, live news/providers, and deployment.
+- STABLE: root `STABLE_FRAMEWORK.md` and required sources read at baseline `6265a47`; explicit Phase 2/F-014 approval confirmed; marketing and shared-system mockup panels inspected; scope/risks/acceptance recorded before implementation; focused build, validation, visual comparison, deviations, and rollback documented.
+- Mockup/evidence: marketing panel hierarchy compared in light/dark at 390×844, 768×1024, 1440×1000, and 1920×1080. Eight new marketing baselines expand the matrix to 32 images across four surfaces.
+- Verification: ESLint PASS; strict TypeScript PASS; production build PASS; 6/6 Node tests PASS; 38/38 Playwright visual and interaction cases PASS with overflow, failed-resource, console-error, and framework-overlay guards.
+- Files: `app/page.tsx`, `app/globals.css`, `playwright.config.ts`, `tests/visual-regression.spec.ts`, `tests/rendered-html.test.mjs`, eight marketing baseline PNGs, baseline README, `PRODUCT_TRACKER.md`, and `CLAUDE_HANDOFF.md`.
+- Deviations: the product-specification headline replaces incidental mockup copy; original CSS abstract art avoids unlicensed/generated photography; responsive stacking and collapsed compact navigation preserve usability on narrow screens.
+- Truthfulness/rights/security: fictional planning/demo state is visible; no providers, publisher media, credentials, personal data, persistence, or privileged behavior added.
+- Accessibility/i18n/fairness: semantic landmarks/headings/navigation, native keyboard/touch controls, visible focus, reduced motion, contrast-aware themes, and no horizontal overflow; English-only remains deferred; country-neutral global positioning preserved.
+- Rollback: revert the focused F-014 UI/tests/docs and remove the eight marketing baselines; no migration or external state.
+- Next safe action: user reviews F-014. Do not begin F-017 or any later feature without explicit approval.
 
 ### 2026-08-01 — Codex — F-010/F-011/F-012/F-015
 
@@ -47,8 +62,8 @@ Required fields for every implementation entry:
 
 | Priority | Tracker ID | Next action | Required evidence | Owner |
 |---|---|---|---|---|
-| P0 | Phase 1 gate | Perform formal Phase 1 closure review; do not infer Phase 2 authorization | Phase completion report and explicit approval | Unassigned |
-| P1 | F-014 | Implement full marketing route only after Phase 2 approval | Responsive and accessibility evidence | Unassigned |
+| P0 | F-014 review | User reviews completed marketing homepage at the local feature-branch server | Acceptance decision | User |
+| P1 | F-017 | Await explicit approval after F-014 review | Marketing routes, legal shells, and SEO evidence | Unassigned |
 
 ### 2026-08-01 — Codex — F-013
 

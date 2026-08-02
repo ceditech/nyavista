@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const surfaces = [
+  { id: "marketing", marker: "Understand the news in minutes, not hours." },
   { id: "briefing", marker: "Every story." },
   { id: "tracker", marker: "Every sprint, phase, and feature" },
   { id: "editorial", marker: "Editorial clarity at every gate." },
@@ -31,6 +32,7 @@ for (const surface of surfaces) {
         await page.setViewportSize({ width: viewport.width, height: viewport.height });
         await page.emulateMedia({ reducedMotion: "reduce" });
         await page.goto("/", { waitUntil: "networkidle" });
+        if (surface.id !== "marketing") await page.getByRole("button", { name: /Explore NyaVista/ }).click();
         const mobileNavigation = page.getByRole("button", { name: "Open navigation" });
         if (surface.id !== "briefing" && await mobileNavigation.isVisible()) await mobileNavigation.click();
         if (surface.id === "tracker") await page.getByRole("button", { name: /Project tracker/ }).click();
@@ -51,10 +53,25 @@ for (const surface of surfaces) {
   }
 }
 
+for (const viewport of viewports) {
+  test(`marketing interactions · ${viewport.id}`, async ({ page }) => {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+    await page.goto("/", { waitUntil: "networkidle" });
+    await expect(page.getByRole("heading", { level: 1, name: "Understand the news in minutes, not hours." })).toBeVisible();
+    await expect(page.locator("nav[aria-label='Marketing navigation']")).toHaveCount(1);
+    await expect(page.getByText("Fictional planning content.")).toBeVisible();
+    await page.getByRole("button", { name: "Switch to dark theme" }).click();
+    await expect(page.locator(".app")).toHaveAttribute("data-theme", "dark");
+    await page.getByRole("button", { name: /Explore NyaVista/ }).click();
+    await expect(page.getByRole("heading", { name: /Every story/ })).toBeVisible();
+  });
+}
+
 for (const viewport of viewports.filter(({ id }) => id === "mobile" || id === "tablet")) {
   test(`sidebar drawer · ${viewport.id}`, async ({ page }) => {
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
     await page.goto("/", { waitUntil: "networkidle" });
+    await page.getByRole("button", { name: /Explore NyaVista/ }).click();
     const menu = page.getByRole("button", { name: "Open navigation" });
     const sidebar = page.getByRole("complementary", { name: "Primary navigation" });
     await expect(menu).toBeVisible();
