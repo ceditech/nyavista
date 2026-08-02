@@ -21,7 +21,17 @@
 
 # misc
 .DS_Store
+Thumbs.db
+Desktop.ini
 *.pem
+*.log
+
+# editor and local tooling
+/.idea/
+/.vscode/
+/.cache/
+/.vite/
+.eslintcache
 
 # debug
 npm-debug.log*
@@ -29,8 +39,10 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files (keep sanitized templates committable)
 .env*
+!.env.example
+!.env.*.example
 
 # vercel
 .vercel
@@ -41,4 +53,6 @@ next-env.d.ts
 /dist/
 /.wrangler/
 /outputs/
+/test-results/
+/playwright-report/
 /work/

@@ -1,19 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
+import trackerMarkdown from "virtual:product-tracker";
 import { product } from "../lib/product";
+import { parseProductTracker, trackerCheckpoints, type TrackerFeature, type TrackerStatus } from "../lib/tracker";
 
 type View = "briefing" | "tracker" | "editorial";
-type PhaseStatus = "Complete" | "Active" | "Planned";
-
-const phases: { id: string; title: string; status: PhaseStatus; progress: number; steps: string[] }[] = [
-  { id: "P0", title: "Audit & planning", status: "Complete", progress: 100, steps: ["STABLE mapped", "Repository audited", "Risks registered"] },
-  { id: "P1", title: "Foundation", status: "Active", progress: 62, steps: ["Brand configuration", "Design tokens", "Shared app shell", "Living tracker"] },
-  { id: "P2", title: "Marketing", status: "Planned", progress: 8, steps: ["Global homepage", "Trust pages", "SEO foundation"] },
-  { id: "P3", title: "Public demo", status: "Planned", progress: 4, steps: ["News feed", "Story detail", "Search & geography"] },
-  { id: "P4", title: "Personalisation", status: "Planned", progress: 0, steps: ["Authentication", "Preferences", "Bookmarks"] },
-  { id: "P5", title: "Editorial", status: "Planned", progress: 3, steps: ["Review queue", "Coverage health", "Publishing controls"] },
-];
+const tracker = parseProductTracker(trackerMarkdown);
 
 const stories = [
   { tag: "GLOBAL · ECONOMY", title: "How cities are preparing public services for longer heat seasons", summary: "A multi-source demo briefing comparing adaptation plans, funding questions, and local trade-offs.", sources: 5, time: "6 min", accent: "gold" },
@@ -28,28 +21,17 @@ function Icon({ children }: { children: React.ReactNode }) {
 export default function Home() {
   const [view, setView] = useState<View>("briefing");
   const [theme, setTheme] = useState<"light" | "dark">("light");
-  const [selectedPhase, setSelectedPhase] = useState("P1");
-  const [polling, setPolling] = useState(true);
   const [navOpen, setNavOpen] = useState(false);
-  const [lastSync, setLastSync] = useState("Just now");
-  const overall = useMemo(() => Math.round(phases.reduce((sum, phase) => sum + phase.progress, 0) / phases.length), []);
-  const activePhase = phases.find((phase) => phase.id === selectedPhase) ?? phases[1];
-
-  function refreshTracker() {
-    setLastSync("Just now");
-    setPolling(false);
-    window.setTimeout(() => setPolling(true), 700);
-  }
 
   return (
     <div className="app" data-theme={theme}>
       <a className="skip-link" href="#main">Skip to main content</a>
-      <aside className={navOpen ? "sidebar open" : "sidebar"} aria-label="Primary navigation">
+      <aside id="primary-navigation" className={navOpen ? "sidebar open" : "sidebar"} aria-label="Primary navigation">
         <div className="brand"><span className="brand-mark">N</span><span>{product.name}</span><button className="nav-close" onClick={() => setNavOpen(false)} aria-label="Close navigation">×</button></div>
         <nav>
           <p className="nav-label">Workspace</p>
           <button className={view === "briefing" ? "nav-item active" : "nav-item"} onClick={() => { setView("briefing"); setNavOpen(false); }}><Icon>⌂</Icon>News intelligence</button>
-          <button className={view === "tracker" ? "nav-item active" : "nav-item"} onClick={() => { setView("tracker"); setNavOpen(false); }}><Icon>◫</Icon>Project tracker<span className="nav-count">15</span></button>
+          <button className={view === "tracker" ? "nav-item active" : "nav-item"} onClick={() => { setView("tracker"); setNavOpen(false); }}><Icon>◫</Icon>Project tracker<span className="nav-count">{tracker.features.length}</span></button>
           <button className={view === "editorial" ? "nav-item active" : "nav-item"} onClick={() => { setView("editorial"); setNavOpen(false); }}><Icon>✓</Icon>Editorial overview</button>
           <p className="nav-label">Explore</p>
           <button className="nav-item"><Icon>◎</Icon>Global coverage</button>
@@ -59,10 +41,11 @@ export default function Home() {
         <div className="sidebar-note"><span className="status-dot" /> Demo environment<p>No live reporting or providers</p></div>
         <button className="nav-item settings"><Icon>⚙</Icon>Settings</button>
       </aside>
+      {navOpen && <button className="sidebar-backdrop" onClick={() => setNavOpen(false)} aria-label="Close navigation"/>}
 
       <div className="workspace">
         <header className="topbar">
-          <button className="mobile-brand" onClick={() => setNavOpen(true)} aria-label="Open navigation" aria-expanded={navOpen}>N</button>
+          <button className="mobile-menu" onClick={() => setNavOpen(true)} aria-label="Open navigation" aria-expanded={navOpen} aria-controls="primary-navigation"><span aria-hidden="true">☰</span><strong>Menu</strong></button>
           <div><p className="eyebrow">{product.owner} · {product.foundingCountry}</p><strong>{view === "tracker" ? "Delivery workspace" : view === "editorial" ? "Editorial command centre" : "Global intelligence briefing"}</strong></div>
           <div className="top-actions">
             <button className="icon-button" aria-label="Search">⌕</button>
@@ -73,7 +56,7 @@ export default function Home() {
 
         <main id="main">
           {view === "briefing" && <Briefing onOpenTracker={() => setView("tracker")} />}
-          {view === "tracker" && <Tracker overall={overall} activePhase={activePhase} selectedPhase={selectedPhase} setSelectedPhase={setSelectedPhase} polling={polling} lastSync={lastSync} refresh={refreshTracker} />}
+          {view === "tracker" && <Tracker />}
           {view === "editorial" && <Editorial />}
         </main>
       </div>
@@ -93,6 +76,7 @@ function Briefing({ onOpenTracker }: { onOpenTracker: () => void }) {
   </div>;
 }
 
+/* Previous hard-coded tracker retained temporarily for history.
 function Tracker({ overall, activePhase, selectedPhase, setSelectedPhase, polling, lastSync, refresh }: { overall: number; activePhase: typeof phases[number]; selectedPhase: string; setSelectedPhase: (id: string) => void; polling: boolean; lastSync: string; refresh: () => void }) {
   return <div className="page tracker-page">
     <section className="page-intro"><div><span className="pill pill-violet">LIVING DELIVERY VIEW</span><h1>From specification to shipped product.</h1><p>A visual first pass of the sprint phases in <code>PRODUCT_TRACKER.md</code>. Values are planning snapshots until markdown synchronisation is implemented.</p></div><div className="sync-card"><div className="sync-status"><span className={polling ? "pulse" : "pulse paused"}/><span><strong>{polling ? "Polling enabled" : "Refreshing…"}</strong><small>Last snapshot: {lastSync}</small></span></div><button className="button secondary compact" onClick={refresh}>Refresh snapshot</button></div></section>
@@ -101,6 +85,51 @@ function Tracker({ overall, activePhase, selectedPhase, setSelectedPhase, pollin
       <aside className="panel sprint-panel"><p className="eyebrow">SELECTED SPRINT</p><div className="sprint-title"><div><span>{activePhase.id}</span><h2>{activePhase.title}</h2></div><strong>{activePhase.progress}%</strong></div><div className="ring" style={{"--progress": `${activePhase.progress * 3.6}deg`} as React.CSSProperties}><span>{activePhase.progress}<small>%</small></span></div><h3>Implementation steps</h3><ol className="step-list">{activePhase.steps.map((step, index) => <li key={step} className={index < Math.ceil(activePhase.steps.length * activePhase.progress / 100) ? "done" : ""}><span>{index < Math.ceil(activePhase.steps.length * activePhase.progress / 100) ? "✓" : index + 1}</span><p>{step}<small>{index < Math.ceil(activePhase.steps.length * activePhase.progress / 100) ? "Evidence recorded" : "Awaiting implementation"}</small></p></li>)}</ol></aside></section>
     <section className="panel activity-panel"><div className="panel-heading"><div><p className="eyebrow">AGENT HANDOFFS</p><h2>Implementation pulse</h2></div><span className="pill pill-green">1 agent active</span></div><div className="timeline"><div><span className="timeline-dot indigo"/><strong>Codex</strong><p>App shell, design system and living tracker foundation</p><time>In progress</time></div><div><span className="timeline-dot violet"/><strong>STABLE gate</strong><p>Scope, mockup panels, risks and acceptance checks recorded</p><time>Completed</time></div><div><span className="timeline-dot gold"/><strong>Next handoff</strong><p>Review implementation evidence in CLAUDE_HANDOFF.md</p><time>Pending</time></div></div></section>
   </div>;
+}
+*/
+
+function Tracker() {
+  const initialSprint = tracker.sprints.find((sprint) => sprint.status === "IN_PROGRESS") ?? tracker.sprints[0];
+  const [selectedSprintId, setSelectedSprintId] = useState(initialSprint.id);
+  const [selectedPhaseId, setSelectedPhaseId] = useState(initialSprint.phases[0]?.id ?? "");
+  const [selectedFeatureId, setSelectedFeatureId] = useState(initialSprint.phases[0]?.features[0]?.id ?? "");
+  const selectedSprint = tracker.sprints.find((sprint) => sprint.id === selectedSprintId) ?? initialSprint;
+  const selectedPhase = selectedSprint.phases.find((phase) => phase.id === selectedPhaseId) ?? selectedSprint.phases[0];
+  const selectedFeature = selectedPhase?.features.find((feature) => feature.id === selectedFeatureId) ?? selectedPhase?.features[0];
+  const doneCount = tracker.features.filter((feature) => feature.status === "DONE").length;
+  const activeCount = tracker.features.filter((feature) => ["IN_PROGRESS", "IN_REVIEW", "VALIDATING"].includes(feature.status)).length;
+
+  function selectSprint(id: string) {
+    const sprint = tracker.sprints.find((candidate) => candidate.id === id) ?? initialSprint;
+    setSelectedSprintId(sprint.id);
+    setSelectedPhaseId(sprint.phases[0]?.id ?? "");
+    setSelectedFeatureId(sprint.phases[0]?.features[0]?.id ?? "");
+  }
+
+  function selectPhase(id: string) {
+    const phase = selectedSprint.phases.find((candidate) => candidate.id === id) ?? selectedSprint.phases[0];
+    setSelectedPhaseId(phase?.id ?? "");
+    setSelectedFeatureId(phase?.features[0]?.id ?? "");
+  }
+
+  return <div className="page tracker-page">
+    <section className="page-intro"><div><span className="pill pill-violet">MARKDOWN-SYNCHRONIZED DELIVERY VIEW</span><h1>Every sprint, phase, and feature—one source.</h1><p>The hierarchy below is generated from <code>PRODUCT_TRACKER.md</code>. Edit its sprint and feature progress registers; the app validates and renders the same delivery record.</p></div><div className="sync-card tracker-source-card"><div className="sync-status"><span className="pulse"/><span><strong>Markdown source linked</strong><small>Tracker updated {tracker.lastUpdated}</small></span></div><small>PRODUCT_TRACKER.md · validated at build time</small></div></section>
+    <section className="metric-grid"><Metric label="Overall completion" value={`${tracker.overallProgress}%`} change="Average feature progress" tone="indigo"/><Metric label="Tracked features" value={`${tracker.features.length}`} change={`Across ${tracker.phases.length} phases`} tone="violet"/><Metric label="Completed" value={`${doneCount}`} change="Acceptance evidence recorded" tone="green"/><Metric label="Active implementation" value={`${activeCount}`} change="Build, review, or validation" tone="gold"/></section>
+    <section className="panel sprint-overview"><div className="panel-heading"><div><p className="eyebrow">SPRINT ROADMAP</p><h2>Delivery sequence</h2></div><span className="legend"><i/> Derived completion</span></div><div className="sprint-strip">{tracker.sprints.map((sprint) => <button key={sprint.id} aria-pressed={sprint.id === selectedSprint.id} className={sprint.id === selectedSprint.id ? "sprint-card selected" : "sprint-card"} onClick={() => selectSprint(sprint.id)}><span><b>{sprint.id}</b><StatusBadge status={sprint.status}/></span><strong>{sprint.title}</strong><small>{sprint.phases.length} phases · {sprint.phases.reduce((count, phase) => count + phase.features.length, 0)} features</small><span className="progress-track" role="progressbar" aria-label={`${sprint.title} completion`} aria-valuenow={sprint.progress} aria-valuemin={0} aria-valuemax={100}><i style={{width: `${sprint.progress}%`}}/></span><em>{sprint.progress}%</em></button>)}</div></section>
+    <section className="delivery-layout">
+      <aside className="panel phase-rail"><div className="panel-heading"><div><p className="eyebrow">{selectedSprint.id} · PHASES</p><h2>{selectedSprint.title}</h2></div><strong className="completion-number">{selectedSprint.progress}%</strong></div><div className="phase-selector">{selectedSprint.phases.map((phase) => <button key={phase.id} aria-pressed={phase.id === selectedPhase?.id} className={phase.id === selectedPhase?.id ? "phase-select selected" : "phase-select"} onClick={() => selectPhase(phase.id)}><span><b>{phase.id}</b><small>{phase.features.length} features</small></span><strong>{phase.title}</strong><span className="progress-track"><i style={{width: `${phase.progress}%`}}/></span><em>{phase.progress}%</em></button>)}</div></aside>
+      <div className="panel feature-workspace">{selectedPhase && <><div className="feature-summary"><div><p className="eyebrow">{selectedPhase.id} · FEATURE IMPLEMENTATION</p><h2>{selectedPhase.title}</h2><p>{selectedPhase.exitCriteria}</p></div><strong>{selectedPhase.progress}%</strong></div><div className="feature-columns"><div className="feature-list" aria-label={`${selectedPhase.title} features`}>{selectedPhase.features.map((feature) => <button key={feature.id} aria-pressed={feature.id === selectedFeature?.id} className={feature.id === selectedFeature?.id ? "feature-row selected" : "feature-row"} onClick={() => setSelectedFeatureId(feature.id)}><span className="feature-copy"><small>{feature.id} · {feature.priority} · {feature.risk} risk</small><strong>{feature.title}</strong><StatusBadge status={feature.status}/></span><span className="feature-progress"><span className="progress-track"><i style={{width: `${feature.progress}%`}}/></span><b>{feature.progress}%</b></span></button>)}</div>{selectedFeature && <FeatureDetail feature={selectedFeature}/>}</div></>}</div>
+    </section>
+  </div>;
+}
+
+function StatusBadge({ status }: { status: TrackerStatus }) {
+  return <span className={`status-badge status-${status.toLowerCase()}`}>{status.replaceAll("_", " ").toLowerCase()}</span>;
+}
+
+function FeatureDetail({ feature }: { feature: TrackerFeature }) {
+  const current = trackerCheckpoints.indexOf(feature.checkpoint);
+  return <article className="feature-detail"><div><p className="eyebrow">SELECTED FEATURE</p><h3>{feature.id} · {feature.title}</h3><StatusBadge status={feature.status}/></div><dl className="feature-detail-grid"><div><dt>Owner</dt><dd>{feature.owner}</dd></div><div><dt>Dependencies</dt><dd>{feature.dependencies}</dd></div><div><dt>Evidence / acceptance</dt><dd>{feature.evidence}</dd></div><div><dt>Risk</dt><dd>{feature.risk}</dd></div></dl><div><p className="eyebrow">STABLE CHECKPOINT</p><ol className="checkpoint-trail">{trackerCheckpoints.map((checkpoint, index) => { const completed = feature.status === "DONE" || index < current; const active = feature.status !== "DONE" && index === current; return <li key={checkpoint} className={completed ? "complete" : active ? "current" : ""}><span>{completed ? "✓" : index + 1}</span><small>{checkpoint.toLowerCase()}</small></li>; })}</ol></div></article>;
 }
 
 function Metric({ label, value, change, tone }: { label: string; value: string; change: string; tone: string }) { return <article className={`metric-card ${tone}`}><span>{label}</span><strong>{value}</strong><small>{change}</small></article>; }

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 
 async function render() {
@@ -15,6 +15,11 @@ test("server-renders the NyaVista demo shell truthfully", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
   const html = await response.text();
   assert.match(html, /<title>NyaVista — Every story\. A clearer view\.<\/title>/i);
+  assert.match(html, /<html lang="en-US">/i);
+  assert.match(html, /name="robots" content="noindex, nofollow"/i);
+  assert.match(html, /name="publisher" content="E-DEAL EXPRESS LLC"/i);
+  assert.match(html, /property="og:locale" content="en_US"/i);
+  assert.match(html, /name="theme-color" content="#031b2d" media="\(prefers-color-scheme: dark\)"/i);
   assert.match(html, /Demo content/i);
   assert.match(html, /not live reporting/i);
   assert.match(html, /Global intelligence briefing/);
@@ -32,9 +37,27 @@ test("centralizes product identity and preserves living delivery records", async
   ]);
   assert.match(product, /E-DEAL EXPRESS LLC/);
   assert.match(product, /United States/);
-  assert.match(tracker, /F-015/);
+  assert.match(tracker, /### Sprint register/);
+  assert.match(tracker, /### Feature progress register/);
+  assert.match(tracker, /F-016/);
   assert.match(handoff, /Cross-Agent Implementation Handoff/);
+  assert.match(page, /virtual:product-tracker/);
+  assert.match(page, /tracker\.sprints\.map/);
+  assert.match(page, /trackerCheckpoints\.map/);
   assert.match(page, /data-theme=/);
   assert.match(css, /prefers-reduced-motion/);
   assert.match(css, /:focus-visible/);
+});
+
+test("keeps the complete visual baseline matrix", async () => {
+  const files = await readdir(new URL("./visual-baselines/", import.meta.url));
+  const pngs = files.filter((file) => file.endsWith(".png"));
+  assert.equal(pngs.length, 24);
+  for (const surface of ["briefing", "tracker", "editorial"]) {
+    for (const theme of ["light", "dark"]) {
+      for (const viewport of ["mobile", "tablet", "desktop", "large-desktop"]) {
+        assert.ok(pngs.includes(`${surface}-${theme}-${viewport}.png`));
+      }
+    }
+  }
 });
