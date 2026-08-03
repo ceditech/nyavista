@@ -61,6 +61,9 @@ test("centralizes product identity and preserves living delivery records", async
   assert.match(page, /selectFeedCandidates/);
   assert.match(page, /function SearchStories/);
   assert.match(page, /function MediaBriefing/);
+  assert.match(page, /function AccountAccess/);
+  assert.match(page, /Authentication setup required/);
+  assert.match(page, /Client login is not authorization/);
   assert.match(page, /SIMULATED MEDIA PREVIEW/);
   assert.doesNotMatch(page, /<video\b|<img\b/);
   assert.match(stories, /Fictional public planning record/);
@@ -72,8 +75,8 @@ test("centralizes product identity and preserves living delivery records", async
 test("keeps the complete visual baseline matrix", async () => {
   const files = await readdir(new URL("./visual-baselines/", import.meta.url));
   const pngs = files.filter((file) => file.endsWith(".png"));
-  assert.equal(pngs.length, 64);
-  for (const surface of ["marketing", "briefing", "story", "search", "media", "tracker", "editorial"]) {
+  assert.equal(pngs.length, 72);
+  for (const surface of ["marketing", "briefing", "story", "search", "media", "account", "tracker", "editorial"]) {
     for (const theme of ["light", "dark"]) {
       for (const viewport of ["mobile", "tablet", "desktop", "large-desktop"]) {
         assert.ok(pngs.includes(`${surface}-${theme}-${viewport}.png`));

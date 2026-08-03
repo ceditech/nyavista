@@ -6,6 +6,7 @@ const surfaces = [
   { id: "story", marker: "Context before conclusions" },
   { id: "search", marker: "Find context, not just keywords." },
   { id: "media", marker: "Context designed for a smaller screen." },
+  { id: "account", marker: "Your news, with privacy-aware controls." },
   { id: "tracker", marker: "Every sprint, phase, and feature" },
   { id: "editorial", marker: "Editorial clarity at every gate." },
 ] as const;
@@ -50,6 +51,7 @@ for (const surface of surfaces) {
             await page.getByRole("button", { name: /Media briefings/ }).click();
           }
         }
+        if (surface.id === "account") await page.getByRole("button", { name: "Open account access" }).click();
         if (surface.id === "tracker") await page.getByRole("button", { name: /Project tracker/ }).click();
         if (surface.id === "editorial") await page.getByRole("button", { name: /Editorial overview/ }).click();
         if (surface.id !== "marketing") {
@@ -71,6 +73,22 @@ for (const surface of surfaces) {
       });
     }
   }
+}
+
+for (const viewport of viewports) {
+  test(`account configuration boundary · ${viewport.id}`, async ({ page }) => {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+    await page.goto("/", { waitUntil: "networkidle" });
+    await page.getByRole("button", { name: /Explore NyaVista/ }).click();
+    await page.getByRole("button", { name: "Open account access" }).click();
+    await expect(page.getByRole("status")).toContainText("Authentication setup required");
+    await expect(page.getByRole("button", { name: "Sign in securely" })).toBeDisabled();
+    await page.getByRole("button", { name: "Create account" }).click();
+    await expect(page.getByRole("button", { name: "Create and verify account" })).toBeDisabled();
+    await page.getByRole("button", { name: "Reset password" }).click();
+    await expect(page.getByRole("button", { name: "Request reset" })).toBeDisabled();
+    await expect(page.getByText("Client login is not authorization")).toBeVisible();
+  });
 }
 
 for (const viewport of viewports) {

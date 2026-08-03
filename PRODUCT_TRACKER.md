@@ -21,7 +21,7 @@ This file is the delivery source of truth. Update it after evidence exists, not 
 |---|---|
 | Product | NyaVista |
 | Owner | E-DEAL EXPRESS LLC |
-| Current phase | Phase 3 public demo product — F-022 approved |
+| Current phase | Phase 4 authentication/personalization — F-023 foundation approved |
 | Overall status | IN_PROGRESS |
 | Release target | TBD |
 | Release owner | TBD |
@@ -29,10 +29,10 @@ This file is the delivery source of truth. Update it after evidence exists, not 
 | Updated by | Codex |
 | STABLE framework path/version | `STABLE_FRAMEWORK.md` at repository root, reviewed at baseline commit `6265a47` |
 | Approved visual reference | `docs/design/nyavista-ui-mockup-light-dark.png` |
-| Visual baseline status | PASS — 40 Playwright baselines across 5 surfaces, 2 themes, and 4 breakpoints |
-| Highest open risk | First pass is demo-only; persistence, authentication, ingestion, AI, and publishing are not live |
-| Build | PASS — `vinext build` (2026-08-01) |
-| Tests | PASS — 10/10 Node tests and 50/50 Playwright visual/interaction tests (2026-08-01) |
+| Visual baseline status | PASS — 72 Playwright baselines across 9 surface groups, 2 themes, and 4 breakpoints |
+| Highest open risk | Firebase is not configured; client identity cannot authorize server or persisted operations |
+| Build | PASS — `vinext build` (2026-08-02) |
+| Tests | PASS — 19/19 Node tests and 94/94 Playwright visual/interaction tests (2026-08-02) |
 | Security review | NOT_STARTED |
 | Accessibility review | IN_REVIEW — semantic DOM, keyboard focus, responsive navigation, reduced motion |
 | Legal/editorial review | NOT_STARTED |
@@ -45,7 +45,7 @@ This file is the delivery source of truth. Update it after evidence exists, not 
 | P1 | Foundation/design system | DONE | Scaffold/build valid; brand, company, theme and shared states complete | F-010–F-013 and F-015–F-016 accepted; lint, types, tests, build, 24 baselines, and 26 browser cases pass | — | User, 2026-08-01 |
 | P2 | Marketing website | DONE | Global responsive pages, legal shells and SEO verified | F-014 and F-017 complete; 24 routes, safe SEO policy, 40 baselines, 50 browser cases, 10 Node tests, and build pass | Qualified legal review remains required before launch | User, 2026-08-02 |
 | P3 | Public demo product | DONE | Feeds, stories, geography, search and demo media verified | F-020–F-022 complete; 17 Node tests, 64 baselines, 82 browser cases, production build, and user review pass | No live news/provider data; all fixtures and media remain fictional | User, 2026-08-02 |
-| P4 | Auth/personalization | NOT_STARTED | Auth, onboarding, preferences and saves persist securely | — | — | — |
+| P4 | Auth/personalization | IN_PROGRESS | Auth, onboarding, preferences and saves persist securely | F-023 fail-closed Firebase client foundation, account UI, config tests, and 8 visual baselines | Firebase project/emulator and F-030 server session/RBAC work remain required | User, 2026-08-02 |
 | P5 | Admin/editorial | NOT_STARTED | RBAC and review/source/media workflows verified | — | — | — |
 | P6 | Firebase persistence | NOT_STARTED | Repositories, rules, indexes, emulator and permission tests pass | — | — | — |
 | P7 | Ingestion | NOT_STARTED | Authorized ingestion, normalization, dedupe, retries and logs pass | — | — | — |
@@ -76,6 +76,7 @@ Create one row per independently testable outcome. Split rows that require diffe
 | F-020 | 3 | Global/country/region feed architecture | P0 | DONE | Codex | `STABLE_FRAMEWORK.md` at repository root reviewed; Phase 2 closure and F-020 continuation approved 2026-08-02; complete lifecycle recorded below | Typed, schema-validated feed scopes support global, country, and region discovery without commercial-market or special-country ranking logic | 4 focused geography/fairness tests and 14/14 full Node tests, lint, strict types, and production build PASS | HIGH | F-010 | Geographic coverage | Working tree |
 | F-021 | 3 | News feed and story visual implementation | P0 | DONE | Codex | Root STABLE, approved feed/story mockup panels, current shell, F-020 contracts, Next.js App Router guidance, React quality review, and user acceptance completed | Responsive feed and story-detail demo expose geography, context, source transparency, uncertainty, and accessible interaction in both themes | 17/17 Node tests, lint, strict types, build, 48 baselines, 62/62 browser cases, and user review PASS | HIGH | F-012, F-020 | Public UX | Working tree |
 | F-022 | 3 | Mobile feed and video visual implementation | P0 | DONE | Codex | Root STABLE, mobile feed/video panels, F-020/F-021 domain and UI, Next.js client/data/image guidance, React quality review, complete validation, and user acceptance recorded | Search, touch-first feed treatment, and rights-safe demo media provide accessible responsive flows with truthful failure/fallback states | 17/17 Node tests, lint, strict types, build, 64 baselines, 82/82 browser cases, and user review PASS | HIGH | F-012, F-020, F-021 | Public UX | Working tree |
+| F-023 | 4 | Authentication and onboarding | P0 | IN_PROGRESS | Codex | Root STABLE, constraints/specs, shared mockup system, Next.js guidance, and official Firebase modular/emulator guidance reviewed; lifecycle record below | Fail-closed Firebase configuration and accessible account/recovery shell exist; completion still requires configured auth, server sessions, emulator/security evidence, and onboarding persistence | 2 focused auth tests, strict types, lint, build, 8 account baselines, and 94/94 browser cases PASS | CRITICAL | F-010, Firebase web configuration; F-030 consumes identity for authorization | Auth/security | Working tree |
 | F-031 | 5 | Editorial dashboard visual implementation | P1 | NOT_STARTED | — | — | Admin panel guides metrics, queues, risks and coverage in both themes | Screenshots/E2E/a11y | HIGH | F-012, RBAC | Admin UX | — |
 | F-030 | 6 | Server-side RBAC and Firebase rules | P0 | NOT_STARTED | — | — | Unauthorized access denied in UI and backend | Rules/integration tests | CRITICAL | Auth/data model | Security | — |
 | F-040 | 7 | Rights-aware ingestion | P0 | NOT_STARTED | — | — | Rights enforced; no paywall bypass/full-text default | Unit/integration logs | CRITICAL | Sources/providers | Content rights | — |
@@ -118,7 +119,7 @@ This is the canonical source for the Project Tracker UI. Sprints group phases fo
 | F-020 | S1 | P3 | Global/country/region feed architecture | P0 | DONE | 100% | DONE | Codex | Typed Zod contracts, bounded requests, deterministic matching, malformed-input rejection, and market-priority invariance pass 14/14 Node tests, lint, types, and build | HIGH | F-010 |
 | F-021 | S1 | P3 | News feed and story experience | P0 | DONE | 100% | DONE | Codex | Typed fictional stories, F-020 geography controls, feed/detail interactions, source/uncertainty states, 48 baselines, 62 browser cases, and user review pass | HIGH | F-012, F-020 |
 | F-022 | S1 | P3 | Search, mobile feed, and demo media | P0 | DONE | 100% | DONE | Codex | Local search/empty/clear states, mobile dock, simulated media controls/transcript/fallback, 64 baselines, 82 browser cases, and user review pass | HIGH | F-012, F-020, F-021 |
-| F-023 | S2 | P4 | Authentication and onboarding | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | Auth, denial, verification, recovery, and security tests required | CRITICAL | F-010, F-030 |
+| F-023 | S2 | P4 | Authentication and onboarding | P0 | IN_PROGRESS | 40% | VALIDATE | Codex | Fail-closed config, modular Firebase seam, sign-in/register/reset/verification shell, docs, unit tests, and 8 visual baselines; live/emulator/server-session evidence pending | CRITICAL | F-010, Firebase web configuration |
 | F-024 | S2 | P4 | Preferences, follows, bookmarks, and history | P1 | NOT_STARTED | 0% | SCOPE | Unassigned | Persistence, privacy, locale, and E2E tests required | HIGH | F-023, F-034 |
 | F-031 | S2 | P5 | Editorial dashboard visual implementation | P1 | NOT_STARTED | 0% | SCOPE | Unassigned | Light/dark screenshots, E2E, and accessibility required | HIGH | F-012, F-030 |
 | F-032 | S2 | P5 | Editorial review and publishing workflow | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | RBAC, review, correction, audit, and E2E tests required | CRITICAL | F-030, F-034 |
@@ -285,6 +286,27 @@ This is the canonical source for the Project Tracker UI. Sprints group phases fo
 - Accessibility/i18n/geographic fairness: labeled search input/selects, native controls, live result count, status empty state, pressed/expanded media states, labeled progress, transcript, touch targets, keyboard focus inheritance, reduced motion, and no-overflow evidence. Search treats Togo and priority markets identically; English-only copy remains a limitation.
 - Migration/rollback: no migration or external state. Revert the focused UI/CSS/tests/baselines and evidence records.
 - Next approval required: Phase 3 is closed. Phase 4 authentication/personalization remains unapproved and must not begin without explicit authorization.
+
+### F-023 Authentication and onboarding
+
+- Phase / epic: Phase 4 authentication and personalization
+- Status / owner: IN_PROGRESS (40%) / Codex
+- Approved outcome: establish a truthful Firebase identity foundation and accessible account entry without unlocking protected or persisted capabilities prematurely.
+- In scope: modular Firebase Web SDK seam; strict required public configuration; optional local Auth Emulator URL; email/password sign-in, registration, verification request, and enumeration-resistant recovery; account navigation; disabled setup state; onboarding/security boundaries; setup documentation; unit and visual evidence.
+- Out of scope: Firebase project creation or console changes, Admin credentials, verified server cookies/sessions, RBAC, Security Rules, social providers, MFA, account deletion, persisted profiles/preferences, protected routes, production deployment, and F-024/F-030.
+- Dependencies: F-010 and valid Firebase web configuration. The prior F-023→F-030 dependency was circular because F-030 already consumes F-023 identity; F-030 remains the authorization/security-rules successor.
+- Acceptance status: fail-closed configuration, account navigation, accessible mode controls, disabled unconfigured actions, generic recovery/error copy, and responsive light/dark UI pass. Live and emulator flows, server authorization, account deletion, and onboarding persistence remain incomplete.
+
+#### STABLE record
+
+- Scope/Think: root framework and required repository sources remained active and were rechecked; F-023 approval was explicit through “Next”; current UI, package manager, environment state, tracker dependencies, Next.js boundaries, official Firebase modular/Auth Emulator guidance, and approved shared design system were inspected before coding.
+- Assess Risk: circular dependency, fake signed-in state, leaked Admin credentials, client-auth/authorization confusion, account enumeration, inaccessible forms, provider failure, responsive overflow, and regression were assessed. The feature fails closed when configuration is absent and never grants product authorization.
+- Build: installed Firebase 12.17.0 through pnpm; added a Zod-validated client configuration and dynamically loaded modular Auth operations; added optional emulator routing, generic errors and recovery copy, email verification request, account/settings navigation, responsive sign-in/register/reset UI, explicit onboarding and F-030 security boundaries, `.env.example`, README guidance, and focused tests.
+- Validate: 2/2 focused auth tests and production build PASS; strict TypeScript and ESLint PASS; 8 new account screenshots generated; 94/94 Playwright visual/interaction cases PASS across light/dark and 390×844, 768×1024, 1440×1000, and 1920×1080. Visual inspection confirms shared token/card/type hierarchy and no horizontal overflow.
+- Evolve/deviations: no dedicated auth mockup panel exists, so the account surface intentionally reuses the approved shared shell, serif hierarchy, cards, semantic status color, themes, and breakpoints. Mobile stacks tabs/cards and remains vertically scrollable. Real login is intentionally unavailable until configuration is supplied.
+- Security/privacy/editorial/fairness: only Firebase public web identifiers are documented; Admin credentials are explicitly prohibited. Inputs are not persisted locally by this slice. Generic failure/recovery messages reduce enumeration disclosure. Identity grants no editorial privilege. Locale/country interests are named but not collected, ranked, or persisted.
+- Migration/rollback: dependency and lockfile only; no database or external migration. Revert `lib/auth.ts`, account UI/CSS/tests/baselines, `.env.example`, README/package changes, and delivery records.
+- Next approval/unblock: user reviews the unconfigured account surface. Completing F-023 requires a Firebase project or Auth Emulator configuration and then server-session/security work coordinated with F-030; do not begin F-024.
 
 Copy this section for each feature.
 

@@ -22,6 +22,12 @@ pnpm test
 pnpm build
 ```
 
+## Firebase Authentication setup
+
+F-023 fails closed until a Firebase web app is configured. Copy `.env.example` to `.env.local`, fill the four required `NEXT_PUBLIC_FIREBASE_*` web identifiers, and enable Email/Password authentication in the Firebase console. For local testing, set `NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL=http://127.0.0.1:9099` and run the Firebase Authentication Emulator separately.
+
+Firebase web configuration contains public client identifiers. Never place Firebase Admin service-account credentials in a `NEXT_PUBLIC_*` variable or commit them. Client authentication does not authorize protected server operations; verified server sessions, role checks, and Firebase Security Rules remain F-030.
+
 ## Delivery records
 
 - `PRODUCT_TRACKER.md` is the delivery source of truth.

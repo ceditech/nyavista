@@ -3,12 +3,13 @@
 
 import { useState } from "react";
 import trackerMarkdown from "virtual:product-tracker";
+import { authConfiguration, runFirebaseAuthOperation, type AuthOperation, type AuthResult } from "../lib/auth";
 import { product } from "../lib/product";
 import { selectFeedCandidates } from "../lib/geography";
 import { demoStories, type DemoStory } from "../lib/stories";
 import { parseProductTracker, trackerCheckpoints, type TrackerFeature, type TrackerStatus } from "../lib/tracker";
 
-type View = "marketing" | "briefing" | "story" | "search" | "media" | "tracker" | "editorial";
+type View = "marketing" | "briefing" | "story" | "search" | "media" | "account" | "tracker" | "editorial";
 const tracker = parseProductTracker(trackerMarkdown);
 
 function Icon({ children }: { children: React.ReactNode }) {
@@ -43,18 +44,18 @@ export default function Home() {
           <button className={view === "media" ? "nav-item active" : "nav-item"} onClick={() => { setView("media"); setNavOpen(false); }}><Icon>◌</Icon>Media briefings</button>
         </nav>
         <div className="sidebar-note"><span className="status-dot" /> Demo environment<p>No live reporting or providers</p></div>
-        <button className="nav-item settings"><Icon>⚙</Icon>Settings</button>
+        <button className={view === "account" ? "nav-item settings active" : "nav-item settings"} onClick={() => { setView("account"); setNavOpen(false); }}><Icon>⚙</Icon>Account & settings</button>
       </aside>
       {navOpen && <button className="sidebar-backdrop" onClick={() => setNavOpen(false)} aria-label="Close navigation"/>}
 
       <div className="workspace">
         <header className="topbar">
           <button className="mobile-menu" onClick={() => setNavOpen(true)} aria-label="Open navigation" aria-expanded={navOpen} aria-controls="primary-navigation"><span aria-hidden="true">☰</span><strong>Menu</strong></button>
-          <div><p className="eyebrow">{product.owner} · {product.foundingCountry}</p><strong>{view === "tracker" ? "Delivery workspace" : view === "editorial" ? "Editorial command centre" : view === "story" ? "Story intelligence" : view === "search" ? "Search demo coverage" : view === "media" ? "Media briefing preview" : "Global intelligence briefing"}</strong></div>
+          <div><p className="eyebrow">{product.owner} · {product.foundingCountry}</p><strong>{view === "tracker" ? "Delivery workspace" : view === "editorial" ? "Editorial command centre" : view === "story" ? "Story intelligence" : view === "search" ? "Search demo coverage" : view === "media" ? "Media briefing preview" : view === "account" ? "Account access" : "Global intelligence briefing"}</strong></div>
           <div className="top-actions">
             <button className="icon-button" aria-label="Search" onClick={() => setView("search")}>⌕</button>
             <button className="theme-toggle" onClick={() => setTheme(theme === "light" ? "dark" : "light")} aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`}><span>{theme === "light" ? "☾" : "☀"}</span>{theme === "light" ? "Dark" : "Light"}</button>
-            <button className="avatar" aria-label="Account menu">NV</button>
+            <button className="avatar" aria-label="Open account access" onClick={() => setView("account")}>NV</button>
           </div>
         </header>
 
@@ -63,10 +64,11 @@ export default function Home() {
           {view === "story" && <StoryDetail story={selectedStory} onBack={() => setView("briefing")} />}
           {view === "search" && <SearchStories onOpenStory={(story) => { setSelectedStory(story); setView("story"); }} />}
           {view === "media" && <MediaBriefing story={demoStories[0]} onOpenStory={(story) => { setSelectedStory(story); setView("story"); }} />}
+          {view === "account" && <AccountAccess />}
           {view === "tracker" && <Tracker />}
           {view === "editorial" && <Editorial />}
         </main>
-        {!["tracker", "editorial"].includes(view) && <nav className="mobile-dock" aria-label="Mobile demo navigation"><button className={view === "briefing" || view === "story" ? "active" : ""} onClick={() => setView("briefing")}><span aria-hidden="true">⌂</span>Feed</button><button className={view === "search" ? "active" : ""} onClick={() => setView("search")}><span aria-hidden="true">⌕</span>Search</button><button className={view === "media" ? "active" : ""} onClick={() => setView("media")}><span aria-hidden="true">▷</span>Media</button></nav>}
+        {!["tracker", "editorial", "account"].includes(view) && <nav className="mobile-dock" aria-label="Mobile demo navigation"><button className={view === "briefing" || view === "story" ? "active" : ""} onClick={() => setView("briefing")}><span aria-hidden="true">⌂</span>Feed</button><button className={view === "search" ? "active" : ""} onClick={() => setView("search")}><span aria-hidden="true">⌕</span>Search</button><button className={view === "media" ? "active" : ""} onClick={() => setView("media")}><span aria-hidden="true">▷</span>Media</button></nav>}
       </div>
       </>}
     </div>
@@ -148,6 +150,46 @@ function StoryDetail({ story, onBack }: { story: DemoStory; onBack: () => void }
       <aside id="sources" className="detail-panel source-register"><p className="eyebrow">SOURCE TRANSPARENCY</p><h2>{story.sourceCount} fictional source records</h2><p className="source-disclosure">These entries test attribution hierarchy only. They are not publishers or live links.</p>{story.sources.map((source) => <section key={source.name}><div><strong>{source.name}</strong><span className="badge">{source.type.replaceAll("-", " ")}</span></div><small>{source.geography}</small><p>{source.note}</p></section>)}</aside>
     </div>
   </article>;
+}
+
+function AccountAccess() {
+  const [mode, setMode] = useState<AuthOperation>("sign-in");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [pending, setPending] = useState(false);
+  const [result, setResult] = useState<AuthResult | null>(null);
+  const configured = authConfiguration.status === "configured";
+
+  async function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setPending(true);
+    setResult(await runFirebaseAuthOperation(mode, email, password));
+    setPending(false);
+  }
+
+  return <div className="page account-page">
+    <header className="account-heading"><span className="pill pill-indigo">FIREBASE AUTH FOUNDATION</span><p className="eyebrow">ACCOUNT ACCESS</p><h1>Your news, with privacy-aware controls.</h1><p>Sign-in, registration, verification, and recovery are separated from personalization and privileged editorial access.</p></header>
+    <div className="account-layout">
+      <section className="account-card" aria-labelledby="account-form-title">
+        <div className="account-tabs" role="group" aria-label="Account action">
+          {([['sign-in', 'Sign in'], ['register', 'Create account'], ['reset', 'Reset password']] as const).map(([value, label]) => <button key={value} type="button" aria-pressed={mode === value} onClick={() => { setMode(value); setResult(null); }}>{label}</button>)}
+        </div>
+        <h2 id="account-form-title">{mode === "sign-in" ? "Welcome back" : mode === "register" ? "Create your account" : "Recover account access"}</h2>
+        <p>{mode === "reset" ? "Request recovery without revealing whether an address is registered." : "Use an email address and password. Social providers are not connected in this slice."}</p>
+        <form className="account-form" onSubmit={submit}>
+          <label>Email address<input type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} disabled={!configured || pending} /></label>
+          {mode !== "reset" && <label>Password<input type="password" autoComplete={mode === "register" ? "new-password" : "current-password"} minLength={8} required value={password} onChange={(event) => setPassword(event.target.value)} disabled={!configured || pending} /></label>}
+          <button className="button primary" disabled={!configured || pending}>{pending ? "Working…" : mode === "sign-in" ? "Sign in securely" : mode === "register" ? "Create and verify account" : "Request reset"}</button>
+        </form>
+        {result && <p className={result.ok ? "account-message success" : "account-message"} role="status">{result.message}</p>}
+      </section>
+      <aside className="account-context">
+        <section className={configured ? "configuration-state ready" : "configuration-state"} role="status"><span aria-hidden="true">{configured ? "✓" : "!"}</span><div><p className="eyebrow">PROVIDER STATUS</p><h2>{configured ? "Firebase client configured" : "Authentication setup required"}</h2><p>{configured ? "Client requests can reach the configured Firebase project. Protected product access remains locked until F-030 establishes verified server sessions and authorization." : "Account controls are intentionally disabled. Add the Firebase web identifiers from .env.example and restart the development server."}</p></div></section>
+        <section><p className="eyebrow">ONBOARDING BOUNDARY</p><h2>Preferences come after verified identity</h2><ul><li>Preferred locale and timezone</li><li>Country-neutral coverage interests</li><li>Privacy, history, and notification choices</li></ul><p>No preference is collected or persisted on this screen.</p></section>
+        <section><p className="eyebrow">SECURITY BOUNDARY</p><h2>Client login is not authorization</h2><p>Editorial tools, saved data, and privileged operations remain unavailable until server-side session verification, RBAC, and Firebase Security Rules are implemented and tested in F-030.</p></section>
+      </aside>
+    </div>
+  </div>;
 }
 
 function SearchStories({ onOpenStory }: { onOpenStory: (story: DemoStory) => void }) {

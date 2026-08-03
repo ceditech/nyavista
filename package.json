@@ -9,12 +9,13 @@
     "dev": "vinext dev",
     "build": "vinext build",
     "start": "vinext start",
-    "test": "npm run build && node --test tests/rendered-html.test.mjs tests/product-config.test.ts tests/marketing.test.ts tests/geography.test.ts tests/stories.test.ts",
+    "test": "npm run build && node --test tests/rendered-html.test.mjs tests/product-config.test.ts tests/marketing.test.ts tests/geography.test.ts tests/stories.test.ts tests/auth.test.ts",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "visual:baseline": "playwright test tests/visual-regression.spec.ts --update-snapshots",
     "visual:test": "playwright test tests/visual-regression.spec.ts"
   },
   "dependencies": {
+    "firebase": "^12.17.0",
     "next": "16.2.6",
     "react": "19.2.6",
     "react-dom": "19.2.6",
