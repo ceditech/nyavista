@@ -13,3 +13,8 @@ test("authentication accepts a complete Firebase web configuration", () => {
   assert.equal(result.status, "configured");
   if (result.status === "configured") assert.equal(result.emulatorUrl, "http://127.0.0.1:9099");
 });
+
+test("authentication rejects a non-loopback emulator target", () => {
+  const result = resolveAuthConfiguration({ apiKey: "demo-key", authDomain: "demo.example", projectId: "demo-project", appId: "demo-app", storageBucket: undefined, messagingSenderId: undefined, emulatorUrl: "https://example.test:9099" });
+  assert.deepEqual(result, { status: "disabled", missing: ["valid loopback Firebase Auth Emulator URL"] });
+});

@@ -20,26 +20,26 @@ Required fields for every implementation entry:
 | Field | Current value |
 |---|---|
 | Approved work | Phase 4 — F-023 authentication foundation |
-| Active tracker IDs | F-023 IN_PROGRESS (40%); F-024 and F-030 not started |
+| Active tracker IDs | F-023 IN_PROGRESS (60%); F-024 and F-030 not started |
 | Active agent | Codex |
 | STABLE reference | `STABLE_FRAMEWORK.md` at commit `f8ab99e` |
 | UI reference | `docs/design/nyavista-ui-mockup-light-dark.png` |
-| State | Demo-only local implementation; no live providers or production data |
-| Next gate | User reviews the fail-closed account surface and supplies/approves Firebase project or Auth Emulator configuration before live auth validation |
+| State | Live Firebase web client configured locally; no verified server session, authorization, persistence, Analytics, or production claim |
+| Next gate | User manually verifies live Email/Password registration, verification, sign-in, recovery, and denial states; then approve the remaining F-023 security/session slice |
 
 ## Implementation ledger
 
 ### 2026-08-02 — Codex — F-023 foundation
 
-- Outcome: implemented the first safe F-023 slice and left it `IN_PROGRESS` at 40%; it does not claim live authentication or authorization.
+- Outcome: Slice 1 was manually accepted; live Firebase web configuration and an optional Auth Emulator harness advance F-023 to 60%. Client configuration is verified, but no live account operation or server authorization is claimed.
 - Scope: Firebase 12.17 modular client seam, Zod-validated required web configuration, optional Auth Emulator endpoint, sign-in/register/email-verification/reset operations, generic failure/recovery messages, account navigation and responsive UI, explicit unconfigured/onboarding/security boundaries, `.env.example`, setup docs, unit/browser/visual evidence. Excluded external Firebase setup, Admin secrets, server sessions, RBAC/Rules, social/MFA/deletion, persistence, F-024, and F-030 implementation.
 - Dependency decision: removed the circular F-023→F-030 gate. F-023 establishes identity; F-030 consumes that identity for server authorization and Firebase Rules. Valid Firebase web configuration remains an F-023 completion dependency.
 - STABLE/mockup: framework and required sources applied; official Firebase modular/Auth Emulator guidance and Next.js client boundaries reviewed. No auth-specific mockup exists, so approved shared shell, typography, cards, semantic colors, light/dark themes, and four breakpoints were reused.
-- Verification: 2/2 auth tests, strict TypeScript, ESLint, and production build PASS; 8 new account baselines; 94/94 Playwright cases PASS with disabled actions, account modes, security copy, themes, console/resource/overlay guards, and overflow checks. Full Node suite initially reported only the deliberate missing-baseline count, resolved by generating the eight baselines.
+- Verification: 3/3 focused auth configuration tests and 20/20 full Node tests PASS; strict TypeScript, ESLint, and production build PASS; 8 account baselines and 94/94 isolated Playwright cases PASS. Read-only live-config browser verification confirms configured provider state, enabled sign-in, and no console errors. Auth Emulator integration test is implemented but not executed.
 - Security/privacy/accessibility/fairness: fails closed with missing config; no fake user, Admin credential, persisted input, privilege, or analytics; generic errors limit enumeration; native labeled inputs/buttons and status region; keyboard/focus/theme/responsive support; country/locale preferences are described but not collected.
 - Files: `lib/auth.ts`, `.env.example`, account UI/CSS, focused tests and eight baselines, `package.json`, `pnpm-lock.yaml`, README, tracker, and handoff.
-- Limitations/rollback: live/emulator auth, verified server sessions, Security Rules, account deletion, and onboarding persistence remain unverified/unimplemented. Revert the focused files/dependency/docs; no external or database migration.
-- Next safe action: user reviews the account surface; then configure a Firebase web app or local Auth Emulator and approve the next F-023 slice. Do not begin F-024.
+- Limitations/rollback: live registration/sign-in/recovery, emulator integration, verified server sessions, Security Rules, account deletion, and onboarding persistence remain unverified/unimplemented. Live identifiers reside only in ignored `.env.local`; remove it to fail closed. Revert the focused files/dependency/docs; no database migration.
+- Next safe action: confirm Email/Password is enabled in Firebase Authentication, then manually verify the live account flows using a user-controlled test address. Do not begin F-024.
 
 ### 2026-08-02 — Codex — F-022
 

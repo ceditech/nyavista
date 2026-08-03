@@ -18,7 +18,7 @@ export default defineConfig({
     },
   },
   use: {
-    baseURL: "http://[::1]:3000",
+    baseURL: "http://[::1]:3100",
     browserName: "chromium",
     colorScheme: "light",
     locale: "en-US",
@@ -26,9 +26,18 @@ export default defineConfig({
     serviceWorkers: "block",
   },
   webServer: {
-    command: "pnpm dev",
-    url: "http://[::1]:3000",
-    reuseExistingServer: true,
+    command: "pnpm dev -- --port 3100",
+    url: "http://[::1]:3100",
+    reuseExistingServer: false,
     timeout: 120_000,
+    env: {
+      NEXT_PUBLIC_FIREBASE_API_KEY: "",
+      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: "",
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: "",
+      NEXT_PUBLIC_FIREBASE_APP_ID: "",
+      NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: "",
+      NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: "",
+      NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL: "",
+    },
   },
 });

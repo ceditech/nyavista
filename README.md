@@ -2,7 +2,7 @@
 
 NyaVista is a United States-founded, global AI-powered news intelligence and multimedia platform owned by E-DEAL EXPRESS LLC. Its Eʋe-inspired name is brand heritage, not regional positioning.
 
-This repository currently contains a first-pass demo application and the product's governing specifications. The interface uses fictional planning data and does not connect to live news, AI, ingestion, authentication, persistence, or publishing providers.
+This repository currently contains a first-pass demo application and the product's governing specifications. The interface uses fictional planning data. Firebase Authentication has a configurable client seam, while live news, AI, ingestion, persistence, authorization, and publishing providers are not connected.
 
 ## Local development
 
@@ -27,6 +27,24 @@ pnpm build
 F-023 fails closed until a Firebase web app is configured. Copy `.env.example` to `.env.local`, fill the four required `NEXT_PUBLIC_FIREBASE_*` web identifiers, and enable Email/Password authentication in the Firebase console. For local testing, set `NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL=http://127.0.0.1:9099` and run the Firebase Authentication Emulator separately.
 
 Firebase web configuration contains public client identifiers. Never place Firebase Admin service-account credentials in a `NEXT_PUBLIC_*` variable or commit them. Client authentication does not authorize protected server operations; verified server sessions, role checks, and Firebase Security Rules remain F-030.
+
+### Local Authentication Emulator
+
+The emulator uses the reserved `demo-nyavista` project ID and binds only to `127.0.0.1`. It does not require a Firebase account or touch production data.
+
+```bash
+# Terminal 1: start the disposable Auth Emulator and its UI
+pnpm emulators:auth
+
+# Terminal 2: configure the app, then run it
+# Copy .env.emulator.example to .env.local
+pnpm dev
+
+# Automated integration proof (starts and stops its own emulator)
+pnpm test:auth:emulator
+```
+
+The application is available at `http://localhost:3000`; the local Emulator UI is available at `http://127.0.0.1:4000`. Emulator accounts and out-of-band verification/reset links are disposable test data. Remove `.env.local` to return the application to its fail-closed unconfigured state.
 
 ## Delivery records
 

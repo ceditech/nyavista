@@ -24,6 +24,15 @@ export const firebaseEnvironment = {
   emulatorUrl: process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL,
 };
 
+function isSafeEmulatorUrl(value: string) {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" && ["127.0.0.1", "localhost", "[::1]"].includes(url.hostname);
+  } catch {
+    return false;
+  }
+}
+
 const requiredEnvironmentNames = {
   apiKey: "NEXT_PUBLIC_FIREBASE_API_KEY",
   authDomain: "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN",
@@ -36,6 +45,9 @@ export function resolveAuthConfiguration(environment: typeof firebaseEnvironment
     .filter(([key]) => !environment[key as keyof typeof requiredEnvironmentNames]?.trim())
     .map(([, name]) => name);
   if (missing.length) return { status: "disabled", missing };
+  if (environment.emulatorUrl && !isSafeEmulatorUrl(environment.emulatorUrl)) {
+    return { status: "disabled", missing: ["valid loopback Firebase Auth Emulator URL"] };
+  }
 
   const parsed = firebaseConfigSchema.safeParse({
     apiKey: environment.apiKey,

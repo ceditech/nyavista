@@ -12,7 +12,9 @@
     "test": "npm run build && node --test tests/rendered-html.test.mjs tests/product-config.test.ts tests/marketing.test.ts tests/geography.test.ts tests/stories.test.ts tests/auth.test.ts",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "visual:baseline": "playwright test tests/visual-regression.spec.ts --update-snapshots",
-    "visual:test": "playwright test tests/visual-regression.spec.ts"
+    "visual:test": "playwright test tests/visual-regression.spec.ts",
+    "emulators:auth": "firebase emulators:start --only auth --project demo-nyavista",
+    "test:auth:emulator": "firebase emulators:exec --only auth --project demo-nyavista \"node --test tests/auth-emulator.test.ts\""
   },
   "dependencies": {
     "firebase": "^12.17.0",
@@ -32,6 +34,7 @@
     "@vitejs/plugin-rsc": "0.5.26",
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.6",
+    "firebase-tools": "^15.25.1",
     "react-server-dom-webpack": "19.2.6",
     "tailwindcss": "4.2.1",
     "typescript": "5.9.3",
