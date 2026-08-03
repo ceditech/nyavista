@@ -17,7 +17,9 @@
     "test:auth:emulator": "firebase emulators:exec --only auth --project demo-nyavista \"node --test tests/auth-emulator.test.ts\"",
     "deploy:rules": "firebase deploy --only firestore:rules,storage -P prod",
     "deploy:rules:firestore": "firebase deploy --only firestore:rules -P prod",
-    "deploy:rules:storage": "firebase deploy --only storage -P prod"
+    "deploy:rules:storage": "firebase deploy --only storage -P prod",
+    "deploy:indexes": "firebase deploy --only firestore:indexes -P prod",
+    "test:integration": "node --env-file-if-exists=.env.local --test tests/integration/firestore.integration.test.ts"
   },
   "dependencies": {
     "firebase": "^12.17.0",
@@ -37,6 +39,7 @@
     "@vitejs/plugin-rsc": "0.5.26",
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.6",
+    "firebase-admin": "^14.2.0",
     "firebase-tools": "^15.25.1",
     "react-server-dom-webpack": "19.2.6",
     "tailwindcss": "4.2.1",
