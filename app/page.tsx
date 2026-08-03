@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import trackerMarkdown from "virtual:product-tracker";
+import { BrandLogo } from "./brand-logo";
 import { authConfiguration, runFirebaseAuthOperation, type AuthOperation, type AuthResult } from "../lib/auth";
 import { product } from "../lib/product";
 import { selectFeedCandidates } from "../lib/geography";
@@ -31,7 +32,7 @@ export default function Home() {
       <a className="skip-link" href="#main">Skip to main content</a>
       {view === "marketing" ? <Marketing theme={theme} onToggleTheme={() => setTheme(theme === "light" ? "dark" : "light")} onExplore={() => setView("briefing")} /> : <>
       <aside id="primary-navigation" className={navOpen ? "sidebar open" : "sidebar"} aria-label="Primary navigation">
-        <div className="brand"><span className="brand-mark">N</span><span>{product.name}</span><button className="nav-close" onClick={() => setNavOpen(false)} aria-label="Close navigation">×</button></div>
+        <div className="brand"><BrandLogo priority /><span className="sr-only">{product.name}</span><button className="nav-close" onClick={() => setNavOpen(false)} aria-label="Close navigation">×</button></div>
         <nav>
           <p className="nav-label">Workspace</p>
           <button className="nav-item" onClick={() => { setView("marketing"); setNavOpen(false); }}><HomeIcon />NyaVista home</button>
@@ -85,7 +86,7 @@ function Marketing({ theme, onToggleTheme, onExplore }: { theme: "light" | "dark
 
   return <div className="marketing-shell">
     <header className="marketing-header">
-      <a className="marketing-brand" href="#marketing-main" aria-label="NyaVista home"><span className="brand-mark">N</span>{product.name}</a>
+      <a className="marketing-brand" href="#marketing-main" aria-label="NyaVista home"><BrandLogo priority /></a>
       <nav className="marketing-nav" aria-label="Marketing navigation">
         <a href="/product">Product</a><a href="/features">Features</a><a href="/how-it-works">How it works</a><a href="/global-coverage">Global coverage</a>
       </nav>
@@ -94,8 +95,9 @@ function Marketing({ theme, onToggleTheme, onExplore }: { theme: "light" | "dark
     <main id="marketing-main" className="marketing-main">
       <section className="marketing-hero" aria-labelledby="marketing-title">
         <div className="marketing-copy"><span className="pill pill-indigo">DEMO EXPERIENCE · NO LIVE REPORTING</span><p className="marketing-kicker">Every story. A clearer view.</p><h1 id="marketing-title">Understand the news in minutes, not hours.</h1><p>Build a clearer picture through transparent, multi-source context and accessible explainers—designed for a global audience.</p><div className="button-row"><button className="button primary" onClick={onExplore}>Explore NyaVista <span aria-hidden="true">→</span></button><a className="button secondary button-link" href="#principles">See how it works <span aria-hidden="true">↓</span></a></div><small className="marketing-disclosure">Fictional planning content. No live sources, recommendations, or AI providers are connected.</small></div>
-        <div className="marketing-mosaic" aria-label="Abstract, rights-safe illustration of global news coverage">
+        <div className="marketing-mosaic" aria-label="NyaVista brand and abstract, rights-safe illustration of global news coverage">
           <div className="mosaic-tile city"><span>Local context</span></div><div className="mosaic-tile globe"><span>Global view</span></div><div className="mosaic-tile network"><span>Source connections</span></div><div className="mosaic-tile people"><span>Human perspective</span></div>
+          <div className="brand-showcase"><BrandLogo variant="detailed" priority /></div>
         </div>
       </section>
       <section id="principles" className="marketing-principles" aria-labelledby="principles-title"><div className="sr-only"><h2 id="principles-title">How NyaVista is designed to help</h2></div>{principles.map((principle) => <article key={principle.title}><Icon>{principle.icon}</Icon><h3>{principle.title}</h3><p>{principle.copy}</p></article>)}</section>

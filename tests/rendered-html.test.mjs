@@ -36,13 +36,15 @@ test("server-renders the NyaVista demo shell truthfully", async () => {
 });
 
 test("centralizes product identity and preserves living delivery records", async () => {
-  const [product, tracker, handoff, page, css, stories] = await Promise.all([
+  const [product, tracker, handoff, page, css, stories, brandLogo, infoPage] = await Promise.all([
     readFile(new URL("../lib/product.ts", import.meta.url), "utf8"),
     readFile(new URL("../PRODUCT_TRACKER.md", import.meta.url), "utf8"),
     readFile(new URL("../CLAUDE_HANDOFF.md", import.meta.url), "utf8"),
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../lib/stories.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/brand-logo.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/[slug]/marketing-info-page.tsx", import.meta.url), "utf8"),
   ]);
   assert.match(product, /E-DEAL EXPRESS LLC/);
   assert.match(product, /United States/);
@@ -62,6 +64,16 @@ test("centralizes product identity and preserves living delivery records", async
   assert.match(page, /function SearchStories/);
   assert.match(page, /function MediaBriefing/);
   assert.match(page, /function AccountAccess/);
+  assert.match(page, /<BrandLogo priority/);
+  assert.match(page, /variant="detailed"/);
+  assert.match(infoPage, /<BrandLogo priority/);
+  assert.match(brandLogo, /from "next\/image"/);
+  assert.match(brandLogo, /\/brand\/nyavista-detailed\.png/);
+  assert.match(brandLogo, /\/brand\/nyavista-wordmark\.png/);
+  assert.match(brandLogo, /unoptimized/);
+  assert.match(css, /brand-logo-wordmark/);
+  assert.match(css, /brand-showcase/);
+  assert.match(css, /@media\(max-width:760px\)/);
   assert.match(page, /Authentication setup required/);
   assert.match(page, /Client login is not authorization/);
   assert.match(page, /SIMULATED MEDIA PREVIEW/);

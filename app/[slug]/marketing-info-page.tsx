@@ -4,13 +4,14 @@
 import { useState } from "react";
 import type { MarketingPage } from "../../lib/marketing";
 import { product } from "../../lib/product";
+import { BrandLogo } from "../brand-logo";
 
 export function MarketingInfoPage({ page }: { page: MarketingPage }) {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   return <div className="app info-app" data-theme={theme}>
     <a className="skip-link" href="#info-main">Skip to main content</a>
     <header className="marketing-header">
-      <a className="marketing-brand" href="/" aria-label="NyaVista home"><span className="brand-mark">N</span>{product.name}</a>
+      <a className="marketing-brand" href="/" aria-label="NyaVista home"><BrandLogo priority /></a>
       <nav className="marketing-nav" aria-label="Marketing navigation"><a href="/product">Product</a><a href="/features">Features</a><a href="/global-coverage">Global coverage</a><a href="/about">About</a></nav>
       <div className="marketing-actions"><button className="theme-toggle" onClick={() => setTheme(theme === "light" ? "dark" : "light")} aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`}><span aria-hidden="true">{theme === "light" ? "☾" : "☀"}</span>{theme === "light" ? "Dark" : "Light"}</button><a className="button primary marketing-explore button-link" href="/">Home</a></div>
     </header>

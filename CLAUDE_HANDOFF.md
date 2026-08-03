@@ -29,6 +29,17 @@ Required fields for every implementation entry:
 
 ## Implementation ledger
 
+### 2026-08-02 — Codex — F-018 cross-app brand refinement
+
+- Outcome: integrated both approved repository logos and refined the shared visual system without changing feature behavior; F-018 is `IN_REVIEW` at 80% pending manual visual acceptance.
+- Scope: centralized `next/image` logo variants; simplified transparent wordmark in marketing/trust/workspace navigation; detailed opaque logo in a deliberate hero brand card; shared canvas, sidebar, header, surface, elevation, interaction, reduced-motion, and responsive crop polish. Excluded route/data/auth/tracker behavior changes, new assets, Analytics, deployment, and screenshot regeneration.
+- STABLE/mockup: root framework and required sources applied; approved mockup and both source logos inspected; pixel dimensions, alpha/background behavior, callsites, image-loading rules, themes, and breakpoints assessed before editing.
+- Verification: strict TypeScript, ESLint, production build, and 20/20 Node tests PASS; focused brand/render assertions 4/4 PASS. User review found vinext image-optimizer HTTP 500 responses; exact runtime copies now live under `public/brand`, `next/image` uses direct `unoptimized` local URLs, root and both assets return 200, no optimizer URL remains, and no framework overlay is present. Playwright screenshots and baseline changes were explicitly deferred by the user to conserve credits.
+- Accessibility/responsiveness: retained accessible home-link names, decorative duplicate wordmark semantics, descriptive detailed-logo alt, focus behavior, touch targets, reduced-motion override, and mobile-first logo/hero sizing at 800/760/480px. Manual mobile/light/dark acceptance remains required.
+- Files: `app/brand-logo.tsx`, `public/brand/*` exact runtime copies, root and trust header markup, shared CSS, focused test, tracker, and handoff. Supplied source assets remain unchanged at their original `docs/design` paths.
+- Risks/rollback: raster assets are larger than ideal future SVG/WebP derivatives; the detailed file has an opaque white canvas and is intentionally contained. Revert the focused brand component/markup/styles/tests/docs; no migration.
+- Next safe action: user manually reviews representative surfaces; do not run screenshot baselines until the user explicitly approves them. F-023 remains paused during this review.
+
 ### 2026-08-02 — Codex — F-023 foundation
 
 - Outcome: Slice 1 was manually accepted; live Firebase web configuration and an optional Auth Emulator harness advance F-023 to 60%. Client configuration is verified, but no live account operation or server authorization is claimed.
