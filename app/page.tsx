@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-html-link-for-pages -- vinext 0.0.50 next/link hydration can load a duplicate React runtime; static marketing anchors are the safe progressive-enhancement path. */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import trackerMarkdown from "virtual:product-tracker";
 import { BrandLogo } from "./brand-logo";
 import { authConfiguration, runFirebaseAuthOperation, type AuthOperation, type AuthResult } from "../lib/auth";
@@ -9,8 +9,11 @@ import { product } from "../lib/product";
 import { selectFeedCandidates } from "../lib/geography";
 import { demoStories, type DemoStory } from "../lib/stories";
 import { parseProductTracker, trackerCheckpoints, type TrackerFeature, type TrackerStatus } from "../lib/tracker";
+import { getPersonalizationFor, observeAuthUser, type SignedInUser } from "../lib/firebase-client";
+import { makeBookmark } from "../lib/personalization";
+import { type Bookmark } from "../lib/domain";
 
-type View = "marketing" | "briefing" | "story" | "search" | "media" | "account" | "tracker" | "editorial";
+type View = "marketing" | "briefing" | "story" | "search" | "media" | "account" | "saved" | "tracker" | "editorial";
 const tracker = parseProductTracker(trackerMarkdown);
 
 function Icon({ children }: { children: React.ReactNode }) {
@@ -26,6 +29,18 @@ export default function Home() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [navOpen, setNavOpen] = useState(false);
   const [selectedStory, setSelectedStory] = useState<DemoStory>(demoStories[0]);
+  const [user, setUser] = useState<SignedInUser | null>(null);
+  const [authReady, setAuthReady] = useState(false);
+
+  useEffect(() => {
+    let unsubscribe = () => {};
+    let active = true;
+    observeAuthUser((nextUser) => { setUser(nextUser); setAuthReady(true); }).then((fn) => {
+      if (active) unsubscribe = fn;
+      else fn();
+    });
+    return () => { active = false; unsubscribe(); };
+  }, []);
 
   return (
     <div className="app" data-theme={theme}>
@@ -41,7 +56,7 @@ export default function Home() {
           <button className={view === "editorial" ? "nav-item active" : "nav-item"} onClick={() => { setView("editorial"); setNavOpen(false); }}><Icon>✓</Icon>Editorial overview</button>
           <p className="nav-label">Explore</p>
           <button className={view === "briefing" || view === "story" ? "nav-item active" : "nav-item"} onClick={() => { setView("briefing"); setNavOpen(false); }}><Icon>◎</Icon>Global coverage</button>
-          <button className="nav-item"><Icon>◇</Icon>Saved stories</button>
+          <button className={view === "saved" ? "nav-item active" : "nav-item"} onClick={() => { setView("saved"); setNavOpen(false); }}><Icon>◇</Icon>Saved stories</button>
           <button className={view === "media" ? "nav-item active" : "nav-item"} onClick={() => { setView("media"); setNavOpen(false); }}><Icon>◌</Icon>Media briefings</button>
         </nav>
         <div className="sidebar-note"><span className="status-dot" /> Demo environment<p>No live reporting or providers</p></div>
@@ -52,7 +67,7 @@ export default function Home() {
       <div className="workspace">
         <header className="topbar">
           <button className="mobile-menu" onClick={() => setNavOpen(true)} aria-label="Open navigation" aria-expanded={navOpen} aria-controls="primary-navigation"><span aria-hidden="true">☰</span><strong>Menu</strong></button>
-          <div><p className="eyebrow">{product.owner} · {product.foundingCountry}</p><strong>{view === "tracker" ? "Delivery workspace" : view === "editorial" ? "Editorial command centre" : view === "story" ? "Story intelligence" : view === "search" ? "Search demo coverage" : view === "media" ? "Media briefing preview" : view === "account" ? "Account access" : "Global intelligence briefing"}</strong></div>
+          <div><p className="eyebrow">{product.owner} · {product.foundingCountry}</p><strong>{view === "tracker" ? "Delivery workspace" : view === "editorial" ? "Editorial command centre" : view === "story" ? "Story intelligence" : view === "search" ? "Search demo coverage" : view === "media" ? "Media briefing preview" : view === "saved" ? "Saved stories" : view === "account" ? "Account access" : "Global intelligence briefing"}</strong></div>
           <div className="top-actions">
             <button className="icon-button" aria-label="Search" onClick={() => setView("search")}>⌕</button>
             <button className="theme-toggle" onClick={() => setTheme(theme === "light" ? "dark" : "light")} aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`}><span>{theme === "light" ? "☾" : "☀"}</span>{theme === "light" ? "Dark" : "Light"}</button>
@@ -66,10 +81,11 @@ export default function Home() {
           {view === "search" && <SearchStories onOpenStory={(story) => { setSelectedStory(story); setView("story"); }} />}
           {view === "media" && <MediaBriefing story={demoStories[0]} onOpenStory={(story) => { setSelectedStory(story); setView("story"); }} />}
           {view === "account" && <AccountAccess />}
+          {view === "saved" && <SavedStories user={user} authReady={authReady} onOpenStory={(story) => { setSelectedStory(story); setView("story"); }} onOpenAccount={() => setView("account")} />}
           {view === "tracker" && <Tracker />}
           {view === "editorial" && <Editorial />}
         </main>
-        {!["tracker", "editorial", "account"].includes(view) && <nav className="mobile-dock" aria-label="Mobile demo navigation"><button className={view === "briefing" || view === "story" ? "active" : ""} onClick={() => setView("briefing")}><span aria-hidden="true">⌂</span>Feed</button><button className={view === "search" ? "active" : ""} onClick={() => setView("search")}><span aria-hidden="true">⌕</span>Search</button><button className={view === "media" ? "active" : ""} onClick={() => setView("media")}><span aria-hidden="true">▷</span>Media</button></nav>}
+        {!["tracker", "editorial", "account", "saved"].includes(view) && <nav className="mobile-dock" aria-label="Mobile demo navigation"><button className={view === "briefing" || view === "story" ? "active" : ""} onClick={() => setView("briefing")}><span aria-hidden="true">⌂</span>Feed</button><button className={view === "search" ? "active" : ""} onClick={() => setView("search")}><span aria-hidden="true">⌕</span>Search</button><button className={view === "media" ? "active" : ""} onClick={() => setView("media")}><span aria-hidden="true">▷</span>Media</button></nav>}
       </div>
       </>}
     </div>
@@ -191,6 +207,76 @@ function AccountAccess() {
         <section><p className="eyebrow">SECURITY BOUNDARY</p><h2>Client login is not authorization</h2><p>Editorial tools, saved data, and privileged operations remain unavailable until server-side session verification, RBAC, and Firebase Security Rules are implemented and tested in F-030.</p></section>
       </aside>
     </div>
+  </div>;
+}
+
+function SavedStories({ user, authReady, onOpenStory, onOpenAccount }: { user: SignedInUser | null; authReady: boolean; onOpenStory: (story: DemoStory) => void; onOpenAccount: () => void }) {
+  const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+  const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+  const [busyId, setBusyId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!authReady || !user) return;
+    let active = true;
+    (async () => {
+      try {
+        const personalization = await getPersonalizationFor(user.uid);
+        if (!personalization) throw new Error("unconfigured");
+        const list = await personalization.bookmarks.list(user.uid);
+        if (active) { setBookmarks(list); setStatus("ready"); }
+      } catch {
+        if (active) setStatus("error");
+      }
+    })();
+    return () => { active = false; };
+  }, [authReady, user]);
+
+  async function save(story: DemoStory) {
+    if (!user) return;
+    setBusyId(story.id);
+    try {
+      const personalization = await getPersonalizationFor(user.uid);
+      if (!personalization) return;
+      const bookmark = makeBookmark(user.uid, story.id, new Date().toISOString());
+      await personalization.bookmarks.add(bookmark);
+      setBookmarks((previous) => [bookmark, ...previous.filter((entry) => entry.id !== bookmark.id)]);
+    } catch { setStatus("error"); } finally { setBusyId(null); }
+  }
+
+  async function remove(id: string) {
+    if (!user) return;
+    setBusyId(id);
+    try {
+      const personalization = await getPersonalizationFor(user.uid);
+      if (!personalization) return;
+      await personalization.bookmarks.remove(user.uid, id);
+      setBookmarks((previous) => previous.filter((entry) => entry.id !== id));
+    } catch { setStatus("error"); } finally { setBusyId(null); }
+  }
+
+  const savedSlugs = new Set(bookmarks.map((entry) => entry.storySlug));
+  const savedStories = bookmarks
+    .map((entry) => demoStories.find((story) => story.id === entry.storySlug))
+    .filter((story): story is DemoStory => Boolean(story));
+  const availableStories = demoStories.filter((story) => !savedSlugs.has(story.id));
+
+  return <div className="page saved-page">
+    <header className="saved-heading"><span className="pill pill-indigo">PERSONALIZATION · YOUR SAVED STORIES</span><p className="eyebrow">SAVED</p><h1>Keep the stories you want to return to.</h1><p>Bookmarks are saved to your account and readable only by you—enforced by the deployed Firebase Security Rules. Content remains fictional demo reporting.</p></header>
+    {!authReady ? <section className="saved-state" role="status"><p>Checking your session…</p></section>
+      : !user ? <section className="saved-state" role="status"><h2>Sign in to save stories</h2><p>Saved stories are private to your account. Sign in to create and view bookmarks.</p><button className="button primary" onClick={onOpenAccount}>Go to account access</button></section>
+      : status === "error" ? <section className="saved-state error" role="status"><h2>We could not load your saved stories</h2><p>Check your connection and try again. No data was changed.</p></section>
+      : <div className="saved-layout">
+          <section className="saved-list" aria-label="Your saved stories">
+            <div className="saved-list-heading"><p className="eyebrow">SAVED · {savedStories.length}</p><h2>{savedStories.length ? "Your bookmarks" : "No saved stories yet"}</h2></div>
+            {savedStories.length ? savedStories.map((story) => <article className="saved-row" key={story.id}><div className={`feed-thumb ${story.accent}`} aria-hidden="true" /><div className="saved-row-copy"><span className="story-tag">{story.geographyLabel} · {story.category}</span><h3><button onClick={() => onOpenStory(story)}>{story.headline}</button></h3><p>{story.summary}</p></div><button className="button secondary compact" onClick={() => remove(story.id)} disabled={busyId === story.id}>{busyId === story.id ? "Removing…" : "Remove"}</button></article>)
+              : <p className="saved-empty">Save a demo story from the panel beside this list. This honest empty state does not imply missing live coverage.</p>}
+          </section>
+          <aside className="saved-picker" aria-label="Save a demo story">
+            <p className="eyebrow">ADD TO SAVED</p><h2>Demo stories</h2>
+            {availableStories.length ? availableStories.map((story) => <div className="saved-pick" key={story.id}><div className="saved-pick-copy"><span className="story-tag">{story.geographyLabel} · {story.category}</span><strong>{story.headline}</strong></div><button className="button secondary compact" onClick={() => save(story)} disabled={busyId === story.id}>{busyId === story.id ? "Saving…" : "Save"}</button></div>)
+              : <p className="saved-empty">Every demo story is saved.</p>}
+          </aside>
+        </div>}
   </div>;
 }
 
