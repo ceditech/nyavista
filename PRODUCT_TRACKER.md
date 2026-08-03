@@ -612,6 +612,7 @@ Copy this section for each feature.
 | R-008 | Mockup treated as literal functional specification | UX/product | Medium | High | HIGH | Written requirements and accessibility override incidental image details | Generated placeholder copied as truth | — | OPEN |
 | R-009 | Light/dark visual drift | UX | Medium | Medium | MEDIUM | Shared semantic tokens and visual regression | Theme-specific components diverge | — | OPEN |
 | R-010 | Responsive divergence from reference | UX/accessibility | Medium | High | HIGH | Breakpoint QA and documented adaptations | Overflow, clipping, unreadable density | — | OPEN |
+| R-011 | Orphaned ChatGPT header-auth scaffolding (`app/chatgpt-auth.ts`) retained in tree | Security/maintainability | Low | Low | LOW | Confirmed unreferenced (no import, route, or middleware consumes it) as of 2026-08-02; leave untouched and delete during P14 launch-readiness cleanup. `lib/auth.ts` remains the sole authoritative auth seam | File is imported or wired into a route/middleware, reintroducing a second auth path | — | OPEN |
 
 ## Decision log
 
@@ -693,6 +694,7 @@ NEXT PHASE:
 - [ ] Migrations, indexes, environment variables, backups, and rollback are verified.
 - [ ] Monitoring, alerts, quotas, cost controls, and incident ownership exist.
 - [ ] No secrets, debug bypasses, or unauthorized data are committed.
+- [ ] Orphaned ChatGPT header-auth scaffolding (`app/chatgpt-auth.ts`) is removed (see R-011).
 
 ### Security, legal, and quality
 
