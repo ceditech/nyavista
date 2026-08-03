@@ -1,0 +1,96 @@
+rules_version = '2';
+
+// F-030 Slice 1c — Firestore Security Rules foundation.
+//
+// Server-side authorization for Firestore. These rules mirror the role model in
+// lib/rbac.ts and the resolution in lib/authz.ts (D-005/D-006): a role comes
+// from a verified `role` custom claim when valid, otherwise a signed-in user is
+// `user` and everyone else is `guest`. Rules enforce coarse, deny-by-default
+// role gates; fine-grained permission checks remain in lib/authz.ts server-side
+// (defense in depth). Any path without an explicit allow is denied.
+//
+// This is a foundation. F-034 extends collections and indexes; new collections
+// stay denied until an explicit rule is added here with a test.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Must stay in sync with `roles` in lib/rbac.ts.
+    function knownRoles() {
+      return ['guest', 'user', 'premium', 'contributor', 'editor', 'senior_editor', 'administrator'];
+    }
+
+    // Mirrors leastPrivilegeRoleProvider + customClaimsRoleProvider: trust a
+    // valid `role` custom claim, else fall back to user/guest. Fail-closed.
+    function roleOf() {
+      return isSignedIn()
+        ? ((('role' in request.auth.token) && (request.auth.token.role in knownRoles()))
+            ? request.auth.token.role
+            : 'user')
+        : 'guest';
+    }
+
+    function hasAnyRole(roles) {
+      return roleOf() in roles;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function isEditorial() {
+      return hasAnyRole(['editor', 'senior_editor', 'administrator']);
+    }
+
+    function isSeniorEditorial() {
+      return hasAnyRole(['senior_editor', 'administrator']);
+    }
+
+    function isAdministrator() {
+      return roleOf() == 'administrator';
+    }
+
+    // User profiles: a user manages only their own; administrators manage all.
+    match /users/{uid} {
+      allow read, write: if isOwner(uid) || isAdministrator();
+    }
+
+    // Per-user private data (bookmarks, follows, history, alerts): owner-only.
+    match /userData/{uid}/{document=**} {
+      allow read, write: if isOwner(uid);
+    }
+
+    // Reader-facing published content: public read; editorial staff write.
+    match /articles/{articleId} {
+      allow read: if true;
+      allow write: if isEditorial();
+    }
+    match /clusters/{clusterId} {
+      allow read: if true;
+      allow write: if isEditorial();
+    }
+
+    // Source registry: public read; administrators manage.
+    match /sources/{sourceId} {
+      allow read: if true;
+      allow write: if isAdministrator();
+    }
+
+    // Corrections: public read; senior editorial write (spec §6, §11).
+    match /corrections/{correctionId} {
+      allow read: if true;
+      allow write: if isSeniorEditorial();
+    }
+
+    // Administrative / back-office collections: administrators only.
+    match /admin/{document=**} {
+      allow read, write: if isAdministrator();
+    }
+
+    // Deny-by-default: no catch-all allow. Unmatched paths are denied.
+  }
+}

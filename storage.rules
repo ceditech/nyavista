@@ -1,0 +1,52 @@
+rules_version = '2';
+
+// F-030 Slice 1c — Cloud Storage Security Rules foundation.
+//
+// Mirrors the role model in lib/rbac.ts / lib/authz.ts (D-005/D-006). A role
+// comes from a verified `role` custom claim when valid, otherwise a signed-in
+// user is `user` and everyone else is `guest`. Deny-by-default; any path
+// without an explicit allow is denied. F-034 extends this with real media
+// paths and per-object metadata rules, each added with a test.
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Must stay in sync with `roles` in lib/rbac.ts.
+    function knownRoles() {
+      return ['guest', 'user', 'premium', 'contributor', 'editor', 'senior_editor', 'administrator'];
+    }
+
+    function roleOf() {
+      return isSignedIn()
+        ? ((('role' in request.auth.token) && (request.auth.token.role in knownRoles()))
+            ? request.auth.token.role
+            : 'user')
+        : 'guest';
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function isEditorial() {
+      return roleOf() in ['editor', 'senior_editor', 'administrator'];
+    }
+
+    // Owner-scoped user uploads.
+    match /user/{uid}/{allPaths=**} {
+      allow read, write: if isOwner(uid);
+    }
+
+    // Editorial media library: public read; editorial staff write.
+    match /media/{allPaths=**} {
+      allow read: if true;
+      allow write: if isEditorial();
+    }
+
+    // Deny-by-default: no catch-all allow.
+  }
+}
