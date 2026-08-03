@@ -53,6 +53,10 @@ The application is available at `http://localhost:3000`; the local Emulator UI i
 - `STABLE_FRAMEWORK.md` governs every implementation lifecycle.
 - `docs/design/nyavista-ui-mockup-light-dark.png` is the approved UI reference.
 
+## Architecture references
+
+- `docs/architecture/news-ingestion-providers.md` — the fixed design target for live news ingestion (GDELT/Guardian provider adapters, streaming, aggregation, dead-letter queue, and the free source catalog). It is a **design reference, not shipped code**: live ingestion is Phase 7 and gated behind Phase 6, and the app still serves labeled demo fixtures. Read it before any ingestion, provider, or "live data" work so implementations do not drift from the approved seam and rights rules.
+
 ## Marketing and trust routes
 
 Phase 2 currently exposes typed, shared route shells for product, feature, audience, format, company, and required trust/legal information. The legal, editorial, privacy, copyright, corrections, community, recommendation, and accessibility text is development-stage content requiring qualified review before launch; it is not operative legal advice or a finalized production policy.

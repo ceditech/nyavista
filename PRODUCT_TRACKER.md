@@ -80,7 +80,7 @@ Create one row per independently testable outcome. Split rows that require diffe
 | F-023 | 4 | Authentication and onboarding | P0 | IN_PROGRESS | Codex | Root STABLE, constraints/specs, shared mockup system, Next.js guidance, and official Firebase modular/emulator guidance reviewed; lifecycle record below | Fail-closed and live-configured Firebase client modes exist; completion still requires live flow acceptance, server sessions, emulator/security evidence, account deletion, and onboarding persistence | 3 focused auth tests, live configured-state browser verification, strict types, lint, build, 8 account baselines, and 94/94 isolated browser cases PASS; emulator integration pending | CRITICAL | F-010, Firebase Authentication enablement; F-030 consumes identity for authorization | Auth/security | Working tree |
 | F-031 | 5 | Editorial dashboard visual implementation | P1 | NOT_STARTED | — | — | Admin panel guides metrics, queues, risks and coverage in both themes | Screenshots/E2E/a11y | HIGH | F-012, RBAC | Admin UX | — |
 | F-030 | 6 | Server-side RBAC and Firebase rules | P0 | NOT_STARTED | — | — | Unauthorized access denied in UI and backend | Rules/integration tests | CRITICAL | Auth/data model | Security | — |
-| F-040 | 7 | Rights-aware ingestion | P0 | NOT_STARTED | — | — | Rights enforced; no paywall bypass/full-text default | Unit/integration logs | CRITICAL | Sources/providers | Content rights | — |
+| F-040 | 7 | Rights-aware ingestion | P0 | NOT_STARTED | — | — | Rights enforced; no paywall bypass/full-text default | Unit/integration logs | CRITICAL | Sources/providers | Content rights; `docs/architecture/news-ingestion-providers.md` | — |
 | F-050 | 8 | Event clustering | P0 | NOT_STARTED | — | — | Related reports cluster; unrelated reports remain separate | Edge-case suite | HIGH | Ingestion/embeddings | AI pipeline | — |
 | F-060 | 9 | Structured multi-source summary | P0 | NOT_STARTED | — | — | Schema-valid, attributed, neutral, auditable | Schema/red-team/editor tests | CRITICAL | Clusters/LLM | AI/editorial | — |
 | F-070 | 10 | Rights-cleared media workflow | P1 | NOT_STARTED | — | — | Attribution, captions, transcript, review and retry work | Integration/E2E | HIGH | Editorial/storage | Media pipelines | — |
@@ -619,6 +619,7 @@ Copy this section for each feature.
 | ID | Date | Decision | Context/options | Consequences | Approver | Related items |
 |---|---|---|---|---|---|---|
 | D-001 | YYYY-MM-DD | Example | — | — | — | — |
+| D-002 | 2026-08-02 | Adopt GDELT 2.0 and The Guardian Open Platform as the reference live-news ingestion providers | Needed free, rights-compatible sources to demonstrate live data across feeds without drift. Options weighed: GDELT (keyless, global, ~15-min cadence, metadata-only), Guardian (free key, first-party, attribution-licensed full text), plus NYT/Hacker News/aggregators. Chose GDELT for global breadth + streaming/clustering and Guardian for licensed text display; others catalogued as secondary | GDELT emits `metadata-only` (link-out, no stored body); Guardian is the sole `full-text-licensed` source (attribution required). Both implement the `NewsIngestionProvider` seam behind a fail-closed config. Remains a design reference only — build is Phase 7 (F-040/F-041/F-042), gated behind F-034; diverging from these providers or their rights rules requires a new decision entry | User, 2026-08-02 | F-040, F-041, F-042; `docs/architecture/news-ingestion-providers.md` |
 
 ## Test and quality dashboard
 
@@ -643,7 +644,7 @@ Copy this section for each feature.
 | README.md | NOT_STARTED | — | — | Engineering | — |
 | NYAVISTA_PRODUCT_SPECS_INSTRUCTIONS.md | DRAFT | — | — | Product/engineering | — |
 | CONSTRAINTS.md | DRAFT | — | — | All disciplines | — |
-| Architecture/data/routes | NOT_STARTED | — | — | Engineering/security | — |
+| Architecture/data/routes | DRAFT | — | 2026-08-02 | Engineering/security | `docs/architecture/news-ingestion-providers.md` — design reference for Phase 7 ingestion (NewsIngestionProvider seam, GDELT/Guardian adapters, streaming/aggregation/DLQ, rights, free source catalog); not-yet-implemented, gated behind F-034 |
 | AI/editorial/content rights | NOT_STARTED | — | — | Editorial/legal | — |
 | Accessibility/i18n/geography | NOT_STARTED | — | — | Product/QA | — |
 | Testing/deployment/limitations | NOT_STARTED | — | — | Engineering/operations | — |

@@ -257,6 +257,8 @@ interface RecommendationProvider {}
 
 Each external service needs an interface, mock, validated configuration, explicit failure state, and setup documentation.
 
+The approved reference design for the `NewsIngestionProvider` seam — its normalized record contract, the GDELT and Guardian adapters, and the streaming, aggregation, and dead-letter-queue behavior — is `docs/architecture/news-ingestion-providers.md`. It is a design reference, not implemented code: live ingestion is Phase 7 (F-040/F-041/F-042), gated behind Phase 6 persistence (F-034). Ingestion implementations must conform to that seam and its rights rules, or record an architecture decision before diverging.
+
 ## 10. Core domain model
 
 Implement typed entities and Zod schemas for:
@@ -284,6 +286,8 @@ schedule/manual trigger -> authorized provider -> validate -> normalize
 ```
 
 No paywall bypass, unauthorized full-text scraping, or unlicensed publisher media. Provide retries, backoff, dead-letter/failed states, observability, and idempotency.
+
+This pipeline's concrete adapter design — scheduled-poll "streaming" with watermark cursors, multi-provider aggregation and cross-provider deduplication, and retry-then-dead-letter handling — is specified in `docs/architecture/news-ingestion-providers.md`, together with the free source catalog (GDELT, Guardian, and others) selected by licensing fit.
 
 ### Clustering
 

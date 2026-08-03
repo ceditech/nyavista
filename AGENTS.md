@@ -67,6 +67,7 @@ For UI work, the STABLE lifecycle must include the applicable mockup panels in S
 - Enforce authentication and authorization server-side and in Firebase Security Rules where applicable.
 - Keep UI, domain, persistence, providers, jobs, validation, and permissions separated.
 - Keep external AI, ingestion, media, search, translation, and recommendation services provider-neutral.
+- Before any news-ingestion, provider-adapter, or "live data" work, read `docs/architecture/news-ingestion-providers.md`. It is the approved design target for the `NewsIngestionProvider` seam, the GDELT/Guardian adapters, streaming/aggregation/dead-letter behavior, rights policies, and the free source catalog. It is a design reference, not shipped code: live ingestion is Phase 7 (F-040/F-041/F-042) and gated behind Phase 6 (F-034). Do not build it early, and do not diverge from its seam or rights rules without a recorded architecture decision.
 - Never expose server credentials or commit secrets, private data, unauthorized content, build outputs, or dependency directories.
 - Preserve locale, timezone, country, region, accessibility, responsive, loading, error, empty, retry, and degraded-provider behavior.
 - Implement the mockup through semantic design tokens and reusable components. Do not scatter sampled values or build isolated theme-specific copies.
