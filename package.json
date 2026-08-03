@@ -15,7 +15,9 @@
     "visual:test": "playwright test tests/visual-regression.spec.ts",
     "emulators:auth": "firebase emulators:start --only auth --project demo-nyavista",
     "test:auth:emulator": "firebase emulators:exec --only auth --project demo-nyavista \"node --test tests/auth-emulator.test.ts\"",
-    "deploy:rules": "firebase deploy --only firestore:rules,storage:rules -P prod"
+    "deploy:rules": "firebase deploy --only firestore:rules,storage:rules -P prod",
+    "deploy:rules:firestore": "firebase deploy --only firestore:rules -P prod",
+    "deploy:rules:storage": "firebase deploy --only storage:rules -P prod"
   },
   "dependencies": {
     "firebase": "^12.17.0",
