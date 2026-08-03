@@ -21,7 +21,7 @@ This file is the delivery source of truth. Update it after evidence exists, not 
 |---|---|
 | Product | NyaVista |
 | Owner | E-DEAL EXPRESS LLC |
-| Current phase | Phase 6 persistence/security — F-030 authorization built + rules deployed to `edx-nyavista`; F-034 persistence started (Slice 1a domain/repository seam); Phase 4 F-023 awaiting live QA |
+| Current phase | Phase 6/4 — F-030 authorization built + rules deployed & integration-verified; F-034 persistence at Slice 1b (Firestore repos); F-024 personalization started (Slice 1a operations/access layer); F-023 awaiting live QA |
 | Overall status | IN_PROGRESS |
 | Release target | TBD |
 | Release owner | TBD |
@@ -32,7 +32,7 @@ This file is the delivery source of truth. Update it after evidence exists, not 
 | Visual baseline status | PASS — 72 Playwright baselines across 9 surface groups, 2 themes, and 4 breakpoints |
 | Highest open risk | Authorization libraries (F-030) and the deployed rules are built and the rules are behaviorally verified by the live integration suite (5/5). The remaining gap: enforcement is not yet wired into a real route (Phase 5/F-024) and F-024's persistence UI is unbuilt |
 | Build | PASS — `vinext build` (2026-08-02) |
-| Tests | PASS — 55/55 Node tests (2026-08-03) and 94/94 isolated Playwright visual/interaction tests (2026-08-02); Auth Emulator integration executed 2026-08-02 (`pnpm test:auth:emulator` → 1/1 Node test PASS). Firebase Security Rules are deployed to `edx-nyavista` and behaviorally verified by the service-account integration suite (`pnpm test:integration` → 5/5 live: owner isolation, role gating, and the fail-closed forged-claim case); see D-007 |
+| Tests | PASS — 58/58 Node tests (2026-08-03) and 94/94 isolated Playwright visual/interaction tests (2026-08-02); Auth Emulator integration executed 2026-08-02 (`pnpm test:auth:emulator` → 1/1 Node test PASS). Firebase Security Rules are deployed to `edx-nyavista` and behaviorally verified by the service-account integration suite (`pnpm test:integration` → 5/5 live: owner isolation, role gating, and the fail-closed forged-claim case); see D-007 |
 | Security review | NOT_STARTED |
 | Accessibility review | IN_REVIEW — semantic DOM, keyboard focus, responsive navigation, reduced motion |
 | Legal/editorial review | NOT_STARTED |
@@ -122,7 +122,7 @@ This is the canonical source for the Project Tracker UI. Sprints group phases fo
 | F-021 | S1 | P3 | News feed and story experience | P0 | DONE | 100% | DONE | Codex | Typed fictional stories, F-020 geography controls, feed/detail interactions, source/uncertainty states, 48 baselines, 62 browser cases, and user review pass | HIGH | F-012, F-020 |
 | F-022 | S1 | P3 | Search, mobile feed, and demo media | P0 | DONE | 100% | DONE | Codex | Local search/empty/clear states, mobile dock, simulated media controls/transcript/fallback, 64 baselines, 82 browser cases, and user review pass | HIGH | F-012, F-020, F-021 |
 | F-023 | S2 | P4 | Authentication and onboarding | P0 | IN_PROGRESS | 70% | VALIDATE | Codex | Slice 1 manually accepted; live Firebase client configured locally and verified without creating users; Auth Emulator integration executed (1/1 PASS, 2026-08-02); live auth-flow QA pending (needs Email/Password enabled in console); server-session, deletion, and onboarding are out-of-scope P6 successors | CRITICAL | F-010, Firebase Authentication enablement |
-| F-024 | S2 | P4 | Preferences, follows, bookmarks, and history | P1 | NOT_STARTED | 0% | SCOPE | Unassigned | Persistence, privacy, locale, and E2E tests required | HIGH | F-023, F-034 |
+| F-024 | S2 | P4 | Preferences, follows, bookmarks, and history | P1 | IN_PROGRESS | 15% | BUILD | Claude | Slice 1a done: `lib/personalization.ts` operations (idempotent-by-target) + per-user repository access + 3 tests. UI routes/components + visual QA next | HIGH | F-023, F-034 |
 | F-031 | S2 | P5 | Editorial dashboard visual implementation | P1 | NOT_STARTED | 0% | SCOPE | Unassigned | Light/dark screenshots, E2E, and accessibility required | HIGH | F-012, F-030 |
 | F-032 | S2 | P5 | Editorial review and publishing workflow | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | RBAC, review, correction, audit, and E2E tests required | CRITICAL | F-030, F-034 |
 | F-033 | S2 | P5 | Source, coverage, user, and media administration | P1 | NOT_STARTED | 0% | SCOPE | Unassigned | Permission, validation, empty/error, and audit tests required | CRITICAL | F-030, F-034 |
@@ -378,6 +378,27 @@ This is the canonical source for the Project Tracker UI. Sprints group phases fo
 - Security/privacy/editorial/fairness: repository owner-scoping is enforced in the API and confirmed against live rules by the integration suite. The service account stays gitignored and referenced by path (D-008/R-013); `firebase-admin` is a dev/test-only dependency and is never bundled into the Workers app.
 - Migration/rollback: additive only — delete `lib/domain.ts`, `lib/repositories.ts`, `lib/firestore-repositories.ts`, `firestore.indexes.json`, the tests, and revert the `firebase.json`/`package.json`/tracker entries and the `firebase-admin` devDependency. No data or schema migration (rules already deployed; the suite self-cleans).
 - Next approval/unblock: F-024 — build the personalization UI (preferences, follows, bookmarks, history) on these repository interfaces, authenticated as the signed-in user so the deployed rules enforce access. Storage-backed media repositories are a later F-034 slice.
+
+### F-024 Preferences, follows, bookmarks, and history
+
+- Phase / epic: Phase 4 authentication and personalization
+- Status / owner: IN_PROGRESS (15%) / Claude
+- Approved outcome: signed-in users personalize countries/regions/categories/topics/sources/language/depth/format, follow targets, bookmark stories, and see history — persisted per-user and enforced by the deployed rules. Delivered in slices — 1a operations + access layer; later slices add the UI routes, components, and visual QA.
+- In scope (Slice 1a, delivered): `lib/personalization.ts` — pure operations encoding the F-024 domain rules (bookmarks/follows/history are idempotent by target, so re-adding updates rather than duplicates) via `makeBookmark`/`makeFollow`/`makeHistoryEntry` + stable id helpers, and `createUserPersonalization(db, uid)` binding a signed-in user's Firestore instance to the full F-034 repository set (the single access point the UI consumes).
+- Out of scope (Slice 1a): the UI routes (`/settings`, `/bookmarks`, `/following`, `/profile`), client components, the signed-in Firebase/Firestore client accessor, loading/empty/error states, accessibility, and light/dark responsive visual QA — the next F-024 slices.
+- Dependencies: F-023 identity, F-034 repositories (Slice 1b, integration-verified).
+- Acceptance status: Slice 1a complete and verified — `pnpm exec tsc --noEmit`, `pnpm lint`, 3 `tests/personalization.test.ts`, and full `pnpm test` (build + 58/58 Node) PASS. Pure/hermetic; the Firestore-backed path is already covered by the F-034 integration suite.
+
+#### STABLE record
+
+- Scope/Think: F-024 is the logical first consumer of F-030 + F-034 (D-009). The pure operations + per-user access point were sliced first so UI components consume one seam and never hand-roll ids/timestamps or re-wire persistence.
+- Assess Risk: risks are duplicate records on re-add and cross-user leakage. Mitigations: idempotent target-keyed ids (one bookmark/follow/history per target); access is owner-scoped by `uid` and enforced by the deployed rules (verified by the F-034 integration suite).
+- Build: added `lib/personalization.ts` and `tests/personalization.test.ts` (registered in the `test` script). No new dependencies. Did not refactor the working F-023 auth init (low-regression); a shared client Firebase accessor comes with the UI slice that needs it.
+- Validate: tsc (strict) and ESLint PASS; 3 tests assert idempotent ids, schema-valid factory output with the follow target encoded, and the repository access shape; full suite 58/58 with production build PASS.
+- Evolve/deviations: entity/operation scope covers F-024's four surfaces; media saves follow with the F-034 storage slice. UI is deferred to keep this slice pure and reviewable.
+- Security/privacy/editorial/fairness: no I/O or secrets; personalization interests are country-neutral and never affect editorial ranking (spec §4). Consent/privacy copy for stored preferences is a UI-slice concern.
+- Migration/rollback: additive only — delete `lib/personalization.ts`, `tests/personalization.test.ts`, and revert the `package.json` test entry and tracker records. No data migration.
+- Next approval/unblock: F-024 Slice 1b (UI) — a signed-in Firebase/Firestore client accessor, the `/settings`/`/bookmarks`/`/following`/`/profile` routes and components built on `createUserPersonalization`, with loading/empty/error states, accessibility, and light/dark responsive visual comparison against the approved mockup + Playwright baselines.
 
 Copy this section for each feature.
 
@@ -684,7 +705,7 @@ Copy this section for each feature.
 |---|---|---|---|---|---|
 | Lint | `pnpm lint` | PASS | 2026-08-01 | ESLint | — |
 | Type check | `pnpm exec tsc --noEmit` | PASS | 2026-08-01 | Strict TypeScript | — |
-| Unit/component | `pnpm test` | PASS | 2026-08-03 | 55/55 Node tests (config/render/route/geography/stories/auth/rbac/server-session/authz/require-authorization/repositories) | — |
+| Unit/component | `pnpm test` | PASS | 2026-08-03 | 58/58 Node tests (…/rbac/server-session/authz/require-authorization/repositories/personalization) | — |
 | Integration/E2E | `pnpm test:auth:emulator`; `pnpm test:integration` | PASS | 2026-08-03 | Auth Emulator 1/1 (2026-08-02); service-account Firestore rules suite 5/5 live on `edx-nyavista` (owner isolation, role gating, fail-closed forged claim) | Broader app E2E still NOT_RUN |
 | Firebase Rules | Emulator/test suite | NOT_RUN | — | — | — |
 | Accessibility | Automated + manual | NOT_RUN | — | — | — |
