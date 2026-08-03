@@ -26,6 +26,11 @@ Desktop.ini
 *.pem
 *.log
 
+# secrets — never commit (Firebase Admin service-account keys, etc.)
+/docs/service-account/
+*-firebase-adminsdk-*.json
+*serviceaccount*.json
+
 # editor and local tooling
 /.idea/
 /.vscode/
