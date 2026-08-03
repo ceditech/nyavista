@@ -21,7 +21,7 @@ This file is the delivery source of truth. Update it after evidence exists, not 
 |---|---|
 | Product | NyaVista |
 | Owner | E-DEAL EXPRESS LLC |
-| Current phase | Phase 4 authentication/personalization — F-023 foundation approved |
+| Current phase | Phase 6 persistence/security — F-030 started (RBAC model, Slice 1a); Phase 4 F-023 awaiting live QA |
 | Overall status | IN_PROGRESS |
 | Release target | TBD |
 | Release owner | TBD |
@@ -32,7 +32,7 @@ This file is the delivery source of truth. Update it after evidence exists, not 
 | Visual baseline status | PASS — 72 Playwright baselines across 9 surface groups, 2 themes, and 4 breakpoints |
 | Highest open risk | Live Firebase client is configured locally, but identity still cannot authorize server or persisted operations |
 | Build | PASS — `vinext build` (2026-08-02) |
-| Tests | PASS — 20/20 Node tests and 94/94 isolated Playwright visual/interaction tests (2026-08-02); Auth Emulator integration executed 2026-08-02 (`pnpm test:auth:emulator` → 1/1 Node test PASS) |
+| Tests | PASS — 29/29 Node tests and 94/94 isolated Playwright visual/interaction tests (2026-08-02); Auth Emulator integration executed 2026-08-02 (`pnpm test:auth:emulator` → 1/1 Node test PASS) |
 | Security review | NOT_STARTED |
 | Accessibility review | IN_REVIEW — semantic DOM, keyboard focus, responsive navigation, reduced motion |
 | Legal/editorial review | NOT_STARTED |
@@ -47,7 +47,7 @@ This file is the delivery source of truth. Update it after evidence exists, not 
 | P3 | Public demo product | DONE | Feeds, stories, geography, search and demo media verified | F-020–F-022 complete; 17 Node tests, 64 baselines, 82 browser cases, production build, and user review pass | No live news/provider data; all fixtures and media remain fictional | User, 2026-08-02 |
 | P4 | Auth/personalization | IN_PROGRESS | Auth, onboarding, preferences and saves persist securely | F-023 fail-closed Firebase client foundation, account UI, config tests, and 8 visual baselines | Firebase project/emulator and F-030 server session/RBAC work remain required | User, 2026-08-02 |
 | P5 | Admin/editorial | NOT_STARTED | RBAC and review/source/media workflows verified | — | — | — |
-| P6 | Firebase persistence | NOT_STARTED | Repositories, rules, indexes, emulator and permission tests pass | — | — | — |
+| P6 | Firebase persistence | IN_PROGRESS | Repositories, rules, indexes, emulator and permission tests pass | F-030 Slice 1a: `lib/rbac.ts` RBAC model + 9/9 tests (full suite 29/29), tsc/lint PASS | F-030 server session (1b) and Firebase rules (1c) pending; F-034 repositories not started | User approved phase gate, 2026-08-02 |
 | P7 | Ingestion | NOT_STARTED | Authorized ingestion, normalization, dedupe, retries and logs pass | — | — | — |
 | P8 | Clustering | NOT_STARTED | Matching, thresholds, merge/split and edge tests pass | — | — | — |
 | P9 | AI intelligence | NOT_STARTED | Structured output, audit, review, costs and mock/live seams pass | — | — | — |
@@ -79,7 +79,7 @@ Create one row per independently testable outcome. Split rows that require diffe
 | F-022 | 3 | Mobile feed and video visual implementation | P0 | DONE | Codex | Root STABLE, mobile feed/video panels, F-020/F-021 domain and UI, Next.js client/data/image guidance, React quality review, complete validation, and user acceptance recorded | Search, touch-first feed treatment, and rights-safe demo media provide accessible responsive flows with truthful failure/fallback states | 17/17 Node tests, lint, strict types, build, 64 baselines, 82/82 browser cases, and user review PASS | HIGH | F-012, F-020, F-021 | Public UX | Working tree |
 | F-023 | 4 | Authentication and onboarding | P0 | IN_PROGRESS | Codex | Root STABLE, constraints/specs, shared mockup system, Next.js guidance, and official Firebase modular/emulator guidance reviewed; lifecycle record below | Fail-closed and live-configured Firebase client modes exist; completion still requires live flow acceptance, server sessions, emulator/security evidence, account deletion, and onboarding persistence | 3 focused auth tests, live configured-state browser verification, strict types, lint, build, 8 account baselines, and 94/94 isolated browser cases PASS; Auth Emulator integration executed 2026-08-02 (1/1 Node test PASS) | CRITICAL | F-010, Firebase Authentication enablement; F-030 consumes identity for authorization | Auth/security | Working tree |
 | F-031 | 5 | Editorial dashboard visual implementation | P1 | NOT_STARTED | — | — | Admin panel guides metrics, queues, risks and coverage in both themes | Screenshots/E2E/a11y | HIGH | F-012, RBAC | Admin UX | — |
-| F-030 | 6 | Server-side RBAC and Firebase rules | P0 | NOT_STARTED | — | — | Unauthorized access denied in UI and backend | Rules/integration tests | CRITICAL | Auth/data model | Security | — |
+| F-030 | 6 | Server-side RBAC and Firebase rules | P0 | IN_PROGRESS | Claude | Root STABLE, CONSTRAINTS, spec §6/§13, and Cloudflare Workers runtime inspected; sliced 1a model / 1b Workers session verification / 1c Firebase rules | Unauthorized access denied in UI and backend | Slice 1a: `lib/rbac.ts` + 9/9 rbac tests, full 29/29 Node, tsc + lint PASS | CRITICAL | Auth/data model | Security | Working tree |
 | F-040 | 7 | Rights-aware ingestion | P0 | NOT_STARTED | — | — | Rights enforced; no paywall bypass/full-text default | Unit/integration logs | CRITICAL | Sources/providers | Content rights; `docs/architecture/news-ingestion-providers.md` | — |
 | F-050 | 8 | Event clustering | P0 | NOT_STARTED | — | — | Related reports cluster; unrelated reports remain separate | Edge-case suite | HIGH | Ingestion/embeddings | AI pipeline | — |
 | F-060 | 9 | Structured multi-source summary | P0 | NOT_STARTED | — | — | Schema-valid, attributed, neutral, auditable | Schema/red-team/editor tests | CRITICAL | Clusters/LLM | AI/editorial | — |
@@ -126,7 +126,7 @@ This is the canonical source for the Project Tracker UI. Sprints group phases fo
 | F-031 | S2 | P5 | Editorial dashboard visual implementation | P1 | NOT_STARTED | 0% | SCOPE | Unassigned | Light/dark screenshots, E2E, and accessibility required | HIGH | F-012, F-030 |
 | F-032 | S2 | P5 | Editorial review and publishing workflow | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | RBAC, review, correction, audit, and E2E tests required | CRITICAL | F-030, F-034 |
 | F-033 | S2 | P5 | Source, coverage, user, and media administration | P1 | NOT_STARTED | 0% | SCOPE | Unassigned | Permission, validation, empty/error, and audit tests required | CRITICAL | F-030, F-034 |
-| F-030 | S2 | P6 | Server-side RBAC and Firebase rules | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | Rules and adversarial integration tests required | CRITICAL | F-023, data model |
+| F-030 | S2 | P6 | Server-side RBAC and Firebase rules | P0 | IN_PROGRESS | 20% | BUILD | Claude | Slice 1a RBAC model (`lib/rbac.ts`) + 9/9 tests done; 1b Workers JWKS session verification + authorize() seam next; 1c Firebase rules after | CRITICAL | F-023, data model |
 | F-034 | S2 | P6 | Firebase repositories, indexes, and storage boundaries | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | Emulator, schema, index, storage, and integration tests required | CRITICAL | F-030 |
 | F-035 | S2 | P6 | Emulator fixtures, migrations, backup, and rollback | P1 | NOT_STARTED | 0% | SCOPE | Unassigned | Fictional fixtures and recovery evidence required | HIGH | F-034 |
 | F-040 | S3 | P7 | Rights-aware ingestion adapters | P0 | NOT_STARTED | 0% | SCOPE | Unassigned | Rights, provider failure, and integration tests required | CRITICAL | F-034 |
@@ -331,6 +331,27 @@ This is the canonical source for the Project Tracker UI. Sprints group phases fo
 - Security/privacy/editorial/fairness: only Firebase public web identifiers are documented; Admin credentials are explicitly prohibited. Inputs are not persisted locally by this slice. Generic failure/recovery messages reduce enumeration disclosure. Identity grants no editorial privilege. Locale/country interests are named but not collected, ranked, or persisted.
 - Migration/rollback: dependency and lockfile only; no database or external migration. Revert `lib/auth.ts`, account UI/CSS/tests/baselines, `.env.example`, README/package changes, and delivery records.
 - Next approval/unblock: the Auth Emulator integration test is executed and passing (2026-08-02), closing that gap. The one remaining in-scope item is manual live QA — exercise live registration, email verification, sign-in, recovery, and denial states after enabling Email/Password in Firebase Authentication (a console action the agent cannot perform). After that, F-023 is ready to mark DONE. Do not begin F-024 or treat client identity as authorization; server session/RBAC is the F-030 (Phase 6) successor and needs separate phase-gate approval.
+
+### F-030 Server-side RBAC and Firebase rules
+
+- Phase / epic: Phase 6 persistence and security
+- Status / owner: IN_PROGRESS (20%) / Claude
+- Approved outcome: enforce authorization on the server so unauthorized access is denied in both UI and backend; deliver in slices — 1a RBAC domain model, 1b Cloudflare Workers session verification + `authorize()`, 1c Firebase Security Rules.
+- In scope (Slice 1a, delivered): typed RBAC vocabulary in `lib/rbac.ts` — the seven spec §6 roles, a composed permission matrix, `hasPermission`/`permissionsForRole`/`isRole`, and focused unit tests. Pure and side-effect-free.
+- Out of scope (Slice 1a): identity verification, request handling, protected routes, Firebase Admin SDK, Firestore/Storage Rules, role persistence, and custom claims — all in 1b/1c or F-034.
+- Dependencies: F-023 identity; F-034 will later back the role store. Authorization stays decoupled from F-034 via a RoleProvider seam (D-005).
+- Acceptance status: Slice 1a complete and verified — `pnpm exec tsc --noEmit`, `pnpm lint`, 9/9 `tests/rbac.test.ts`, and full `pnpm test` (build + 29/29 Node) PASS. Server enforcement remains unproven until 1b.
+
+#### STABLE record
+
+- Scope/Think: root STABLE, CONSTRAINTS, spec §6 (roles) and §13 (security), the working tree, and the runtime were inspected. The decisive finding is that the app runs on Cloudflare Workers, so the Node-oriented Firebase Admin SDK is unsuitable; the feature was sliced to isolate the pure model (1a) from runtime-bound verification (1b) and Rules (1c). Phase gate approved by the user (D-004).
+- Assess Risk: primary risks are privilege escalation, conflating billing tier with staff authority, and hidden-UI-as-authorization. Mitigations: least-privilege defaults deferred to the 1b seam; premium modeled as a separate axis (D-006); explicit note that this matrix is never the sole UI gate; permission-based (not role-rank) checks so the two role axes never need a false linear ordering.
+- Build: added `lib/rbac.ts` (seven roles, composed permission sets, `hasPermission`, `permissionsForRole`, `isRole`) and `tests/rbac.test.ts`; registered the test in the `test` script. No enums/namespaces (Node type-stripping constraint); matches existing `lib` conventions. No new dependencies.
+- Validate: tsc (strict) and ESLint PASS; 9/9 RBAC tests assert the matrix, cumulative staff chain, premium-axis separation, completeness, and the `isRole` guard; full suite 29/29 with production build PASS. No source outside `lib/rbac.ts`, `tests/rbac.test.ts`, and `package.json` changed.
+- Evolve/deviations: modeled premium as a consumer entitlement axis rather than the literal spec ladder (D-006), recorded as an intentional, additive-safe interpretation. Server verification and Firebase Rules follow in 1b/1c.
+- Security/privacy/editorial/fairness: no identity, secrets, or persistence introduced; the model is data only. Roles are country-neutral and grant no geographic or editorial privilege by default.
+- Migration/rollback: additive only — delete `lib/rbac.ts`, `tests/rbac.test.ts`, revert the `package.json` test entry and tracker records. No data or schema migration.
+- Next approval/unblock: proceed to Slice 1b — Workers JWKS/Web-Crypto ID-token verification and the `authorize()`/`RoleProvider` seam (D-005), with unit tests for valid/expired/wrong-audience/tampered tokens and fail-closed paths.
 
 Copy this section for each feature.
 
@@ -621,6 +642,9 @@ Copy this section for each feature.
 |---|---|---|---|---|---|---|
 | D-001 | YYYY-MM-DD | Example | — | — | — | — |
 | D-002 | 2026-08-02 | Adopt GDELT 2.0 and The Guardian Open Platform as the reference live-news ingestion providers | Needed free, rights-compatible sources to demonstrate live data across feeds without drift. Options weighed: GDELT (keyless, global, ~15-min cadence, metadata-only), Guardian (free key, first-party, attribution-licensed full text), plus NYT/Hacker News/aggregators. Chose GDELT for global breadth + streaming/clustering and Guardian for licensed text display; others catalogued as secondary | GDELT emits `metadata-only` (link-out, no stored body); Guardian is the sole `full-text-licensed` source (attribution required). Both implement the `NewsIngestionProvider` seam behind a fail-closed config. Remains a design reference only — build is Phase 7 (F-040/F-041/F-042), gated behind F-034; diverging from these providers or their rights rules requires a new decision entry | User, 2026-08-02 | F-040, F-041, F-042; `docs/architecture/news-ingestion-providers.md` |
+| D-004 | 2026-08-02 | Approve the Phase 6 gate to start F-030 (server-side RBAC and Firebase rules) while Phase 4 F-023 awaits live QA | User approved advancing past the P4→P6 gate that AGENTS.md requires. F-030 is the security spine that unblocks F-023 server sessions, F-024, and admin/editorial | F-030 proceeds in slices (1a RBAC model, 1b Workers session verification, 1c Firebase rules); F-034 persistence remains a separate P6 item and is not pulled forward | User, 2026-08-02 | F-030, P6; F-023, F-024, F-034 |
+| D-005 | 2026-08-02 | Verify Firebase identity on Cloudflare Workers via JWKS + Web Crypto, behind a fail-closed RoleProvider seam | Runtime is Cloudflare Workers (`nodejs_compat`, RSC in `rsc` env); the Node-oriented Firebase Admin SDK does not run cleanly there. Options: Admin SDK / session cookies (needs a Node service) vs. verifying the RS256 ID token against Google JWKS with `crypto.subtle`. Chose the runtime-native JWKS path | Server session verification uses no Admin SDK and no new heavy deps; roles resolve through a `RoleProvider` interface defaulting to least-privilege (signed-in ⇒ `user`, else `guest`), with the real store deferred to F-034 (Firestore) or Firebase custom claims. Governs F-030 Slice 1b | User, 2026-08-02 | F-030 (Slice 1b); F-034; `lib/auth.ts` |
+| D-006 | 2026-08-02 | Model `premium` as a consumer entitlement axis separate from the cumulative editorial/admin staff chain; authorize by permission, not role rank | Spec §6 lists roles as a ladder, but conflating the premium billing tier with staff authority would entangle RBAC with billing (F-072). Options: single linear inheritance vs. two axes | `lib/rbac.ts` composes a staff chain (user → contributor → editor → senior_editor → administrator) and a separate premium branch off `user`; `hasPermission` is permission-based so the axes need no single ordering. Staff access to premium content and billing entitlements stay additive concerns for F-072/F-034 | User, 2026-08-02 | F-030 (`lib/rbac.ts`); F-072 |
 | D-003 | 2026-08-02 | Use live Firebase Authentication as the primary auth path; retain the Auth Emulator as a fallback only | Live Firebase web config is wired into ignored `.env.local`. Options: emulator-first vs. live-first. Chose live-first so F-023 completes via real registration/verification/sign-in/recovery QA | The Auth Emulator is no longer the required validation gate; it is retained for local development, offline work, CI without live credentials, and when live Firebase is unavailable. `lib/auth.ts` remains fail-closed and provider-agnostic, so switching between live and emulator is env-only (`NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL`). The 2026-08-02 emulator pass stays valid regression evidence; F-023 DONE now depends on live-flow QA after Email/Password is enabled in the console | User, 2026-08-02 | F-023; `lib/auth.ts`; README Firebase Authentication setup |
 
 ## Test and quality dashboard
